@@ -36,19 +36,11 @@ export function parseBriefUpdate(content: string): ParseResult {
   }
 }
 
-export function mergeBriefUpdate(
-  currentBrief: Brief,
-  update: BriefUpdate
-): Brief {
+export function mergeBriefUpdate(currentBrief: Brief, update: BriefUpdate): Brief {
   return {
-    goal:
-      update.goal !== undefined && update.goal !== null
-        ? update.goal
-        : currentBrief.goal,
+    goal: update.goal !== undefined && update.goal !== null ? update.goal : currentBrief.goal,
 
-    context: update.context
-      ? [...currentBrief.context, ...update.context]
-      : currentBrief.context,
+    context: update.context ? [...currentBrief.context, ...update.context] : currentBrief.context,
 
     decisions: update.decisions
       ? [...currentBrief.decisions, ...update.decisions]
@@ -59,8 +51,6 @@ export function mergeBriefUpdate(
       : currentBrief.openQuestions,
 
     readyToDesign:
-      update.readyToDesign !== undefined
-        ? update.readyToDesign
-        : currentBrief.readyToDesign,
+      update.readyToDesign !== undefined ? update.readyToDesign : currentBrief.readyToDesign,
   };
 }

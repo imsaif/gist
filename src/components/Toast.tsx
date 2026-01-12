@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 interface ToastProps {
   message: string;
@@ -10,28 +10,24 @@ interface ToastProps {
 }
 
 export function Toast({ message, isVisible, onClose, duration = 2000 }: ToastProps) {
-  const [isShowing, setIsShowing] = useState(false);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (isVisible) {
-      setIsShowing(true);
-      const timer = setTimeout(() => {
-        setIsShowing(false);
-        setTimeout(onClose, 200); // Wait for fade out animation
+      timerRef.current = setTimeout(() => {
+        onClose();
       }, duration);
-      return () => clearTimeout(timer);
+      return () => {
+        if (timerRef.current) clearTimeout(timerRef.current);
+      };
     }
   }, [isVisible, duration, onClose]);
 
-  if (!isVisible && !isShowing) return null;
+  if (!isVisible) return null;
 
   return (
-    <div
-      className={`fixed bottom-6 left-1/2 z-50 -translate-x-1/2 transform transition-all duration-200 ${
-        isShowing ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0'
-      }`}
-    >
-      <div className="flex items-center gap-2 rounded-lg bg-text-primary px-4 py-3 text-sm font-medium text-white shadow-lg">
+    <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 transform transition-all duration-200">
+      <div className="bg-text-primary flex items-center gap-2 rounded-lg px-4 py-3 text-sm font-medium text-white shadow-lg">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="16"

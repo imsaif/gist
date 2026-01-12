@@ -83,10 +83,7 @@ export default function BriefMode() {
   );
 
   const handleNewChat = useCallback(() => {
-    if (
-      messages.length > 1 &&
-      !confirm('Start over? Current brief will be lost.')
-    ) {
+    if (messages.length > 1 && !confirm('Start over? Current brief will be lost.')) {
       return;
     }
     setMessages(INITIAL_MESSAGES);
@@ -145,23 +142,23 @@ export default function BriefMode() {
   return (
     <div className="flex h-screen flex-col">
       {/* Header */}
-      <header className="flex h-14 items-center justify-between border-b border-border-light px-6">
+      <header className="border-border-light flex h-14 items-center justify-between border-b px-6">
         <div className="flex items-center gap-4">
           <Link
             href="/"
-            className="text-xl font-semibold text-text-primary hover:text-accent-primary transition-colors"
+            className="text-text-primary hover:text-accent-primary text-xl font-semibold transition-colors"
           >
             Gist
           </Link>
           <span className="text-text-tertiary">/</span>
-          <span className="rounded-full bg-bg-secondary px-3 py-1 text-sm font-medium text-text-secondary">
+          <span className="bg-bg-secondary text-text-secondary rounded-full px-3 py-1 text-sm font-medium">
             Brief Mode
           </span>
         </div>
         <div className="flex items-center gap-2">
           <button
             onClick={handleNewChat}
-            className="rounded-lg border border-border-light px-4 py-2 text-sm font-medium text-text-secondary transition-colors hover:bg-bg-secondary"
+            className="border-border-light text-text-secondary hover:bg-bg-secondary rounded-lg border px-4 py-2 text-sm font-medium transition-colors"
           >
             New Brief
           </button>
@@ -171,7 +168,7 @@ export default function BriefMode() {
       {/* Main content */}
       <div className="flex flex-1 overflow-hidden">
         {/* Left panel - Conversation */}
-        <div className="flex w-1/2 flex-col border-r border-border-light">
+        <div className="border-border-light flex w-1/2 flex-col border-r">
           <div className="flex-1 overflow-y-auto p-6">
             <div className="space-y-4">
               {messages.map((message) => (
@@ -186,7 +183,7 @@ export default function BriefMode() {
                         : 'bg-msg-ai-bg text-text-primary'
                     }`}
                   >
-                    <p className="whitespace-pre-wrap text-base leading-relaxed">
+                    <p className="text-base leading-relaxed whitespace-pre-wrap">
                       {message.content}
                     </p>
                   </div>
@@ -194,7 +191,7 @@ export default function BriefMode() {
               ))}
               {isLoading && (
                 <div className="flex justify-start">
-                  <div className="rounded-2xl bg-msg-ai-bg px-4 py-3 text-text-secondary">
+                  <div className="bg-msg-ai-bg text-text-secondary rounded-2xl px-4 py-3">
                     <span className="inline-flex gap-1">
                       <span className="animate-bounce">.</span>
                       <span className="animate-bounce [animation-delay:0.2s]">.</span>
@@ -207,7 +204,7 @@ export default function BriefMode() {
           </div>
 
           {/* Input area */}
-          <div className="border-t border-border-light p-4">
+          <div className="border-border-light border-t p-4">
             {error && <p className="mb-2 text-sm text-red-500">{error}</p>}
             <div className="flex gap-2">
               <textarea
@@ -217,12 +214,12 @@ export default function BriefMode() {
                 placeholder="What are you trying to design?"
                 disabled={isLoading}
                 rows={1}
-                className="flex-1 resize-none rounded-xl border border-border-light px-4 py-3 text-base outline-none transition-colors focus:border-accent-primary disabled:bg-bg-secondary disabled:text-text-tertiary"
+                className="border-border-light focus:border-accent-primary disabled:bg-bg-secondary disabled:text-text-tertiary flex-1 resize-none rounded-xl border px-4 py-3 text-base transition-colors outline-none"
               />
               <button
                 onClick={() => handleSendMessage(inputValue)}
                 disabled={isLoading || !inputValue.trim()}
-                className="rounded-xl bg-accent-primary px-6 py-3 font-medium text-white transition-colors hover:bg-accent-hover disabled:bg-bg-tertiary disabled:text-text-tertiary"
+                className="bg-accent-primary hover:bg-accent-hover disabled:bg-bg-tertiary disabled:text-text-tertiary rounded-xl px-6 py-3 font-medium text-white transition-colors"
               >
                 Send
               </button>
@@ -231,12 +228,12 @@ export default function BriefMode() {
         </div>
 
         {/* Right panel - Brief */}
-        <div className="flex w-1/2 flex-col bg-bg-secondary">
+        <div className="bg-bg-secondary flex w-1/2 flex-col">
           <div className="flex-1 overflow-y-auto p-6">
             {/* Building sections - show while not ready */}
             {!isReady && (
               <div className="mb-8 space-y-6">
-                <h2 className="text-sm font-semibold uppercase tracking-wide text-text-secondary">
+                <h2 className="text-text-secondary text-sm font-semibold tracking-wide uppercase">
                   Building Brief
                 </h2>
 
@@ -248,7 +245,9 @@ export default function BriefMode() {
                     <span
                       className={`text-sm ${brief.goal ? 'text-text-primary' : 'text-text-tertiary'}`}
                     >
-                      Goal {brief.goal && '— ' + brief.goal.slice(0, 50) + (brief.goal.length > 50 ? '...' : '')}
+                      Goal{' '}
+                      {brief.goal &&
+                        '— ' + brief.goal.slice(0, 50) + (brief.goal.length > 50 ? '...' : '')}
                     </span>
                   </div>
 
@@ -281,15 +280,15 @@ export default function BriefMode() {
                     <span
                       className={`text-sm ${brief.openQuestions.length > 0 ? 'text-text-primary' : 'text-text-tertiary'}`}
                     >
-                      Open Questions {brief.openQuestions.length > 0 && `— ${brief.openQuestions.length} remaining`}
+                      Open Questions{' '}
+                      {brief.openQuestions.length > 0 &&
+                        `— ${brief.openQuestions.length} remaining`}
                     </span>
                   </div>
 
                   <div className="flex items-center gap-3">
-                    <div className="h-2 w-2 rounded-full bg-border-medium" />
-                    <span className="text-sm text-text-tertiary">
-                      Ready to Design
-                    </span>
+                    <div className="bg-border-medium h-2 w-2 rounded-full" />
+                    <span className="text-text-tertiary text-sm">Ready to Design</span>
                   </div>
                 </div>
               </div>
@@ -298,11 +297,11 @@ export default function BriefMode() {
             {/* Files Section */}
             <div>
               <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-sm font-semibold uppercase tracking-wide text-text-secondary">
+                <h2 className="text-text-secondary text-sm font-semibold tracking-wide uppercase">
                   Files
                 </h2>
                 <button
-                  className="flex h-6 w-6 items-center justify-center rounded text-text-tertiary transition-colors hover:bg-bg-tertiary hover:text-text-secondary"
+                  className="text-text-tertiary hover:bg-bg-tertiary hover:text-text-secondary flex h-6 w-6 items-center justify-center rounded transition-colors"
                   title="Add file"
                 >
                   <svg
@@ -344,8 +343,8 @@ export default function BriefMode() {
                   )}
                 </div>
               ) : (
-                <div className="rounded-xl border-2 border-dashed border-border-light p-8 text-center">
-                  <p className="text-sm text-text-tertiary">
+                <div className="border-border-light rounded-xl border-2 border-dashed p-8 text-center">
+                  <p className="text-text-tertiary text-sm">
                     Documents will appear here as your brief builds
                   </p>
                 </div>

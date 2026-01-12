@@ -5,7 +5,7 @@ import { ModeCard } from './ModeCard';
 export function ModeSelector() {
   return (
     <div className="w-full max-w-4xl">
-      <h2 className="mb-8 text-center text-xl text-text-secondary">
+      <h2 className="text-text-secondary mb-8 text-center text-xl">
         What do you need to think through?
       </h2>
 
@@ -57,7 +57,7 @@ export function ModeSelector() {
       </div>
 
       {/* Template link */}
-      <p className="mt-8 text-center text-sm text-text-tertiary">
+      <p className="text-text-tertiary mt-8 text-center text-sm">
         or{' '}
         <span className="text-text-secondary hover:text-accent-primary cursor-pointer underline">
           start from a template

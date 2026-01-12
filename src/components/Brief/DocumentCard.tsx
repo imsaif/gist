@@ -41,17 +41,19 @@ export function DocumentCard({
   return (
     <div
       className={`group relative flex h-36 w-full flex-col rounded-xl border bg-white p-4 transition-all hover:shadow-md ${
-        isSelected ? 'border-accent-primary ring-2 ring-accent-primary/20' : 'border-border-light hover:border-border-medium'
+        isSelected
+          ? 'border-accent-primary ring-accent-primary/20 ring-2'
+          : 'border-border-light hover:border-border-medium'
       }`}
     >
       {/* Checkbox */}
-      <div className="absolute left-3 top-3">
+      <div className="absolute top-3 left-3">
         <button
           onClick={handleCheckboxClick}
           className={`flex h-5 w-5 items-center justify-center rounded border transition-colors ${
             isSelected
               ? 'border-accent-primary bg-accent-primary text-white'
-              : 'border-border-medium bg-white hover:border-accent-primary'
+              : 'border-border-medium hover:border-accent-primary bg-white'
           }`}
         >
           {isSelected && (
@@ -73,31 +75,26 @@ export function DocumentCard({
       </div>
 
       {/* Main clickable area */}
-      <button
-        onClick={onView}
-        className="flex flex-1 flex-col justify-between pl-6 text-left"
-      >
+      <button onClick={onView} className="flex flex-1 flex-col justify-between pl-6 text-left">
         {/* Title and line count */}
         <div className="min-w-0 pr-2">
-          <p className="truncate text-sm font-medium leading-tight text-text-primary">
-            {title}
-          </p>
-          <p className="mt-1 text-xs text-text-tertiary">{lineCount} lines</p>
+          <p className="text-text-primary truncate text-sm leading-tight font-medium">{title}</p>
+          <p className="text-text-tertiary mt-1 text-xs">{lineCount} lines</p>
         </div>
 
         {/* File Type Badge */}
         <div>
-          <span className="inline-block rounded bg-bg-tertiary px-2 py-1 text-xs font-medium text-text-secondary">
+          <span className="bg-bg-tertiary text-text-secondary inline-block rounded px-2 py-1 text-xs font-medium">
             {fileType}
           </span>
         </div>
       </button>
 
       {/* Action buttons - visible on hover */}
-      <div className="absolute right-2 top-2 flex gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+      <div className="absolute top-2 right-2 flex gap-1 opacity-0 transition-opacity group-hover:opacity-100">
         <button
           onClick={handleCopyClick}
-          className="flex h-7 w-7 items-center justify-center rounded-md bg-bg-secondary text-text-secondary transition-colors hover:bg-bg-tertiary hover:text-text-primary"
+          className="bg-bg-secondary text-text-secondary hover:bg-bg-tertiary hover:text-text-primary flex h-7 w-7 items-center justify-center rounded-md transition-colors"
           title="Copy to clipboard"
         >
           <svg
@@ -117,7 +114,7 @@ export function DocumentCard({
         </button>
         <button
           onClick={handleDownloadClick}
-          className="flex h-7 w-7 items-center justify-center rounded-md bg-bg-secondary text-text-secondary transition-colors hover:bg-bg-tertiary hover:text-text-primary"
+          className="bg-bg-secondary text-text-secondary hover:bg-bg-tertiary hover:text-text-primary flex h-7 w-7 items-center justify-center rounded-md transition-colors"
           title="Download"
         >
           <svg

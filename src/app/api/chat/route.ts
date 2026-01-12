@@ -12,7 +12,6 @@ function getMockResponse(messages: Message[]): string {
   const messageCount = userMessages.length;
 
   if (messageCount === 1) {
-    const userMessage = userMessages[0].content.toLowerCase();
     return `Interesting — so you're looking to design something around "${userMessages[0].content.slice(0, 50)}". Before we dive in, what's prompting this? Is this solving a problem you're seeing, or is it a new initiative?
 
 <brief_update>
@@ -111,17 +110,13 @@ export async function POST(request: Request) {
       messages: claudeMessages,
     });
 
-    const assistantMessage =
-      response.content[0].type === 'text' ? response.content[0].text : '';
+    const assistantMessage = response.content[0].type === 'text' ? response.content[0].text : '';
 
     return Response.json({
       message: assistantMessage,
     });
   } catch (error) {
     console.error('Chat API error:', error);
-    return Response.json(
-      { error: 'Failed to get response from AI' },
-      { status: 500 }
-    );
+    return Response.json({ error: 'Failed to get response from AI' }, { status: 500 });
   }
 }
