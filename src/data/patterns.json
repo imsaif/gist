@@ -1,0 +1,1013 @@
+{
+  "categories": [
+    {
+      "id": "trust",
+      "name": "Trust & Transparency",
+      "color": "#10b981"
+    },
+    {
+      "id": "control",
+      "name": "Control & Agency",
+      "color": "#3b82f6"
+    },
+    {
+      "id": "feedback",
+      "name": "Feedback & Learning",
+      "color": "#8b5cf6"
+    },
+    {
+      "id": "error",
+      "name": "Error Handling",
+      "color": "#ef4444"
+    },
+    {
+      "id": "onboarding",
+      "name": "Onboarding",
+      "color": "#f59e0b"
+    },
+    {
+      "id": "io",
+      "name": "Input & Output",
+      "color": "#06b6d4"
+    },
+    {
+      "id": "collaboration",
+      "name": "Collaboration",
+      "color": "#ec4899"
+    }
+  ],
+  "patterns": [
+    {
+      "id": "explainability",
+      "name": "Explainability",
+      "category": "trust",
+      "oneLiner": "Show users why AI made a decision or recommendation",
+      "problem": "Users don't trust AI outputs when they can't understand the reasoning. Black-box decisions create anxiety and reduce adoption.",
+      "solution": "Provide clear explanations alongside AI outputs. Show the inputs that influenced the decision, confidence factors, or reasoning chain. Let users drill down for more detail.",
+      "examples": [
+        {
+          "product": "ChatGPT",
+          "description": "Shows reasoning steps in responses, explains limitations"
+        },
+        {
+          "product": "Notion AI",
+          "description": "Explains what it understood from the prompt before generating"
+        },
+        {
+          "product": "Grammarly",
+          "description": "Shows why each suggestion improves the writing"
+        }
+      ],
+      "url": "https://aiuxdesign.guide/patterns/explainability",
+      "keywords": [
+        "why",
+        "explain",
+        "reasoning",
+        "understand",
+        "black box",
+        "transparent",
+        "clarity",
+        "decision",
+        "justify",
+        "rationale"
+      ],
+      "relatedPatterns": ["confidence-calibration", "source-attribution"]
+    },
+    {
+      "id": "confidence-calibration",
+      "name": "Confidence Calibration",
+      "category": "trust",
+      "oneLiner": "Show users how certain the AI is about its output",
+      "problem": "Users treat all AI outputs as equally reliable, leading to over-reliance on uncertain results or dismissal of accurate ones.",
+      "solution": "Display confidence indicators alongside outputs. Use visual cues like percentages, color coding, or verbal qualifiers. Help users understand when to trust and when to verify.",
+      "examples": [
+        {
+          "product": "GitHub Copilot",
+          "description": "Shows multiple suggestions ranked by confidence"
+        },
+        {
+          "product": "Google Search",
+          "description": "AI overviews indicate when information might be incomplete"
+        },
+        {
+          "product": "Midjourney",
+          "description": "Shows variation options when uncertain about intent"
+        }
+      ],
+      "url": "https://aiuxdesign.guide/patterns/confidence-calibration",
+      "keywords": [
+        "confidence",
+        "certain",
+        "sure",
+        "accurate",
+        "reliable",
+        "trust",
+        "uncertain",
+        "maybe",
+        "probability",
+        "score"
+      ],
+      "relatedPatterns": ["explainability", "graceful-degradation"]
+    },
+    {
+      "id": "source-attribution",
+      "name": "Source Attribution",
+      "category": "trust",
+      "oneLiner": "Show where AI information comes from",
+      "problem": "Users can't verify AI-generated information without knowing its sources. This creates credibility issues and potential misinformation spread.",
+      "solution": "Cite sources for factual claims. Link to original content. Show what data or context influenced the output. Make it easy to verify claims.",
+      "examples": [
+        {
+          "product": "Perplexity",
+          "description": "Inline citations with numbered sources for every claim"
+        },
+        {
+          "product": "Bing Chat",
+          "description": "Shows source links alongside generated responses"
+        },
+        {
+          "product": "ChatGPT Browse",
+          "description": "Displays visited URLs and quotes from sources"
+        }
+      ],
+      "url": "https://aiuxdesign.guide/patterns/source-attribution",
+      "keywords": [
+        "source",
+        "citation",
+        "reference",
+        "where",
+        "verify",
+        "fact",
+        "credible",
+        "link",
+        "original",
+        "evidence"
+      ],
+      "relatedPatterns": ["explainability", "confidence-calibration"]
+    },
+    {
+      "id": "human-in-the-loop",
+      "name": "Human-in-the-Loop",
+      "category": "control",
+      "oneLiner": "Require user approval before AI executes actions",
+      "problem": "Autonomous AI actions can cause irreversible damage or unwanted changes. Users feel out of control when AI acts without permission.",
+      "solution": "Preview AI actions before execution. Require explicit confirmation for impactful changes. Show what will happen and let users modify before proceeding.",
+      "examples": [
+        {
+          "product": "GitHub Copilot",
+          "description": "Shows suggestion inline, user presses Tab to accept"
+        },
+        {
+          "product": "Notion AI",
+          "description": "Generates content below selection, user chooses to keep or discard"
+        },
+        {
+          "product": "Gmail Smart Compose",
+          "description": "Shows suggestion in gray, user presses Tab to accept"
+        }
+      ],
+      "url": "https://aiuxdesign.guide/patterns/human-in-the-loop",
+      "keywords": [
+        "approve",
+        "confirm",
+        "accept",
+        "review",
+        "permission",
+        "execute",
+        "action",
+        "preview",
+        "before",
+        "consent"
+      ],
+      "relatedPatterns": ["undo-redo", "ai-controls"]
+    },
+    {
+      "id": "undo-redo",
+      "name": "Undo/Redo",
+      "category": "control",
+      "oneLiner": "Let users reverse AI actions easily",
+      "problem": "Users hesitate to try AI features when changes feel permanent. Fear of making mistakes reduces experimentation and adoption.",
+      "solution": "Provide prominent undo for all AI actions. Maintain history for multiple steps back. Make reversal instant and obvious. Consider auto-save before AI operations.",
+      "examples": [
+        {
+          "product": "Figma AI",
+          "description": "Cmd+Z immediately reverses any AI-generated changes"
+        },
+        {
+          "product": "Notion AI",
+          "description": "Shows 'Undo' button immediately after AI writes content"
+        },
+        {
+          "product": "Photoshop AI",
+          "description": "Non-destructive AI layers can be toggled or removed"
+        }
+      ],
+      "url": "https://aiuxdesign.guide/patterns/undo-redo",
+      "keywords": [
+        "undo",
+        "redo",
+        "reverse",
+        "revert",
+        "back",
+        "cancel",
+        "restore",
+        "history",
+        "mistake",
+        "recover"
+      ],
+      "relatedPatterns": ["human-in-the-loop", "version-history"]
+    },
+    {
+      "id": "ai-controls",
+      "name": "AI Controls",
+      "category": "control",
+      "oneLiner": "Give users settings to customize AI behavior",
+      "problem": "One-size-fits-all AI doesn't match individual preferences. Users feel powerless when they can't adjust AI to their needs.",
+      "solution": "Provide toggles for AI features. Let users adjust creativity, tone, verbosity. Allow disabling specific AI behaviors. Remember preferences across sessions.",
+      "examples": [
+        {
+          "product": "ChatGPT",
+          "description": "Custom instructions for response style preferences"
+        },
+        {
+          "product": "Grammarly",
+          "description": "Goals panel to set tone, formality, intent"
+        },
+        {
+          "product": "GitHub Copilot",
+          "description": "Settings to enable/disable for specific file types"
+        }
+      ],
+      "url": "https://aiuxdesign.guide/patterns/ai-controls",
+      "keywords": [
+        "settings",
+        "preferences",
+        "customize",
+        "adjust",
+        "control",
+        "toggle",
+        "configure",
+        "options",
+        "behavior",
+        "personalize"
+      ],
+      "relatedPatterns": ["memory-personalization", "human-in-the-loop"]
+    },
+    {
+      "id": "inline-feedback",
+      "name": "Inline Feedback",
+      "category": "feedback",
+      "oneLiner": "Let users rate or correct AI outputs in context",
+      "problem": "Generic feedback forms are rarely completed. AI can't improve without knowing what works and what doesn't for specific outputs.",
+      "solution": "Place feedback controls directly on AI outputs. Use thumbs up/down, star ratings, or 'this was helpful' buttons. Make feedback frictionless and immediate.",
+      "examples": [
+        {
+          "product": "ChatGPT",
+          "description": "Thumbs up/down on each response with optional explanation"
+        },
+        {
+          "product": "Google Search",
+          "description": "Feedback button on AI overviews"
+        },
+        {
+          "product": "Copilot",
+          "description": "Accept/reject signals which suggestions were useful"
+        }
+      ],
+      "url": "https://aiuxdesign.guide/patterns/inline-feedback",
+      "keywords": [
+        "feedback",
+        "rate",
+        "helpful",
+        "thumbs",
+        "like",
+        "dislike",
+        "improve",
+        "correct",
+        "report",
+        "quality"
+      ],
+      "relatedPatterns": ["regeneration", "memory-personalization"]
+    },
+    {
+      "id": "regeneration",
+      "name": "Regeneration",
+      "category": "feedback",
+      "oneLiner": "Let users request a new AI output if unsatisfied",
+      "problem": "Single outputs rarely match user intent perfectly. Users abandon AI features when first results aren't useful.",
+      "solution": "Offer 'regenerate' or 'try again' buttons. Show variations or alternatives. Let users guide regeneration with additional context or constraints.",
+      "examples": [
+        {
+          "product": "Midjourney",
+          "description": "V1-V4 variation buttons plus reroll for entirely new outputs"
+        },
+        {
+          "product": "ChatGPT",
+          "description": "Regenerate response button, edit and resubmit option"
+        },
+        {
+          "product": "Notion AI",
+          "description": "'Try again' and 'Make longer/shorter' options"
+        }
+      ],
+      "url": "https://aiuxdesign.guide/patterns/regeneration",
+      "keywords": [
+        "regenerate",
+        "try again",
+        "another",
+        "different",
+        "variation",
+        "alternative",
+        "new",
+        "refresh",
+        "retry",
+        "redo"
+      ],
+      "relatedPatterns": ["inline-feedback", "ai-controls"]
+    },
+    {
+      "id": "memory-personalization",
+      "name": "Memory & Personalization",
+      "category": "feedback",
+      "oneLiner": "Remember user preferences and context over time",
+      "problem": "Users repeat the same instructions every session. AI feels generic when it doesn't learn from past interactions.",
+      "solution": "Store user preferences, past corrections, and context. Reference previous conversations. Improve suggestions based on acceptance patterns. Let users view and edit what AI remembers.",
+      "examples": [
+        {
+          "product": "ChatGPT",
+          "description": "Memory feature stores facts and preferences across chats"
+        },
+        {
+          "product": "Spotify",
+          "description": "Recommendations improve based on listening history"
+        },
+        {
+          "product": "GitHub Copilot",
+          "description": "Learns from codebase patterns and accepted suggestions"
+        }
+      ],
+      "url": "https://aiuxdesign.guide/patterns/memory-personalization",
+      "keywords": [
+        "remember",
+        "memory",
+        "personalize",
+        "learn",
+        "history",
+        "preference",
+        "context",
+        "past",
+        "adapt",
+        "custom"
+      ],
+      "relatedPatterns": ["ai-controls", "inline-feedback"]
+    },
+    {
+      "id": "graceful-degradation",
+      "name": "Graceful Degradation",
+      "category": "error",
+      "oneLiner": "Provide useful fallbacks when AI fails or is uncertain",
+      "problem": "AI failures leave users stranded with no path forward. Complete failures erode trust more than partial successes.",
+      "solution": "Offer alternatives when AI can't complete a task. Provide partial results with caveats. Suggest manual paths or simpler requests. Never leave users with just an error message.",
+      "examples": [
+        {
+          "product": "Siri",
+          "description": "Falls back to web search when it can't answer directly"
+        },
+        {
+          "product": "ChatGPT",
+          "description": "Provides partial answer with 'I'm not certain' qualifier"
+        },
+        {
+          "product": "Google Assistant",
+          "description": "Offers to set a reminder when it can't complete action"
+        }
+      ],
+      "url": "https://aiuxdesign.guide/patterns/graceful-degradation",
+      "keywords": [
+        "fallback",
+        "fail",
+        "error",
+        "alternative",
+        "backup",
+        "partial",
+        "degrade",
+        "uncertain",
+        "can't",
+        "unable"
+      ],
+      "relatedPatterns": ["error-recovery", "fallback-behaviors"]
+    },
+    {
+      "id": "error-recovery",
+      "name": "Error Recovery",
+      "category": "error",
+      "oneLiner": "Help users fix issues and try again after AI errors",
+      "problem": "AI errors are frustrating when users don't know what went wrong or how to proceed. Vague error messages cause abandonment.",
+      "solution": "Explain what went wrong in plain language. Suggest specific fixes or alternative approaches. Preserve user input so they don't have to start over. Offer easy retry options.",
+      "examples": [
+        {
+          "product": "ChatGPT",
+          "description": "Explains token limits and suggests breaking up long prompts"
+        },
+        {
+          "product": "DALL-E",
+          "description": "Explains content policy violations with guidance to rephrase"
+        },
+        {
+          "product": "Midjourney",
+          "description": "Shows why a prompt failed and how to modify it"
+        }
+      ],
+      "url": "https://aiuxdesign.guide/patterns/error-recovery",
+      "keywords": [
+        "error",
+        "fix",
+        "wrong",
+        "problem",
+        "issue",
+        "failed",
+        "retry",
+        "help",
+        "recover",
+        "troubleshoot"
+      ],
+      "relatedPatterns": ["graceful-degradation", "fallback-behaviors"]
+    },
+    {
+      "id": "fallback-behaviors",
+      "name": "Fallback Behaviors",
+      "category": "error",
+      "oneLiner": "Define what happens when AI is unavailable or slow",
+      "problem": "AI service outages or slowdowns disrupt user workflows. Users can't complete tasks when AI is the only path.",
+      "solution": "Design manual alternatives for all AI features. Show cached results when real-time isn't available. Provide clear status when AI is processing or unavailable. Queue requests for later processing.",
+      "examples": [
+        {
+          "product": "Gmail",
+          "description": "Smart Compose gracefully disappears when offline"
+        },
+        {
+          "product": "Notion",
+          "description": "AI features show 'unavailable' with manual alternative"
+        },
+        {
+          "product": "Figma",
+          "description": "Manual tools always available alongside AI features"
+        }
+      ],
+      "url": "https://aiuxdesign.guide/patterns/fallback-behaviors",
+      "keywords": [
+        "offline",
+        "unavailable",
+        "slow",
+        "timeout",
+        "backup",
+        "manual",
+        "alternative",
+        "queue",
+        "status",
+        "loading"
+      ],
+      "relatedPatterns": ["graceful-degradation", "error-recovery"]
+    },
+    {
+      "id": "progressive-disclosure",
+      "name": "Progressive Disclosure",
+      "category": "onboarding",
+      "oneLiner": "Reveal AI capabilities gradually as users need them",
+      "problem": "Showing all AI features at once overwhelms users. Complex interfaces prevent discovery of useful capabilities.",
+      "solution": "Start with core AI features, reveal advanced ones over time. Use contextual hints to surface features when relevant. Let users explore at their own pace.",
+      "examples": [
+        {
+          "product": "Notion AI",
+          "description": "Basic commands first, advanced options in submenu"
+        },
+        {
+          "product": "Canva Magic",
+          "description": "Shows simple edit first, reveals more options after"
+        },
+        {
+          "product": "GitHub Copilot",
+          "description": "Basic completions first, chat features introduced later"
+        }
+      ],
+      "url": "https://aiuxdesign.guide/patterns/progressive-disclosure",
+      "keywords": [
+        "overwhelm",
+        "simple",
+        "basic",
+        "advanced",
+        "gradually",
+        "reveal",
+        "discover",
+        "learn",
+        "step",
+        "beginner"
+      ],
+      "relatedPatterns": ["expectation-setting", "tutorial-flows"]
+    },
+    {
+      "id": "expectation-setting",
+      "name": "Expectation Setting",
+      "category": "onboarding",
+      "oneLiner": "Clearly communicate what AI can and cannot do",
+      "problem": "Users have unrealistic expectations from AI hype. Disappointment from unmet expectations damages trust permanently.",
+      "solution": "State capabilities and limitations upfront. Use examples to show what good output looks like. Be honest about accuracy rates and failure modes. Under-promise and over-deliver.",
+      "examples": [
+        {
+          "product": "ChatGPT",
+          "description": "Welcome screen lists capabilities and limitations"
+        },
+        {
+          "product": "DALL-E",
+          "description": "Shows example outputs with prompt that created them"
+        },
+        {
+          "product": "Copilot",
+          "description": "Docs explain it suggests code, doesn't write perfect code"
+        }
+      ],
+      "url": "https://aiuxdesign.guide/patterns/expectation-setting",
+      "keywords": [
+        "expect",
+        "can",
+        "cannot",
+        "limitation",
+        "capability",
+        "honest",
+        "accurate",
+        "promise",
+        "realistic",
+        "understand"
+      ],
+      "relatedPatterns": ["progressive-disclosure", "confidence-calibration"]
+    },
+    {
+      "id": "tutorial-flows",
+      "name": "Tutorial Flows",
+      "category": "onboarding",
+      "oneLiner": "Guide users through AI features with interactive learning",
+      "problem": "Users don't know how to get the best results from AI. Trial-and-error learning is slow and frustrating.",
+      "solution": "Provide guided first-run experiences. Show example prompts and expected outputs. Offer tips contextually during use. Let users practice in low-stakes environments.",
+      "examples": [
+        {
+          "product": "Midjourney",
+          "description": "Getting started guide with example prompts to try"
+        },
+        {
+          "product": "ChatGPT",
+          "description": "Example prompts on empty state to demonstrate capabilities"
+        },
+        {
+          "product": "Copilot",
+          "description": "Interactive tutorial showing how to accept suggestions"
+        }
+      ],
+      "url": "https://aiuxdesign.guide/patterns/tutorial-flows",
+      "keywords": [
+        "tutorial",
+        "guide",
+        "learn",
+        "teach",
+        "example",
+        "walkthrough",
+        "onboard",
+        "help",
+        "start",
+        "how to"
+      ],
+      "relatedPatterns": ["progressive-disclosure", "expectation-setting"]
+    },
+    {
+      "id": "prompt-suggestions",
+      "name": "Prompt Suggestions",
+      "category": "io",
+      "oneLiner": "Help users craft better prompts with suggestions",
+      "problem": "Users don't know what to ask or how to ask it. Empty text boxes create friction and reduce engagement.",
+      "solution": "Offer starter prompts and templates. Suggest refinements based on partial input. Show examples of effective prompts. Auto-complete common requests.",
+      "examples": [
+        {
+          "product": "ChatGPT",
+          "description": "Starter prompts on empty state, GPT-specific suggestions"
+        },
+        {
+          "product": "Perplexity",
+          "description": "Related questions and suggested follow-ups"
+        },
+        {
+          "product": "Midjourney",
+          "description": "Style and parameter suggestions as you type"
+        }
+      ],
+      "url": "https://aiuxdesign.guide/patterns/prompt-suggestions",
+      "keywords": [
+        "prompt",
+        "suggest",
+        "example",
+        "template",
+        "help",
+        "start",
+        "idea",
+        "what to",
+        "autocomplete",
+        "recommend"
+      ],
+      "relatedPatterns": ["tutorial-flows", "structured-output"]
+    },
+    {
+      "id": "structured-output",
+      "name": "Structured Output",
+      "category": "io",
+      "oneLiner": "Present AI outputs in organized, scannable formats",
+      "problem": "Wall-of-text AI responses are hard to read and use. Users miss important information in unstructured output.",
+      "solution": "Format outputs with headers, bullets, and sections. Use tables for comparisons. Highlight key information. Make outputs easy to skim and reference.",
+      "examples": [
+        {
+          "product": "ChatGPT",
+          "description": "Uses markdown formatting, headers, code blocks"
+        },
+        {
+          "product": "Perplexity",
+          "description": "Structured answers with sections and citations"
+        },
+        {
+          "product": "Claude",
+          "description": "Organized responses with clear structure and artifacts"
+        }
+      ],
+      "url": "https://aiuxdesign.guide/patterns/structured-output",
+      "keywords": [
+        "format",
+        "structure",
+        "organize",
+        "readable",
+        "clear",
+        "section",
+        "bullet",
+        "header",
+        "scan",
+        "layout"
+      ],
+      "relatedPatterns": ["prompt-suggestions", "explainability"]
+    },
+    {
+      "id": "multimodal-input",
+      "name": "Multimodal Input",
+      "category": "io",
+      "oneLiner": "Accept multiple input types: text, voice, images, files",
+      "problem": "Text-only input limits how users can communicate with AI. Some requests are easier to show than describe.",
+      "solution": "Support image uploads, voice input, file attachments. Let users combine modalities. Show what input types are accepted. Handle each modality gracefully.",
+      "examples": [
+        {
+          "product": "ChatGPT",
+          "description": "Accepts text, images, files, and voice input"
+        },
+        {
+          "product": "Google Lens",
+          "description": "Visual search from camera or uploaded images"
+        },
+        {
+          "product": "Claude",
+          "description": "Analyzes uploaded documents, images, and code"
+        }
+      ],
+      "url": "https://aiuxdesign.guide/patterns/multimodal-input",
+      "keywords": [
+        "image",
+        "voice",
+        "upload",
+        "file",
+        "photo",
+        "camera",
+        "attach",
+        "visual",
+        "audio",
+        "document"
+      ],
+      "relatedPatterns": ["prompt-suggestions", "structured-output"]
+    },
+    {
+      "id": "ai-human-handoff",
+      "name": "AI-Human Handoff",
+      "category": "collaboration",
+      "oneLiner": "Smoothly transition between AI and human assistance",
+      "problem": "AI can't handle everything. Users get stuck when there's no path to human help. Abrupt handoffs lose context.",
+      "solution": "Recognize when AI isn't helping and offer human support. Transfer full context to human agents. Make handoff seamless and preserve conversation history.",
+      "examples": [
+        {
+          "product": "Intercom",
+          "description": "Bot recognizes frustration and offers human agent"
+        },
+        {
+          "product": "Zendesk",
+          "description": "AI summarizes issue for human agent when escalating"
+        },
+        {
+          "product": "Apple Support",
+          "description": "Chat transfers to human with full conversation visible"
+        }
+      ],
+      "url": "https://aiuxdesign.guide/patterns/ai-human-handoff",
+      "keywords": [
+        "human",
+        "support",
+        "agent",
+        "help",
+        "escalate",
+        "transfer",
+        "real person",
+        "talk to",
+        "contact",
+        "live"
+      ],
+      "relatedPatterns": ["shared-context", "graceful-degradation"]
+    },
+    {
+      "id": "shared-context",
+      "name": "Shared Context",
+      "category": "collaboration",
+      "oneLiner": "Maintain context across AI interactions and collaborators",
+      "problem": "Users repeat themselves when context is lost. Team members can't see what AI discussed with colleagues. Context switching wastes time.",
+      "solution": "Persist conversation context across sessions. Share AI interactions with team members. Show what context AI is using. Let users add or correct context.",
+      "examples": [
+        {
+          "product": "Notion AI",
+          "description": "AI can access page content and linked pages as context"
+        },
+        {
+          "product": "Slack AI",
+          "description": "Summarizes channels visible to the team"
+        },
+        {
+          "product": "GitHub Copilot Chat",
+          "description": "Uses open files and codebase as context"
+        }
+      ],
+      "url": "https://aiuxdesign.guide/patterns/shared-context",
+      "keywords": [
+        "context",
+        "remember",
+        "share",
+        "team",
+        "collaborate",
+        "previous",
+        "history",
+        "aware",
+        "know",
+        "connected"
+      ],
+      "relatedPatterns": ["memory-personalization", "ai-human-handoff"]
+    },
+    {
+      "id": "version-history",
+      "name": "Version History",
+      "category": "collaboration",
+      "oneLiner": "Track and allow reverting AI-generated changes",
+      "problem": "AI changes can be hard to track. Teams need to see what AI contributed. Lost work from AI errors causes frustration.",
+      "solution": "Log all AI-generated content and edits. Show version history with AI contributions marked. Allow comparing and reverting to previous versions. Make AI changes auditable.",
+      "examples": [
+        {
+          "product": "Google Docs",
+          "description": "Version history shows AI-generated content"
+        },
+        {
+          "product": "Notion",
+          "description": "Page history includes AI edits"
+        },
+        {
+          "product": "GitHub",
+          "description": "Copilot suggestions visible in git history"
+        }
+      ],
+      "url": "https://aiuxdesign.guide/patterns/version-history",
+      "keywords": [
+        "version",
+        "history",
+        "track",
+        "revert",
+        "previous",
+        "change",
+        "audit",
+        "log",
+        "compare",
+        "restore"
+      ],
+      "relatedPatterns": ["undo-redo", "shared-context"]
+    },
+    {
+      "id": "loading-progress",
+      "name": "Loading & Progress",
+      "category": "feedback",
+      "oneLiner": "Show AI processing status and estimated completion",
+      "problem": "Users don't know if AI is working or stuck. Long waits without feedback feel broken. Uncertainty causes users to abandon or retry.",
+      "solution": "Show processing indicators immediately. Provide progress updates for long operations. Estimate remaining time when possible. Show what AI is doing if multi-step.",
+      "examples": [
+        {
+          "product": "ChatGPT",
+          "description": "Typing indicator while generating response"
+        },
+        {
+          "product": "Midjourney",
+          "description": "Shows percentage progress and preview as image generates"
+        },
+        {
+          "product": "Runway",
+          "description": "Step-by-step progress for video generation"
+        }
+      ],
+      "url": "https://aiuxdesign.guide/patterns/loading-progress",
+      "keywords": [
+        "loading",
+        "progress",
+        "wait",
+        "processing",
+        "generating",
+        "status",
+        "thinking",
+        "working",
+        "time",
+        "estimate"
+      ],
+      "relatedPatterns": ["streaming-output", "fallback-behaviors"]
+    },
+    {
+      "id": "streaming-output",
+      "name": "Streaming Output",
+      "category": "io",
+      "oneLiner": "Show AI output progressively as it's generated",
+      "problem": "Waiting for complete AI responses feels slow. Users can't start reading or processing until generation finishes.",
+      "solution": "Stream text as it's generated. Show partial images during creation. Let users start interacting with partial output. Provide 'stop generating' option.",
+      "examples": [
+        {
+          "product": "ChatGPT",
+          "description": "Streams response word by word as generated"
+        },
+        {
+          "product": "Claude",
+          "description": "Progressive text rendering with stop button"
+        },
+        {
+          "product": "Midjourney",
+          "description": "Shows image progressively from blur to sharp"
+        }
+      ],
+      "url": "https://aiuxdesign.guide/patterns/streaming-output",
+      "keywords": [
+        "stream",
+        "progressive",
+        "real-time",
+        "live",
+        "typing",
+        "generating",
+        "partial",
+        "stop",
+        "continuous",
+        "flow"
+      ],
+      "relatedPatterns": ["loading-progress", "structured-output"]
+    },
+    {
+      "id": "scope-boundaries",
+      "name": "Scope Boundaries",
+      "category": "trust",
+      "oneLiner": "Clearly define what AI will and won't do",
+      "problem": "Users ask AI to do things outside its capabilities or permissions. Unclear boundaries lead to frustration or risky behavior.",
+      "solution": "State scope explicitly in the interface. Decline out-of-scope requests gracefully. Explain why certain actions aren't available. Suggest alternatives within scope.",
+      "examples": [
+        {
+          "product": "ChatGPT",
+          "description": "Declines harmful requests with explanation"
+        },
+        {
+          "product": "Claude",
+          "description": "Explains when tasks are outside its abilities"
+        },
+        {
+          "product": "Copilot",
+          "description": "Focuses on coding, redirects non-coding questions"
+        }
+      ],
+      "url": "https://aiuxdesign.guide/patterns/scope-boundaries",
+      "keywords": [
+        "scope",
+        "boundary",
+        "limit",
+        "can't",
+        "won't",
+        "refuse",
+        "decline",
+        "outside",
+        "restricted",
+        "allowed"
+      ],
+      "relatedPatterns": ["expectation-setting", "graceful-degradation"]
+    },
+    {
+      "id": "editable-output",
+      "name": "Editable Output",
+      "category": "control",
+      "oneLiner": "Let users modify AI-generated content directly",
+      "problem": "AI output is rarely perfect. Users need to make tweaks but can only regenerate entirely or copy-paste elsewhere.",
+      "solution": "Make AI output directly editable in place. Track user modifications. Offer AI assistance for editing ('make this shorter'). Preserve formatting during edits.",
+      "examples": [
+        {
+          "product": "Notion AI",
+          "description": "Generated content is immediately editable"
+        },
+        {
+          "product": "Canva Magic Write",
+          "description": "AI text is editable with AI refinement options"
+        },
+        {
+          "product": "v0",
+          "description": "Generated code can be edited in the preview"
+        }
+      ],
+      "url": "https://aiuxdesign.guide/patterns/editable-output",
+      "keywords": [
+        "edit",
+        "modify",
+        "change",
+        "tweak",
+        "adjust",
+        "customize",
+        "refine",
+        "update",
+        "fix",
+        "improve"
+      ],
+      "relatedPatterns": ["regeneration", "human-in-the-loop"]
+    },
+    {
+      "id": "contextual-triggers",
+      "name": "Contextual Triggers",
+      "category": "io",
+      "oneLiner": "Surface AI features when contextually relevant",
+      "problem": "Users forget AI features exist. Hunting through menus to find AI options disrupts workflow.",
+      "solution": "Show AI options based on user actions and context. Use selection-based triggers, empty state suggestions, and smart defaults. Make AI feel integrated, not separate.",
+      "examples": [
+        {
+          "product": "Notion",
+          "description": "AI option appears when you select text"
+        },
+        {
+          "product": "Gmail",
+          "description": "Smart Reply appears after reading messages"
+        },
+        {
+          "product": "Figma",
+          "description": "AI features appear in right-click menu for selections"
+        }
+      ],
+      "url": "https://aiuxdesign.guide/patterns/contextual-triggers",
+      "keywords": [
+        "context",
+        "trigger",
+        "suggest",
+        "relevant",
+        "appear",
+        "when",
+        "selection",
+        "menu",
+        "integrated",
+        "smart"
+      ],
+      "relatedPatterns": ["prompt-suggestions", "progressive-disclosure"]
+    },
+    {
+      "id": "comparison-view",
+      "name": "Comparison View",
+      "category": "io",
+      "oneLiner": "Show original and AI-modified content side by side",
+      "problem": "Users can't assess AI changes without seeing what changed. Accepting AI edits blindly risks unintended modifications.",
+      "solution": "Display before/after comparisons. Highlight specific changes. Let users accept individual changes or all at once. Show diff views for text modifications.",
+      "examples": [
+        {
+          "product": "Grammarly",
+          "description": "Shows original and suggested text with changes highlighted"
+        },
+        {
+          "product": "GitHub Copilot",
+          "description": "Diff view for multi-line suggestions"
+        },
+        {
+          "product": "Microsoft Editor",
+          "description": "Side-by-side comparison for rewrites"
+        }
+      ],
+      "url": "https://aiuxdesign.guide/patterns/comparison-view",
+      "keywords": [
+        "compare",
+        "before",
+        "after",
+        "diff",
+        "change",
+        "original",
+        "modified",
+        "side by side",
+        "highlight",
+        "review"
+      ],
+      "relatedPatterns": ["editable-output", "human-in-the-loop"]
+    }
+  ]
+}

@@ -1,9 +1,15 @@
 // Message types
+export interface IdentifiedPatternInMessage {
+  patternId: string;
+  reason: string;
+}
+
 export interface Message {
   id: string;
   role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
+  identifiedPattern?: IdentifiedPatternInMessage;
 }
 
 // Brief types
@@ -17,11 +23,19 @@ export interface ReadyToDesign {
   checklist: string[];
 }
 
+export interface PatternRecommendation {
+  patternId: string;
+  reason: string;
+  addedToBrief: boolean;
+}
+
 export interface Brief {
   goal: string | null;
   context: string[];
   decisions: Decision[];
   openQuestions: string[];
+  patterns: PatternRecommendation[];
+  successCriteria: string[];
   readyToDesign: ReadyToDesign | null;
 }
 
@@ -31,6 +45,8 @@ export interface BriefUpdate {
   context?: string[] | null;
   decisions?: Decision[] | null;
   openQuestions?: string[] | null;
+  patterns?: string[] | null;
+  successCriteria?: string[] | null;
   readyToDesign?: ReadyToDesign | null;
 }
 

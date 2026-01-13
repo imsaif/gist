@@ -44,34 +44,34 @@
 
 ### 1.2 Pattern System
 
-- [ ] Create pattern data structure
-- [ ] Add all 28 patterns to `data/patterns.json`
-- [ ] Pattern categories (Trust, Control, Feedback, Error, Onboarding, I/O, Collab)
-- [ ] Pattern matching logic (`lib/patterns/matcher.ts`)
-- [ ] Pattern identification in AI responses (`<pattern_identified>` tags)
+- [x] Create pattern data structure
+- [x] Add all 28 patterns to `data/patterns.json`
+- [x] Pattern categories (Trust, Control, Feedback, Error, Onboarding, I/O, Collab)
+- [x] Pattern matching logic (`lib/patterns/matcher.ts`)
+- [x] Pattern identification in AI responses (`<pattern_identified>` tags)
 
 **Files:**
 
-- `types/patterns.ts` - Pattern interfaces
-- `data/patterns.json` - All 28 patterns
-- `lib/patterns/patterns.ts` - Pattern data loader
-- `lib/patterns/matcher.ts` - Keyword matching logic
+- `types/patterns.ts` - Pattern interfaces ✓
+- `data/patterns.json` - All 28 patterns ✓
+- `lib/patterns/patterns.ts` - Pattern data loader ✓
+- `lib/patterns/matcher.ts` - Keyword matching logic ✓
 
 ### 1.3 Pattern Cards in Chat
 
-- [ ] PatternCard component (inline in conversation)
-- [ ] "See examples" button (links to aiuxdesign.guide)
-- [ ] "Add to brief" button
-- [ ] Pattern category colors
+- [x] PatternCard component (inline in conversation)
+- [x] "See examples" button (links to aiuxdesign.guide)
+- [x] "Add to brief" button
+- [x] Pattern category colors
 
 **Files:**
 
-- `components/Chat/PatternCard.tsx`
+- `components/Chat/PatternCard.tsx` ✓
 
 ### 1.4 Enhanced Brief Artifact
 
-- [ ] Update Brief type with new fields (patterns, successCriteria)
-- [ ] Recommended Patterns section in artifact
+- [x] Update Brief type with new fields (patterns, successCriteria)
+- [x] Recommended Patterns section in artifact
 - [ ] Success Criteria section
 - [ ] Pattern links in export
 
@@ -82,14 +82,14 @@
 
 ### 1.5 Updated System Prompt
 
-- [ ] Add pattern identification instructions
-- [ ] Add `<pattern_identified>` format
-- [ ] Include pattern data in prompt
-- [ ] Update brief_update format
+- [x] Add pattern identification instructions
+- [x] Add `<pattern_identified>` format
+- [x] Include pattern data in prompt
+- [x] Update brief_update format
 
 **Files:**
 
-- `lib/constants.ts` - Update SYSTEM_PROMPT
+- `lib/constants.ts` - Update SYSTEM_PROMPT ✓
 
 ### 1.6 PDF Export
 

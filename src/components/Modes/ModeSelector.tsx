@@ -12,14 +12,12 @@ export function ModeSelector() {
       {/* Top row - 3 cards */}
       <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
         <ModeCard
-          mode="brief"
           title="Brief"
           description="Clarify before you build"
           icon={<span>📋</span>}
           href="/brief"
         />
         <ModeCard
-          mode="critique"
           title="Critique"
           description="Review a design"
           icon={<span>🔍</span>}
@@ -27,7 +25,6 @@ export function ModeSelector() {
           disabled
         />
         <ModeCard
-          mode="research"
           title="Research"
           description="Plan what to learn"
           icon={<span>🔬</span>}
@@ -39,7 +36,6 @@ export function ModeSelector() {
       {/* Bottom row - 2 cards centered */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:px-16">
         <ModeCard
-          mode="stakeholder"
           title="Stakeholder"
           description="Prepare for hard Qs"
           icon={<span>🎯</span>}
@@ -47,7 +43,6 @@ export function ModeSelector() {
           disabled
         />
         <ModeCard
-          mode="ia"
           title="IA"
           description="Structure info & nav"
           icon={<span>🗂️</span>}

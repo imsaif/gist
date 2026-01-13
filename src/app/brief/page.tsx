@@ -4,7 +4,12 @@ import { useState, useCallback } from 'react';
 import Link from 'next/link';
 import { Message, Brief } from '@/types';
 import { INITIAL_BRIEF, INITIAL_MESSAGES } from '@/lib/constants';
-import { parseBriefUpdate, mergeBriefUpdate } from '@/lib/briefParser';
+import {
+  parseBriefUpdate,
+  mergeBriefUpdate,
+  addPatternToBrief,
+  isPatternInBrief,
+} from '@/lib/briefParser';
 import { BriefModal } from '@/components/Brief/BriefModal';
 import { Toast } from '@/components/Toast';
 import {
@@ -12,6 +17,8 @@ import {
   getBriefDocumentInfo,
   generateBriefMarkdown,
 } from '@/components/Brief/DocumentCard';
+import { PatternCard } from '@/components/Chat/PatternCard';
+import { getPatternById } from '@/lib/patterns/patterns';
 
 function generateId(): string {
   return Math.random().toString(36).substring(2, 15);
@@ -59,13 +66,14 @@ export default function BriefMode() {
         }
 
         const data = await response.json();
-        const { displayContent, briefUpdate } = parseBriefUpdate(data.message);
+        const { displayContent, briefUpdate, identifiedPattern } = parseBriefUpdate(data.message);
 
         const aiMessage: Message = {
           id: generateId(),
           role: 'assistant',
           content: displayContent,
           timestamp: new Date(),
+          identifiedPattern: identifiedPattern ?? undefined,
         };
         setMessages((prev) => [...prev, aiMessage]);
 
@@ -127,6 +135,11 @@ export default function BriefMode() {
     }
   }, [brief.readyToDesign]);
 
+  const handleAddPatternToBrief = useCallback((patternId: string, reason: string) => {
+    setBrief((prev) => addPatternToBrief(prev, patternId, reason));
+    showToast('Pattern added to brief');
+  }, []);
+
   const handleDownloadPrompt = useCallback(() => {
     if (brief.readyToDesign?.prompt) {
       const blob = new Blob([brief.readyToDesign.prompt], { type: 'text/plain' });
@@ -171,24 +184,48 @@ export default function BriefMode() {
         <div className="border-border-light flex w-1/2 flex-col border-r">
           <div className="flex-1 overflow-y-auto p-6">
             <div className="space-y-4">
-              {messages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-                >
-                  <div
-                    className={`max-w-[80%] rounded-2xl px-4 py-3 ${
-                      message.role === 'user'
-                        ? 'bg-msg-user-bg text-msg-user-text'
-                        : 'bg-msg-ai-bg text-text-primary'
-                    }`}
-                  >
-                    <p className="text-base leading-relaxed whitespace-pre-wrap">
-                      {message.content}
-                    </p>
+              {messages.map((message) => {
+                const identifiedPattern = message.identifiedPattern
+                  ? getPatternById(message.identifiedPattern.patternId)
+                  : null;
+
+                return (
+                  <div key={message.id}>
+                    <div
+                      className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                    >
+                      <div
+                        className={`max-w-[80%] rounded-2xl px-4 py-3 ${
+                          message.role === 'user'
+                            ? 'bg-msg-user-bg text-msg-user-text'
+                            : 'bg-msg-ai-bg text-text-primary'
+                        }`}
+                      >
+                        <p className="text-base leading-relaxed whitespace-pre-wrap">
+                          {message.content}
+                        </p>
+                      </div>
+                    </div>
+                    {identifiedPattern && message.identifiedPattern && (
+                      <div className="mt-2 flex justify-start">
+                        <div className="max-w-[80%]">
+                          <PatternCard
+                            pattern={identifiedPattern}
+                            reason={message.identifiedPattern.reason}
+                            onAddToBrief={() =>
+                              handleAddPatternToBrief(
+                                identifiedPattern.id,
+                                message.identifiedPattern!.reason
+                              )
+                            }
+                            isAddedToBrief={isPatternInBrief(brief, identifiedPattern.id)}
+                          />
+                        </div>
+                      </div>
+                    )}
                   </div>
-                </div>
-              ))}
+                );
+              })}
               {isLoading && (
                 <div className="flex justify-start">
                   <div className="bg-msg-ai-bg text-text-secondary rounded-2xl px-4 py-3">
@@ -287,10 +324,51 @@ export default function BriefMode() {
                   </div>
 
                   <div className="flex items-center gap-3">
+                    <div
+                      className={`h-2 w-2 rounded-full ${brief.patterns.length > 0 ? 'bg-blue-500' : 'bg-border-medium'}`}
+                    />
+                    <span
+                      className={`text-sm ${brief.patterns.length > 0 ? 'text-text-primary' : 'text-text-tertiary'}`}
+                    >
+                      Patterns{' '}
+                      {brief.patterns.length > 0 && `— ${brief.patterns.length} recommended`}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-3">
                     <div className="bg-border-medium h-2 w-2 rounded-full" />
                     <span className="text-text-tertiary text-sm">Ready to Design</span>
                   </div>
                 </div>
+
+                {/* Show patterns if any */}
+                {brief.patterns.length > 0 && (
+                  <div className="mt-6 space-y-2">
+                    <h3 className="text-text-tertiary text-xs font-medium uppercase">
+                      Recommended Patterns
+                    </h3>
+                    <div className="space-y-2">
+                      {brief.patterns.map((p) => {
+                        const pattern = getPatternById(p.patternId);
+                        if (!pattern) return null;
+                        return (
+                          <a
+                            key={p.patternId}
+                            href={pattern.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="border-border-light hover:border-accent-primary block rounded-lg border bg-white p-3 transition-colors"
+                          >
+                            <div className="text-text-primary text-sm font-medium">
+                              {pattern.name}
+                            </div>
+                            <div className="text-text-tertiary text-xs">{pattern.oneLiner}</div>
+                          </a>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 

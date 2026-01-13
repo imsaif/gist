@@ -10,6 +10,12 @@
 
 ## Recent Sessions
 
+### Session: January 13, 2026 (MacBook) - Pattern System
+
+- **Files changed:** 12
+- **Pattern:** Pattern identification system
+- **Notes:** Built complete pattern system with 28 AI UX patterns across 7 categories. Created PatternCard component for inline display in chat, pattern matching logic (keyword + semantic), and updated system prompt with pattern identification instructions. Patterns now appear during conversation and can be added to brief.
+
 ### Session: January 12, 2026 (MacBook) - Code Quality Setup
 
 - **Files changed:** 21
@@ -30,13 +36,18 @@
 - `src/lib/briefParser.ts` - Parse AI responses for brief updates
 - `src/components/Brief/` - Document cards, modal viewer
 - `src/components/Modes/` - Mode selection components
+- `src/components/Chat/PatternCard.tsx` - Pattern identification cards
+- `src/lib/patterns/` - Pattern data loader and matcher
+- `src/data/patterns.json` - All 28 AI UX patterns
 - `TODO.md` - Comprehensive task list from v2 spec
 
 ## Architecture Notes
 
 - Two-panel layout: Chat (left), Brief/Files (right)
 - AI responses contain `<brief_update>` JSON tags for state updates
+- AI responses can contain `<pattern_identified>` JSON tags for pattern cards
 - Document cards show files with hover actions (copy, download)
+- PatternCard appears inline in chat when AI identifies relevant patterns
 - Mock mode (`MOCK_MODE=true`) for testing without API key
 
 ## Commands
