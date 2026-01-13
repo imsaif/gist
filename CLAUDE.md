@@ -10,6 +10,12 @@
 
 ## Recent Sessions
 
+### Session: January 13, 2026 (MacBook) - Landing Page Redesign
+
+- **Files changed:** 19
+- **Pattern:** Landing page and branding
+- **Notes:** Redesigned landing page with absurd.design illustrations, side-by-side hero layout, and Heroicons for value props. Updated branding to match aiuxdesign.guide (Satoshi font, dark slate colors). Fixed text accessibility (WCAG AA compliance). Added mode switcher to chat header.
+
 ### Session: January 13, 2026 (MacBook) - Pattern System
 
 - **Files changed:** 12

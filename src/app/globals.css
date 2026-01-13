@@ -9,11 +9,11 @@
   /* Text */
   --text-primary: #111827;
   --text-secondary: #6b7280;
-  --text-tertiary: #9ca3af;
+  --text-tertiary: #71717a;
 
   /* Accent */
-  --accent-primary: #2563eb;
-  --accent-hover: #1d4ed8;
+  --accent-primary: #1e293b;
+  --accent-hover: #0f172a;
 
   /* Borders */
   --border-light: #e5e7eb;
@@ -21,7 +21,7 @@
 
   /* Messages */
   --msg-ai-bg: #f3f4f6;
-  --msg-user-bg: #2563eb;
+  --msg-user-bg: #1e293b;
   --msg-user-text: #ffffff;
 }
 
@@ -39,7 +39,7 @@
   --color-msg-ai-bg: var(--msg-ai-bg);
   --color-msg-user-bg: var(--msg-user-bg);
   --color-msg-user-text: var(--msg-user-text);
-  --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans: 'Satoshi', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 body {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { Message, Brief } from '@/types';
 import { INITIAL_BRIEF, INITIAL_MESSAGES } from '@/lib/constants';
@@ -20,6 +20,26 @@ import {
 import { PatternCard } from '@/components/Chat/PatternCard';
 import { getPatternById } from '@/lib/patterns/patterns';
 
+const MODES = [
+  { id: 'brief', name: 'Brief', icon: '📋', description: 'Clarify before you build', active: true },
+  { id: 'critique', name: 'Critique', icon: '🔍', description: 'Review a design', active: false },
+  {
+    id: 'research',
+    name: 'Research',
+    icon: '🔬',
+    description: 'Plan what to learn',
+    active: false,
+  },
+  {
+    id: 'stakeholder',
+    name: 'Stakeholder',
+    icon: '🎯',
+    description: 'Prepare for hard Qs',
+    active: false,
+  },
+  { id: 'ia', name: 'IA', icon: '🗂️', description: 'Structure info & nav', active: false },
+] as const;
+
 function generateId(): string {
   return Math.random().toString(36).substring(2, 15);
 }
@@ -32,6 +52,20 @@ export default function BriefMode() {
   const [inputValue, setInputValue] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [toast, setToast] = useState({ isVisible: false, message: '' });
+  const [isModeDropdownOpen, setIsModeDropdownOpen] = useState(false);
+  const [currentMode] = useState('brief');
+  const modeDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (modeDropdownRef.current && !modeDropdownRef.current.contains(event.target as Node)) {
+        setIsModeDropdownOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const showToast = (message: string) => {
     setToast({ isVisible: true, message });
@@ -164,16 +198,96 @@ export default function BriefMode() {
             Gist
           </Link>
           <span className="text-text-tertiary">/</span>
-          <span className="bg-bg-secondary text-text-secondary rounded-full px-3 py-1 text-sm font-medium">
-            Brief Mode
-          </span>
+
+          {/* Mode Switcher Dropdown */}
+          <div className="relative" ref={modeDropdownRef}>
+            <button
+              onClick={() => setIsModeDropdownOpen(!isModeDropdownOpen)}
+              className="bg-bg-secondary hover:bg-bg-tertiary flex items-center gap-2 rounded-full px-3 py-1 text-sm font-medium transition-colors"
+            >
+              <span>{MODES.find((m) => m.id === currentMode)?.icon}</span>
+              <span className="text-text-secondary">
+                {MODES.find((m) => m.id === currentMode)?.name} Mode
+              </span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className={`text-text-tertiary transition-transform ${isModeDropdownOpen ? 'rotate-180' : ''}`}
+              >
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+            </button>
+
+            {isModeDropdownOpen && (
+              <div className="border-border-light absolute top-full left-0 z-50 mt-2 w-64 overflow-hidden rounded-xl border bg-white shadow-lg">
+                <div className="p-2">
+                  <p className="text-text-tertiary px-3 py-2 text-xs font-medium uppercase">
+                    Switch Mode
+                  </p>
+                  {MODES.map((mode) => (
+                    <button
+                      key={mode.id}
+                      disabled={!mode.active}
+                      onClick={() => {
+                        if (mode.active) {
+                          setIsModeDropdownOpen(false);
+                        }
+                      }}
+                      className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-colors ${
+                        mode.id === currentMode
+                          ? 'bg-accent-primary/10 text-accent-primary'
+                          : mode.active
+                            ? 'hover:bg-bg-secondary text-text-primary'
+                            : 'text-text-tertiary cursor-not-allowed opacity-50'
+                      }`}
+                    >
+                      <span className="text-lg">{mode.icon}</span>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium">{mode.name}</span>
+                          {!mode.active && (
+                            <span className="bg-bg-tertiary text-text-tertiary rounded px-1.5 py-0.5 text-xs">
+                              Soon
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-text-tertiary text-xs">{mode.description}</p>
+                      </div>
+                      {mode.id === currentMode && (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M20 6 9 17l-5-5" />
+                        </svg>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <button
             onClick={handleNewChat}
             className="border-border-light text-text-secondary hover:bg-bg-secondary rounded-lg border px-4 py-2 text-sm font-medium transition-colors"
           >
-            New Brief
+            New
           </button>
         </div>
       </header>
