@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback, useRef, useEffect, Suspense } from 'react';
 import Link from 'next/link';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { Message, Brief } from '@/types';
 import { INITIAL_BRIEF, INITIAL_MESSAGES } from '@/lib/constants';
 import {
@@ -19,6 +20,27 @@ import {
 } from '@/components/Brief/DocumentCard';
 import { PatternCard } from '@/components/Chat/PatternCard';
 import { getPatternById } from '@/lib/patterns/patterns';
+
+// Wrapper component to handle search params with Suspense
+function BriefModeContent() {
+  return <BriefModeInner />;
+}
+
+export default function BriefMode() {
+  return (
+    <Suspense fallback={<BriefModeLoading />}>
+      <BriefModeContent />
+    </Suspense>
+  );
+}
+
+function BriefModeLoading() {
+  return (
+    <div className="flex h-screen items-center justify-center">
+      <div className="text-text-tertiary">Loading...</div>
+    </div>
+  );
+}
 
 const MODES = [
   { id: 'brief', name: 'Brief', icon: '📋', description: 'Clarify before you build', active: true },
@@ -44,7 +66,9 @@ function generateId(): string {
   return Math.random().toString(36).substring(2, 15);
 }
 
-export default function BriefMode() {
+function BriefModeInner() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const [messages, setMessages] = useState<Message[]>(INITIAL_MESSAGES);
   const [brief, setBrief] = useState<Brief>(INITIAL_BRIEF);
   const [isLoading, setIsLoading] = useState(false);
@@ -54,6 +78,7 @@ export default function BriefMode() {
   const [toast, setToast] = useState({ isVisible: false, message: '' });
   const [isModeDropdownOpen, setIsModeDropdownOpen] = useState(false);
   const [currentMode] = useState('brief');
+  const [initialMessageSent, setInitialMessageSent] = useState(false);
   const modeDropdownRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown when clicking outside
@@ -66,6 +91,68 @@ export default function BriefMode() {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Handle initial message from URL query parameter
+  useEffect(() => {
+    const initialQuery = searchParams.get('q');
+    if (initialQuery && !initialMessageSent && !isLoading) {
+      setInitialMessageSent(true);
+      // Clear the URL parameter
+      router.replace('/brief', { scroll: false });
+      // Send the initial message
+      handleSendMessageDirect(initialQuery);
+    }
+  }, [searchParams, initialMessageSent, isLoading, router]);
+
+  // Direct send function that doesn't depend on state (for initial message)
+  const handleSendMessageDirect = async (content: string) => {
+    if (!content.trim()) return;
+
+    setError(null);
+
+    const userMessage: Message = {
+      id: generateId(),
+      role: 'user',
+      content: content.trim(),
+      timestamp: new Date(),
+    };
+    const newMessages = [...INITIAL_MESSAGES, userMessage];
+    setMessages(newMessages);
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: newMessages }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to get response');
+      }
+
+      const data = await response.json();
+      const { displayContent, briefUpdate, identifiedPattern } = parseBriefUpdate(data.message);
+
+      const aiMessage: Message = {
+        id: generateId(),
+        role: 'assistant',
+        content: displayContent,
+        timestamp: new Date(),
+        identifiedPattern: identifiedPattern ?? undefined,
+      };
+      setMessages((prev) => [...prev, aiMessage]);
+
+      if (briefUpdate) {
+        setBrief((prev) => mergeBriefUpdate(prev, briefUpdate));
+      }
+    } catch (err) {
+      console.error('Chat error:', err);
+      setError('Failed to get response. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const showToast = (message: string) => {
     setToast({ isVisible: true, message });

@@ -10,6 +10,12 @@
 
 ## Recent Sessions
 
+### Session: January 19, 2026 (MacBook) - Chat-First Landing Page
+
+- **Files changed:** 2
+- **Pattern:** Landing page redesign
+- **Notes:** Redesigned landing page with chat-first interface. Added AI greeting bubble, large input field with rotating placeholder, and clickable prompt chips. Implemented URL query param routing to pass initial message to brief page. Added Suspense boundary for useSearchParams. Kept illustration and value props sections.
+
 ### Session: January 13, 2026 (MacBook) - Landing Page Redesign
 
 - **Files changed:** 19

@@ -1,7 +1,8 @@
 'use client';
 
+import { useState, useRef, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import Link from 'next/link';
 
 // Heroicons (outline)
 const LightBulbIcon = () => (
@@ -11,7 +12,7 @@ const LightBulbIcon = () => (
     viewBox="0 0 24 24"
     strokeWidth={1}
     stroke="currentColor"
-    className="h-14 w-14"
+    className="h-10 w-10"
   >
     <path
       strokeLinecap="round"
@@ -28,7 +29,7 @@ const PuzzlePieceIcon = () => (
     viewBox="0 0 24 24"
     strokeWidth={1}
     stroke="currentColor"
-    className="h-14 w-14"
+    className="h-10 w-10"
   >
     <path
       strokeLinecap="round"
@@ -45,7 +46,7 @@ const PaintBrushIcon = () => (
     viewBox="0 0 24 24"
     strokeWidth={1}
     stroke="currentColor"
-    className="h-14 w-14"
+    className="h-10 w-10"
   >
     <path
       strokeLinecap="round"
@@ -55,9 +56,75 @@ const PaintBrushIcon = () => (
   </svg>
 );
 
+const PROMPT_CHIPS = [
+  {
+    label: 'Write a brief for...',
+    prompt: 'I need to write a design brief for ',
+    placeholder: 'a new feature',
+  },
+  {
+    label: 'Help me think through...',
+    prompt: 'Help me think through ',
+    placeholder: 'user onboarding',
+  },
+  {
+    label: 'Convince stakeholders about...',
+    prompt: 'I need to convince stakeholders that ',
+    placeholder: 'we should simplify the flow',
+  },
+];
+
+const PLACEHOLDER_PROMPTS = [
+  'What are you designing?',
+  'Describe your feature...',
+  'What problem are you solving?',
+];
+
 export default function Home() {
+  const router = useRouter();
+  const [inputValue, setInputValue] = useState('');
+  const [placeholderIndex, setPlaceholderIndex] = useState(0);
+  const [isFocused, setIsFocused] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Rotate placeholder text
+  useEffect(() => {
+    if (isFocused || inputValue) return;
+
+    const interval = setInterval(() => {
+      setPlaceholderIndex((prev) => (prev + 1) % PLACEHOLDER_PROMPTS.length);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [isFocused, inputValue]);
+
+  // Auto-resize textarea
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 200)}px`;
+    }
+  }, [inputValue]);
+
+  const handleSubmit = () => {
+    if (!inputValue.trim()) return;
+    router.push(`/brief?q=${encodeURIComponent(inputValue.trim())}`);
+  };
+
+  const handleChipClick = (prompt: string) => {
+    setInputValue(prompt);
+    textareaRef.current?.focus();
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit();
+    }
+  };
+
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col bg-white">
       {/* Header */}
       <header className="border-border-light flex h-14 items-center justify-between border-b px-6">
         <h1 className="text-text-primary text-xl font-semibold">Gist</h1>
@@ -68,117 +135,131 @@ export default function Home() {
         </nav>
       </header>
 
-      {/* Hero */}
-      <main className="flex flex-1 flex-col">
-        <div className="bg-bg-secondary px-6 py-20 md:py-28">
-          <div className="mx-auto grid max-w-6xl items-center gap-12 md:grid-cols-2 md:gap-16">
-            {/* Left - Text */}
-            <div className="text-center md:text-left">
-              <h2 className="text-text-primary mb-6 text-4xl leading-tight font-bold tracking-tight sm:text-5xl lg:text-6xl">
-                Get Clarity Before
-                <br />
-                You Open Figma
-              </h2>
-              <p className="text-text-secondary mb-8 text-lg sm:text-xl">
-                A thinking partner for designers.
-              </p>
-
-              <Link
-                href="/brief"
-                className="bg-accent-primary hover:bg-accent-hover inline-flex items-center gap-2 rounded-xl px-8 py-4 text-lg font-semibold text-white transition-colors"
-              >
-                Start thinking
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M5 12h14" />
-                  <path d="m12 5 7 7-7 7" />
-                </svg>
-              </Link>
+      {/* Main chat-like interface with illustration */}
+      <main className="flex flex-1 flex-col justify-center px-6 py-12">
+        <div className="mx-auto grid w-full max-w-6xl items-center gap-12 md:grid-cols-2 md:gap-16">
+          {/* Left - Chat interface */}
+          <div className="w-full max-w-xl">
+            {/* AI Greeting */}
+            <div className="mb-8">
+              <div className="bg-msg-ai-bg text-text-primary inline-block rounded-2xl px-5 py-3 text-lg">
+                What are you designing?
+              </div>
             </div>
 
-            {/* Right - Illustration */}
-            <div className="flex justify-center md:justify-end">
-              <Image
-                src="/illustrations/absurd-08.png"
-                alt="Designer thinking"
-                width={400}
-                height={400}
-                priority
-              />
+            {/* Input area */}
+            <div className="relative mb-6">
+              <div className="border-border-light focus-within:border-accent-primary focus-within:ring-accent-primary/20 flex items-end gap-3 rounded-2xl border-2 bg-white p-4 transition-all focus-within:ring-4">
+                <textarea
+                  ref={textareaRef}
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  onFocus={() => setIsFocused(true)}
+                  onBlur={() => setIsFocused(false)}
+                  placeholder={PLACEHOLDER_PROMPTS[placeholderIndex]}
+                  rows={1}
+                  className="text-text-primary placeholder:text-text-tertiary flex-1 resize-none bg-transparent text-base leading-relaxed outline-none"
+                />
+                <button
+                  onClick={handleSubmit}
+                  disabled={!inputValue.trim()}
+                  className="bg-accent-primary hover:bg-accent-hover disabled:bg-bg-tertiary disabled:text-text-tertiary flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl text-white transition-colors"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M5 12h14" />
+                    <path d="m12 5 7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            {/* Prompt chips */}
+            <div className="flex flex-wrap gap-2">
+              {PROMPT_CHIPS.map((chip) => (
+                <button
+                  key={chip.label}
+                  onClick={() => handleChipClick(chip.prompt)}
+                  className="border-border-light text-text-secondary hover:border-accent-primary hover:text-accent-primary rounded-full border bg-white px-4 py-2 text-sm transition-colors"
+                >
+                  {chip.label}
+                </button>
+              ))}
             </div>
           </div>
-        </div>
 
-        {/* Value props */}
-        <div className="w-full py-24">
-          <div className="mx-auto max-w-5xl px-6">
-            <div className="grid gap-16 md:grid-cols-3">
-              {/* Prop 1 */}
-              <div className="flex flex-col items-center text-center">
-                <div className="text-accent-primary mb-6">
-                  <LightBulbIcon />
-                </div>
-                <h3 className="text-text-primary mb-3 text-xl font-semibold">
-                  Think before you design
-                </h3>
-                <p className="text-text-secondary text-base leading-relaxed">
-                  Work through user flows, edge cases, and interaction patterns before you open
-                  Figma.
-                </p>
-              </div>
-
-              {/* Prop 2 */}
-              <div className="flex flex-col items-center text-center">
-                <div className="text-accent-primary mb-6">
-                  <PuzzlePieceIcon />
-                </div>
-                <h3 className="text-text-primary mb-3 text-xl font-semibold">Know what works</h3>
-                <p className="text-text-secondary text-base leading-relaxed">
-                  Surface proven UX patterns from ChatGPT, Notion AI, and Copilot.
-                </p>
-              </div>
-
-              {/* Prop 3 */}
-              <div className="flex flex-col items-center text-center">
-                <div className="text-accent-primary mb-6">
-                  <PaintBrushIcon />
-                </div>
-                <h3 className="text-text-primary mb-3 text-xl font-semibold">
-                  Design with intention
-                </h3>
-                <p className="text-text-secondary text-base leading-relaxed">
-                  Skip the AI slop. Build UI you actually understand and can explain.
-                </p>
-              </div>
-            </div>
+          {/* Right - Illustration */}
+          <div className="hidden justify-center md:flex md:justify-end">
+            <Image
+              src="/illustrations/absurd-08.png"
+              alt="Designer thinking"
+              width={400}
+              height={400}
+              priority
+              className="max-w-[320px] lg:max-w-[400px]"
+            />
           </div>
         </div>
       </main>
+
+      {/* Value props */}
+      <section className="border-border-light border-t px-6 py-16">
+        <div className="mx-auto max-w-4xl">
+          <div className="grid gap-12 md:grid-cols-3">
+            {/* Prop 1 */}
+            <div className="flex flex-col items-center text-center">
+              <div className="text-accent-primary mb-4">
+                <LightBulbIcon />
+              </div>
+              <h3 className="text-text-primary mb-2 text-lg font-semibold">
+                Think before you design
+              </h3>
+              <p className="text-text-secondary text-sm leading-relaxed">
+                Work through user flows, edge cases, and interaction patterns before you open Figma.
+              </p>
+            </div>
+
+            {/* Prop 2 */}
+            <div className="flex flex-col items-center text-center">
+              <div className="text-accent-primary mb-4">
+                <PuzzlePieceIcon />
+              </div>
+              <h3 className="text-text-primary mb-2 text-lg font-semibold">Know what works</h3>
+              <p className="text-text-secondary text-sm leading-relaxed">
+                Surface proven UX patterns from ChatGPT, Notion AI, and Copilot.
+              </p>
+            </div>
+
+            {/* Prop 3 */}
+            <div className="flex flex-col items-center text-center">
+              <div className="text-accent-primary mb-4">
+                <PaintBrushIcon />
+              </div>
+              <h3 className="text-text-primary mb-2 text-lg font-semibold">
+                Design with intention
+              </h3>
+              <p className="text-text-secondary text-sm leading-relaxed">
+                Skip the AI slop. Build UI you actually understand and can explain.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Footer */}
       <footer className="border-border-light border-t px-6 py-4">
         <div className="text-text-tertiary flex flex-col items-center justify-center gap-1 text-sm">
           <p>Never ship UI you can&apos;t defend</p>
-          <p className="text-xs">
-            Illustrations by{' '}
-            <a
-              href="https://absurd.design"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-text-secondary underline"
-            >
-              absurd.design
-            </a>
-          </p>
         </div>
       </footer>
     </div>
