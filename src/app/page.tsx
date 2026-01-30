@@ -1,18 +1,18 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import Image from 'next/image';
+import { ReactNode } from 'react';
 
-// Heroicons (outline)
-const LightBulbIcon = () => (
+// Heroicons (outline) - Value Props
+const LightBulbIcon = ({ className = 'h-10 w-10' }: { className?: string }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
     viewBox="0 0 24 24"
     strokeWidth={1}
     stroke="currentColor"
-    className="h-10 w-10"
+    className={className}
   >
     <path
       strokeLinecap="round"
@@ -22,14 +22,14 @@ const LightBulbIcon = () => (
   </svg>
 );
 
-const PuzzlePieceIcon = () => (
+const PuzzlePieceIcon = ({ className = 'h-10 w-10' }: { className?: string }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
     viewBox="0 0 24 24"
     strokeWidth={1}
     stroke="currentColor"
-    className="h-10 w-10"
+    className={className}
   >
     <path
       strokeLinecap="round"
@@ -39,14 +39,14 @@ const PuzzlePieceIcon = () => (
   </svg>
 );
 
-const PaintBrushIcon = () => (
+const PaintBrushIcon = ({ className = 'h-10 w-10' }: { className?: string }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
     viewBox="0 0 24 24"
     strokeWidth={1}
     stroke="currentColor"
-    className="h-10 w-10"
+    className={className}
   >
     <path
       strokeLinecap="round"
@@ -56,73 +56,95 @@ const PaintBrushIcon = () => (
   </svg>
 );
 
-const PROMPT_CHIPS = [
-  {
-    label: 'Write a brief for...',
-    prompt: 'I need to write a design brief for ',
-    placeholder: 'a new feature',
-  },
-  {
-    label: 'Help me think through...',
-    prompt: 'Help me think through ',
-    placeholder: 'user onboarding',
-  },
-  {
-    label: 'Convince stakeholders about...',
-    prompt: 'I need to convince stakeholders that ',
-    placeholder: 'we should simplify the flow',
-  },
-];
+// Heroicons for Mode Cards
+const ClipboardDocumentIcon = ({ className = 'h-8 w-8' }: { className?: string }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="currentColor"
+    className={className}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M8.25 7.5V6.108c0-1.135.845-2.098 1.976-2.192.373-.03.748-.057 1.123-.08M15.75 18H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08M15.75 18.75v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5A3.375 3.375 0 0 0 6.375 7.5H5.25m11.9-3.664A2.251 2.251 0 0 0 15 2.25h-1.5a2.251 2.251 0 0 0-2.15 1.586m5.8 0c.065.21.1.433.1.664v.75h-6V4.5c0-.231.035-.454.1-.664M6.75 7.5H4.875c-.621 0-1.125.504-1.125 1.125v12c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V16.5a9 9 0 0 0-9-9Z"
+    />
+  </svg>
+);
 
-const PLACEHOLDER_PROMPTS = [
-  'What are you designing?',
-  'Describe your feature...',
-  'What problem are you solving?',
+const MapIcon = ({ className = 'h-8 w-8' }: { className?: string }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="currentColor"
+    className={className}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M9 6.75V15m6-6v8.25m.503 3.498 4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 0 0-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0Z"
+    />
+  </svg>
+);
+
+const ScaleIcon = ({ className = 'h-8 w-8' }: { className?: string }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="currentColor"
+    className={className}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.97A48.416 48.416 0 0 0 12 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52 2.62 10.726c.122.499-.106 1.028-.589 1.202a5.988 5.988 0 0 1-2.031.352 5.988 5.988 0 0 1-2.031-.352c-.483-.174-.711-.703-.59-1.202L18.75 4.971Zm-16.5.52c.99-.203 1.99-.377 3-.52m0 0 2.62 10.726c.122.499-.106 1.028-.589 1.202a5.989 5.989 0 0 1-2.031.352 5.989 5.989 0 0 1-2.031-.352c-.483-.174-.711-.703-.59-1.202L5.25 4.971Z"
+    />
+  </svg>
+);
+
+interface ModeCard {
+  id: string;
+  icon: ReactNode;
+  title: string;
+  description: string;
+  href: string;
+  cta: string;
+}
+
+const MODE_CARDS: ModeCard[] = [
+  {
+    id: 'brief',
+    icon: <ClipboardDocumentIcon className="h-8 w-8" />,
+    title: 'Write a Brief',
+    description: 'Quick clarification before you design',
+    href: '/brief',
+    cta: 'Start',
+  },
+  {
+    id: 'map',
+    icon: <MapIcon className="h-8 w-8" />,
+    title: 'Map a Flow',
+    description: 'Walk through the user journey step by step',
+    href: '/map',
+    cta: 'Start mapping',
+  },
+  {
+    id: 'rationale',
+    icon: <ScaleIcon className="h-8 w-8" />,
+    title: 'Capture Decisions',
+    description: 'Document and defend your design choices',
+    href: '/rationale',
+    cta: 'Start thinking',
+  },
 ];
 
 export default function Home() {
-  const router = useRouter();
-  const [inputValue, setInputValue] = useState('');
-  const [placeholderIndex, setPlaceholderIndex] = useState(0);
-  const [isFocused, setIsFocused] = useState(false);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  // Rotate placeholder text
-  useEffect(() => {
-    if (isFocused || inputValue) return;
-
-    const interval = setInterval(() => {
-      setPlaceholderIndex((prev) => (prev + 1) % PLACEHOLDER_PROMPTS.length);
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, [isFocused, inputValue]);
-
-  // Auto-resize textarea
-  useEffect(() => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
-      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 200)}px`;
-    }
-  }, [inputValue]);
-
-  const handleSubmit = () => {
-    if (!inputValue.trim()) return;
-    router.push(`/brief?q=${encodeURIComponent(inputValue.trim())}`);
-  };
-
-  const handleChipClick = (prompt: string) => {
-    setInputValue(prompt);
-    textareaRef.current?.focus();
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSubmit();
-    }
-  };
-
   return (
     <div className="flex min-h-screen flex-col bg-white">
       {/* Header */}
@@ -135,79 +157,68 @@ export default function Home() {
         </nav>
       </header>
 
-      {/* Main chat-like interface with illustration */}
+      {/* Main content */}
       <main className="flex flex-1 flex-col justify-center px-6 py-12">
-        <div className="mx-auto grid w-full max-w-6xl items-center gap-12 md:grid-cols-2 md:gap-16">
-          {/* Left - Chat interface */}
-          <div className="w-full max-w-xl">
-            {/* AI Greeting */}
-            <div className="mb-8">
-              <div className="bg-msg-ai-bg text-text-primary inline-block rounded-2xl px-5 py-3 text-lg">
-                What are you designing?
-              </div>
-            </div>
-
-            {/* Input area */}
-            <div className="relative mb-6">
-              <div className="border-border-light focus-within:border-accent-primary focus-within:ring-accent-primary/20 flex items-end gap-3 rounded-2xl border-2 bg-white p-4 transition-all focus-within:ring-4">
-                <textarea
-                  ref={textareaRef}
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  onFocus={() => setIsFocused(true)}
-                  onBlur={() => setIsFocused(false)}
-                  placeholder={PLACEHOLDER_PROMPTS[placeholderIndex]}
-                  rows={1}
-                  className="text-text-primary placeholder:text-text-tertiary flex-1 resize-none bg-transparent text-base leading-relaxed outline-none"
-                />
-                <button
-                  onClick={handleSubmit}
-                  disabled={!inputValue.trim()}
-                  className="bg-accent-primary hover:bg-accent-hover disabled:bg-bg-tertiary disabled:text-text-tertiary flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl text-white transition-colors"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M5 12h14" />
-                    <path d="m12 5 7 7-7 7" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-
-            {/* Prompt chips */}
-            <div className="flex flex-wrap gap-2">
-              {PROMPT_CHIPS.map((chip) => (
-                <button
-                  key={chip.label}
-                  onClick={() => handleChipClick(chip.prompt)}
-                  className="border-border-light text-text-secondary hover:border-accent-primary hover:text-accent-primary rounded-full border bg-white px-4 py-2 text-sm transition-colors"
-                >
-                  {chip.label}
-                </button>
-              ))}
-            </div>
+        <div className="mx-auto w-full max-w-5xl">
+          {/* Hero */}
+          <div className="mb-12 text-center">
+            <h2 className="text-text-primary mb-4 text-4xl font-bold">Think before you design</h2>
+            <p className="text-text-secondary mx-auto max-w-2xl text-lg">
+              A thinking partner for designers. Clarify what you&apos;re building, map user
+              journeys, and capture design decisions — before you open Figma.
+            </p>
           </div>
 
-          {/* Right - Illustration */}
-          <div className="hidden justify-center md:flex md:justify-end">
-            <Image
-              src="/illustrations/absurd-08.png"
-              alt="Designer thinking"
-              width={400}
-              height={400}
-              priority
-              className="max-w-[320px] lg:max-w-[400px]"
-            />
+          {/* Mode Cards + Illustration - Side by Side */}
+          <div className="mb-16 flex flex-col items-start gap-12 lg:flex-row">
+            {/* Mode Cards - Left */}
+            <div className="grid flex-1 gap-4">
+              {MODE_CARDS.map((mode) => (
+                <Link
+                  key={mode.id}
+                  href={mode.href}
+                  className="group border-border-light hover:border-accent-primary flex items-start gap-4 rounded-2xl border-2 bg-white p-5 transition-all hover:shadow-lg"
+                >
+                  <div className="text-accent-primary flex-shrink-0">{mode.icon}</div>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-text-primary group-hover:text-accent-primary mb-1 text-lg font-semibold transition-colors">
+                      {mode.title}
+                    </h3>
+                    <p className="text-text-secondary text-sm">{mode.description}</p>
+                  </div>
+                  <div className="text-accent-primary flex flex-shrink-0 items-center gap-1 font-medium">
+                    <span className="text-sm">{mode.cta}</span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="transition-transform group-hover:translate-x-1"
+                    >
+                      <path d="M5 12h14" />
+                      <path d="m12 5 7 7-7 7" />
+                    </svg>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            {/* Illustration - Right */}
+            <div className="hidden flex-shrink-0 items-center justify-center lg:flex">
+              <Image
+                src="/illustrations/absurd-08.png"
+                alt="Designer thinking"
+                width={320}
+                height={320}
+                priority
+                className="opacity-80"
+              />
+            </div>
           </div>
         </div>
       </main>

@@ -3,21 +3,17 @@
 import { useState, useCallback, useRef, useEffect, Suspense, ReactNode } from 'react';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { Message, Brief } from '@/types';
-import { INITIAL_BRIEF, INITIAL_MESSAGES } from '@/lib/constants';
+import { Message, DesignRationale } from '@/types';
+import { INITIAL_RATIONALE, RATIONALE_INITIAL_MESSAGES } from '@/lib/constants';
 import {
-  parseBriefUpdate,
-  mergeBriefUpdate,
-  addPatternToBrief,
-  isPatternInBrief,
-} from '@/lib/briefParser';
-import { BriefModal } from '@/components/Brief/BriefModal';
+  parseRationaleUpdate,
+  mergeRationaleUpdate,
+  addPatternToDecision,
+  isPatternInRationale,
+  generateRationaleMarkdown,
+} from '@/lib/rationaleParser';
+import { RationaleModal, RationalePanel } from '@/components/Rationale';
 import { Toast } from '@/components/Toast';
-import {
-  DocumentCard,
-  getBriefDocumentInfo,
-  generateBriefMarkdown,
-} from '@/components/Brief/DocumentCard';
 import { PatternCard } from '@/components/Chat/PatternCard';
 import { getPatternById } from '@/lib/patterns/patterns';
 
@@ -74,19 +70,19 @@ const ScaleIcon = ({ className = 'h-5 w-5' }: { className?: string }) => (
 );
 
 // Wrapper component to handle search params with Suspense
-function BriefModeContent() {
-  return <BriefModeInner />;
+function RationaleModeContent() {
+  return <RationaleModeInner />;
 }
 
-export default function BriefMode() {
+export default function RationaleMode() {
   return (
-    <Suspense fallback={<BriefModeLoading />}>
-      <BriefModeContent />
+    <Suspense fallback={<RationaleModeLoading />}>
+      <RationaleModeContent />
     </Suspense>
   );
 }
 
-function BriefModeLoading() {
+function RationaleModeLoading() {
   return (
     <div className="flex h-screen items-center justify-center">
       <div className="text-text-tertiary">Loading...</div>
@@ -130,11 +126,11 @@ function generateId(): string {
   return Math.random().toString(36).substring(2, 15);
 }
 
-function BriefModeInner() {
+function RationaleModeInner() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [messages, setMessages] = useState<Message[]>(INITIAL_MESSAGES);
-  const [brief, setBrief] = useState<Brief>(INITIAL_BRIEF);
+  const [messages, setMessages] = useState<Message[]>(RATIONALE_INITIAL_MESSAGES);
+  const [rationale, setRationale] = useState<DesignRationale>(INITIAL_RATIONALE);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [inputValue, setInputValue] = useState('');
@@ -143,6 +139,7 @@ function BriefModeInner() {
   const [isModeDropdownOpen, setIsModeDropdownOpen] = useState(false);
   const [initialMessageSent, setInitialMessageSent] = useState(false);
   const modeDropdownRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -155,14 +152,17 @@ function BriefModeInner() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Auto-scroll to bottom on new messages
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
   // Handle initial message from URL query parameter
   useEffect(() => {
     const initialQuery = searchParams.get('q');
     if (initialQuery && !initialMessageSent && !isLoading) {
       setInitialMessageSent(true);
-      // Clear the URL parameter
-      router.replace('/brief', { scroll: false });
-      // Send the initial message
+      router.replace('/rationale', { scroll: false });
       handleSendMessageDirect(initialQuery);
     }
   }, [searchParams, initialMessageSent, isLoading, router]);
@@ -179,7 +179,7 @@ function BriefModeInner() {
       content: content.trim(),
       timestamp: new Date(),
     };
-    const newMessages = [...INITIAL_MESSAGES, userMessage];
+    const newMessages = [...RATIONALE_INITIAL_MESSAGES, userMessage];
     setMessages(newMessages);
     setIsLoading(true);
 
@@ -187,7 +187,7 @@ function BriefModeInner() {
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: newMessages }),
+        body: JSON.stringify({ messages: newMessages, mode: 'rationale' }),
       });
 
       if (!response.ok) {
@@ -195,7 +195,9 @@ function BriefModeInner() {
       }
 
       const data = await response.json();
-      const { displayContent, briefUpdate, identifiedPattern } = parseBriefUpdate(data.message);
+      const { displayContent, rationaleUpdate, identifiedPattern } = parseRationaleUpdate(
+        data.message
+      );
 
       const aiMessage: Message = {
         id: generateId(),
@@ -206,8 +208,8 @@ function BriefModeInner() {
       };
       setMessages((prev) => [...prev, aiMessage]);
 
-      if (briefUpdate) {
-        setBrief((prev) => mergeBriefUpdate(prev, briefUpdate));
+      if (rationaleUpdate) {
+        setRationale((prev) => mergeRationaleUpdate(prev, rationaleUpdate));
       }
     } catch (err) {
       console.error('Chat error:', err);
@@ -242,7 +244,7 @@ function BriefModeInner() {
         const response = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ messages: newMessages }),
+          body: JSON.stringify({ messages: newMessages, mode: 'rationale' }),
         });
 
         if (!response.ok) {
@@ -250,7 +252,9 @@ function BriefModeInner() {
         }
 
         const data = await response.json();
-        const { displayContent, briefUpdate, identifiedPattern } = parseBriefUpdate(data.message);
+        const { displayContent, rationaleUpdate, identifiedPattern } = parseRationaleUpdate(
+          data.message
+        );
 
         const aiMessage: Message = {
           id: generateId(),
@@ -261,8 +265,8 @@ function BriefModeInner() {
         };
         setMessages((prev) => [...prev, aiMessage]);
 
-        if (briefUpdate) {
-          setBrief((prev) => mergeBriefUpdate(prev, briefUpdate));
+        if (rationaleUpdate) {
+          setRationale((prev) => mergeRationaleUpdate(prev, rationaleUpdate));
         }
       } catch (err) {
         console.error('Chat error:', err);
@@ -275,11 +279,11 @@ function BriefModeInner() {
   );
 
   const handleNewChat = useCallback(() => {
-    if (messages.length > 1 && !confirm('Start over? Current brief will be lost.')) {
+    if (messages.length > 1 && !confirm('Start over? Current rationale will be lost.')) {
       return;
     }
-    setMessages(INITIAL_MESSAGES);
-    setBrief(INITIAL_BRIEF);
+    setMessages(RATIONALE_INITIAL_MESSAGES);
+    setRationale(INITIAL_RATIONALE);
     setError(null);
     setInputValue('');
   }, [messages.length]);
@@ -291,50 +295,35 @@ function BriefModeInner() {
     }
   };
 
-  const isReady = brief.readyToDesign !== null;
-  const hasContent = brief.goal !== null;
-  const documentInfo = getBriefDocumentInfo(brief);
-
-  const handleCopyBrief = useCallback(async () => {
-    const markdown = generateBriefMarkdown(brief);
+  const handleCopyRationale = useCallback(async () => {
+    const markdown = generateRationaleMarkdown(rationale);
     await navigator.clipboard.writeText(markdown);
-    showToast('Brief copied to clipboard');
-  }, [brief]);
+    showToast('Rationale copied to clipboard');
+  }, [rationale]);
 
-  const handleDownloadBrief = useCallback(() => {
-    const markdown = generateBriefMarkdown(brief);
+  const handleDownloadRationale = useCallback(() => {
+    const markdown = generateRationaleMarkdown(rationale);
     const blob = new Blob([markdown], { type: 'text/markdown' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `design-brief-${new Date().toISOString().split('T')[0]}.md`;
+    a.download = `design-rationale-${new Date().toISOString().split('T')[0]}.md`;
     a.click();
     URL.revokeObjectURL(url);
-  }, [brief]);
+  }, [rationale]);
 
-  const handleCopyPrompt = useCallback(async () => {
-    if (brief.readyToDesign?.prompt) {
-      await navigator.clipboard.writeText(brief.readyToDesign.prompt);
-      showToast('Prompt copied to clipboard');
-    }
-  }, [brief.readyToDesign]);
-
-  const handleAddPatternToBrief = useCallback((patternId: string, reason: string) => {
-    setBrief((prev) => addPatternToBrief(prev, patternId, reason));
-    showToast('Pattern added to brief');
-  }, []);
-
-  const handleDownloadPrompt = useCallback(() => {
-    if (brief.readyToDesign?.prompt) {
-      const blob = new Blob([brief.readyToDesign.prompt], { type: 'text/plain' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `design-prompt-${new Date().toISOString().split('T')[0]}.txt`;
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-  }, [brief.readyToDesign]);
+  const handleAddPatternToDecision = useCallback(
+    (patternId: string, reason: string, decisionId?: string) => {
+      // If no specific decision, add to the most recent decision
+      const targetDecisionId =
+        decisionId ?? rationale.decisions[rationale.decisions.length - 1]?.id;
+      if (targetDecisionId) {
+        setRationale((prev) => addPatternToDecision(prev, targetDecisionId, patternId, reason));
+        showToast('Pattern added to decision');
+      }
+    },
+    [rationale.decisions]
+  );
 
   return (
     <div className="flex h-screen flex-col">
@@ -356,9 +345,9 @@ function BriefModeInner() {
               className="bg-bg-secondary hover:bg-bg-tertiary flex items-center gap-2 rounded-full px-3 py-1 text-sm font-medium transition-colors"
             >
               <span className="text-accent-primary">
-                <ClipboardDocumentIcon className="h-4 w-4" />
+                <ScaleIcon className="h-4 w-4" />
               </span>
-              <span className="text-text-secondary">Brief Mode</span>
+              <span className="text-text-secondary">Rationale Mode</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="14"
@@ -387,7 +376,7 @@ function BriefModeInner() {
                       href={mode.href}
                       onClick={() => setIsModeDropdownOpen(false)}
                       className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-colors ${
-                        mode.id === 'brief'
+                        mode.id === 'rationale'
                           ? 'bg-accent-primary/10 text-accent-primary'
                           : 'hover:bg-bg-secondary text-text-primary'
                       }`}
@@ -399,7 +388,7 @@ function BriefModeInner() {
                         </div>
                         <p className="text-text-tertiary text-xs">{mode.description}</p>
                       </div>
-                      {mode.id === 'brief' && (
+                      {mode.id === 'rationale' && (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="16"
@@ -465,13 +454,15 @@ function BriefModeInner() {
                           <PatternCard
                             pattern={identifiedPattern}
                             reason={message.identifiedPattern.reason}
-                            onAddToBrief={() =>
-                              handleAddPatternToBrief(
+                            onAdd={() =>
+                              handleAddPatternToDecision(
                                 identifiedPattern.id,
-                                message.identifiedPattern!.reason
+                                message.identifiedPattern!.reason,
+                                message.identifiedPattern!.decisionId
                               )
                             }
-                            isAddedToBrief={isPatternInBrief(brief, identifiedPattern.id)}
+                            isAdded={isPatternInRationale(rationale, identifiedPattern.id)}
+                            addLabel="Add to decision"
                           />
                         </div>
                       </div>
@@ -490,6 +481,7 @@ function BriefModeInner() {
                   </div>
                 </div>
               )}
+              <div ref={messagesEndRef} />
             </div>
           </div>
 
@@ -501,7 +493,7 @@ function BriefModeInner() {
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="What are you trying to design?"
+                placeholder="Tell me about a decision you've made..."
                 disabled={isLoading}
                 rows={1}
                 className="border-border-light focus:border-accent-primary disabled:bg-bg-secondary disabled:text-text-tertiary flex-1 resize-none rounded-xl border px-4 py-3 text-base transition-colors outline-none"
@@ -517,179 +509,22 @@ function BriefModeInner() {
           </div>
         </div>
 
-        {/* Right panel - Brief */}
-        <div className="bg-bg-secondary flex w-1/2 flex-col">
-          <div className="flex-1 overflow-y-auto p-6">
-            {/* Building sections - show while not ready */}
-            {!isReady && (
-              <div className="mb-8 space-y-6">
-                <h2 className="text-text-secondary text-sm font-semibold tracking-wide uppercase">
-                  Building Brief
-                </h2>
-
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`h-2 w-2 rounded-full ${brief.goal ? 'bg-green-500' : 'bg-border-medium'}`}
-                    />
-                    <span
-                      className={`text-sm ${brief.goal ? 'text-text-primary' : 'text-text-tertiary'}`}
-                    >
-                      Goal{' '}
-                      {brief.goal &&
-                        '— ' + brief.goal.slice(0, 50) + (brief.goal.length > 50 ? '...' : '')}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`h-2 w-2 rounded-full ${brief.context.length > 0 ? 'bg-green-500' : 'bg-border-medium'}`}
-                    />
-                    <span
-                      className={`text-sm ${brief.context.length > 0 ? 'text-text-primary' : 'text-text-tertiary'}`}
-                    >
-                      Context {brief.context.length > 0 && `— ${brief.context.length} items`}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`h-2 w-2 rounded-full ${brief.decisions.length > 0 ? 'bg-green-500' : 'bg-border-medium'}`}
-                    />
-                    <span
-                      className={`text-sm ${brief.decisions.length > 0 ? 'text-text-primary' : 'text-text-tertiary'}`}
-                    >
-                      Decisions {brief.decisions.length > 0 && `— ${brief.decisions.length} made`}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`h-2 w-2 rounded-full ${brief.openQuestions.length > 0 ? 'bg-yellow-500' : 'bg-border-medium'}`}
-                    />
-                    <span
-                      className={`text-sm ${brief.openQuestions.length > 0 ? 'text-text-primary' : 'text-text-tertiary'}`}
-                    >
-                      Open Questions{' '}
-                      {brief.openQuestions.length > 0 &&
-                        `— ${brief.openQuestions.length} remaining`}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`h-2 w-2 rounded-full ${brief.patterns.length > 0 ? 'bg-blue-500' : 'bg-border-medium'}`}
-                    />
-                    <span
-                      className={`text-sm ${brief.patterns.length > 0 ? 'text-text-primary' : 'text-text-tertiary'}`}
-                    >
-                      Patterns{' '}
-                      {brief.patterns.length > 0 && `— ${brief.patterns.length} recommended`}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    <div className="bg-border-medium h-2 w-2 rounded-full" />
-                    <span className="text-text-tertiary text-sm">Ready to Design</span>
-                  </div>
-                </div>
-
-                {/* Show patterns if any */}
-                {brief.patterns.length > 0 && (
-                  <div className="mt-6 space-y-2">
-                    <h3 className="text-text-tertiary text-xs font-medium uppercase">
-                      Recommended Patterns
-                    </h3>
-                    <div className="space-y-2">
-                      {brief.patterns.map((p) => {
-                        const pattern = getPatternById(p.patternId);
-                        if (!pattern) return null;
-                        return (
-                          <a
-                            key={p.patternId}
-                            href={pattern.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="border-border-light hover:border-accent-primary block rounded-lg border bg-white p-3 transition-colors"
-                          >
-                            <div className="text-text-primary text-sm font-medium">
-                              {pattern.name}
-                            </div>
-                            <div className="text-text-tertiary text-xs">{pattern.oneLiner}</div>
-                          </a>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Files Section */}
-            <div>
-              <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-text-secondary text-sm font-semibold tracking-wide uppercase">
-                  Files
-                </h2>
-                <button
-                  className="text-text-tertiary hover:bg-bg-tertiary hover:text-text-secondary flex h-6 w-6 items-center justify-center rounded transition-colors"
-                  title="Add file"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <line x1="12" y1="5" x2="12" y2="19" />
-                    <line x1="5" y1="12" x2="19" y2="12" />
-                  </svg>
-                </button>
-              </div>
-
-              {hasContent ? (
-                <div className="grid grid-cols-2 gap-3">
-                  <DocumentCard
-                    title={documentInfo.title}
-                    lineCount={documentInfo.lineCount}
-                    fileType="MD"
-                    onView={() => setIsModalOpen(true)}
-                    onCopy={handleCopyBrief}
-                    onDownload={handleDownloadBrief}
-                  />
-                  {isReady && (
-                    <DocumentCard
-                      title="design-prompt.txt"
-                      lineCount={brief.readyToDesign?.prompt.split('\n').length || 5}
-                      fileType="TXT"
-                      onView={() => setIsModalOpen(true)}
-                      onCopy={handleCopyPrompt}
-                      onDownload={handleDownloadPrompt}
-                    />
-                  )}
-                </div>
-              ) : (
-                <div className="border-border-light rounded-xl border-2 border-dashed p-8 text-center">
-                  <p className="text-text-tertiary text-sm">
-                    Documents will appear here as your brief builds
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
+        {/* Right panel - Design Rationale */}
+        <div className="bg-bg-secondary w-1/2">
+          <RationalePanel
+            rationale={rationale}
+            onViewRationale={() => setIsModalOpen(true)}
+            onCopyRationale={handleCopyRationale}
+            onDownloadRationale={handleDownloadRationale}
+          />
         </div>
       </div>
 
-      <BriefModal
-        brief={brief}
+      <RationaleModal
+        rationale={rationale}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onCopy={() => showToast('Brief copied to clipboard')}
+        onCopy={() => showToast('Rationale copied to clipboard')}
       />
 
       <Toast

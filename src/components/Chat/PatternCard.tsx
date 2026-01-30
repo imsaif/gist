@@ -3,11 +3,17 @@
 import { Pattern } from '@/types/patterns';
 import { getCategoryMeta } from '@/lib/patterns/patterns';
 
+type AddToMode = 'brief' | 'map' | 'rationale';
+
 interface PatternCardProps {
   pattern: Pattern;
   reason?: string;
   onAddToBrief?: () => void;
   isAddedToBrief?: boolean;
+  // Generic add action for any mode
+  onAdd?: () => void;
+  isAdded?: boolean;
+  addLabel?: string; // e.g., "Add to brief", "Add to step", "Add to decision"
 }
 
 export function PatternCard({
@@ -15,7 +21,13 @@ export function PatternCard({
   reason,
   onAddToBrief,
   isAddedToBrief = false,
+  onAdd,
+  isAdded,
+  addLabel = 'Add to brief',
 }: PatternCardProps) {
+  // Use generic props if provided, otherwise fall back to brief-specific props
+  const handleAdd = onAdd ?? onAddToBrief;
+  const hasBeenAdded = isAdded ?? isAddedToBrief;
   const categoryMeta = getCategoryMeta(pattern.category);
   const categoryColor = categoryMeta?.color ?? '#6b7280';
 
@@ -93,17 +105,17 @@ export function PatternCard({
             </svg>
           </a>
 
-          {onAddToBrief && (
+          {handleAdd && (
             <button
-              onClick={onAddToBrief}
-              disabled={isAddedToBrief}
+              onClick={handleAdd}
+              disabled={hasBeenAdded}
               className={`inline-flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-                isAddedToBrief
+                hasBeenAdded
                   ? 'cursor-default bg-green-50 text-green-600'
                   : 'bg-accent-primary/10 text-accent-primary hover:bg-accent-primary/20'
               }`}
             >
-              {isAddedToBrief ? (
+              {hasBeenAdded ? (
                 <>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -136,7 +148,7 @@ export function PatternCard({
                     <path d="M12 5v14" />
                     <path d="M5 12h14" />
                   </svg>
-                  Add to brief
+                  {addLabel}
                 </>
               )}
             </button>

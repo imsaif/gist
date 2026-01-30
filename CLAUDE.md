@@ -10,6 +10,12 @@
 
 ## Recent Sessions
 
+### Session: January 30, 2026 (MacBook) - Three Modes Implementation
+
+- **Files changed:** 22
+- **Pattern:** Multi-mode architecture
+- **Notes:** Implemented three-mode redesign: Brief (existing), Map (new), and Rationale (new). Added types, parsers, system prompts, and components for each mode. Created DesignMap and Rationale component libraries. Updated landing page with side-by-side layout (mode cards left, illustration right). Replaced all emojis with Heroicons across mode dropdowns.
+
 ### Session: January 19, 2026 (MacBook) - Chat-First Landing Page
 
 - **Files changed:** 2
@@ -42,23 +48,30 @@
 
 ## Key Files
 
-- `src/app/page.tsx` - Landing page with mode selection
+- `src/app/page.tsx` - Landing page with three mode cards
 - `src/app/brief/page.tsx` - Brief mode chat interface
-- `src/lib/constants.ts` - System prompt and initial states
+- `src/app/map/page.tsx` - Map mode for user journey flows
+- `src/app/rationale/page.tsx` - Rationale mode for design decisions
+- `src/lib/constants.ts` - System prompts and initial states for all modes
 - `src/lib/briefParser.ts` - Parse AI responses for brief updates
-- `src/components/Brief/` - Document cards, modal viewer
-- `src/components/Modes/` - Mode selection components
+- `src/lib/designMapParser.ts` - Parse AI responses for map updates
+- `src/lib/rationaleParser.ts` - Parse AI responses for rationale updates
+- `src/components/Brief/` - Brief document cards, modal viewer
+- `src/components/DesignMap/` - Map panel, flow timeline, step cards
+- `src/components/Rationale/` - Rationale panel, decision cards
 - `src/components/Chat/PatternCard.tsx` - Pattern identification cards
 - `src/lib/patterns/` - Pattern data loader and matcher
 - `src/data/patterns.json` - All 28 AI UX patterns
-- `TODO.md` - Comprehensive task list from v2 spec
 
 ## Architecture Notes
 
-- Two-panel layout: Chat (left), Brief/Files (right)
-- AI responses contain `<brief_update>` JSON tags for state updates
+- Three modes: Brief, Map, Rationale (each with distinct conversation flow)
+- Two-panel layout: Chat (left), Artifact (right) - artifact varies by mode
+- AI responses contain mode-specific XML tags:
+  - Brief: `<brief_update>` for brief state updates
+  - Map: `<designmap_update>` for flow step updates
+  - Rationale: `<rationale_update>` for decision updates
 - AI responses can contain `<pattern_identified>` JSON tags for pattern cards
-- Document cards show files with hover actions (copy, download)
 - PatternCard appears inline in chat when AI identifies relevant patterns
 - Mock mode (`MOCK_MODE=true`) for testing without API key
 
