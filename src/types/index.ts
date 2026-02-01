@@ -55,49 +55,112 @@ export interface BriefUpdate {
 }
 
 // ============================================
-// Rationale Mode Types
+// Critique Mode Types
 // ============================================
 
-export type RationalePhase = 'problem' | 'context' | 'decisions' | 'review';
+export type CritiquePhase = 'upload' | 'analyze' | 'deep-dive' | 'synthesize';
 
-export interface RejectedAlternative {
-  approach: string;
-  reason: string;
-}
-
-export interface DecisionPattern {
-  patternId: string;
-  application: string; // How the pattern applies
-  caution?: string; // Warnings about using this pattern here
-}
-
-export interface DesignDecision {
+export interface CritiqueIssue {
   id: string;
+  severity: 'critical' | 'major' | 'minor';
+  category: string;
   title: string;
-  what: string; // What was decided
-  why: string; // Rationale
-  rejected: RejectedAlternative[];
-  patterns: DecisionPattern[];
-  openQuestions: string[];
+  description: string;
+  suggestion: string;
+  patternId?: string;
 }
 
-export interface DesignRationale {
-  problem: string | null;
-  context: string[]; // Users, constraints, timeline
-  decisions: DesignDecision[];
-  assumptions: string[]; // What we're betting on
-  openQuestions: string[];
-  currentPhase: RationalePhase;
+export interface Critique {
+  imageDescription: string | null;
+  whatsWorking: string[];
+  issues: CritiqueIssue[];
+  patterns: { patternId: string; reason: string }[];
+  priorityFixes: string[];
+  currentPhase: CritiquePhase;
 }
 
-export interface DesignRationaleUpdate {
-  problem?: string | null;
+export interface CritiqueUpdate {
+  imageDescription?: string;
+  whatsWorking?: string[];
+  addIssues?: CritiqueIssue[];
+  updateIssues?: (Partial<CritiqueIssue> & { id: string })[];
+  patterns?: { patternId: string; reason: string }[];
+  priorityFixes?: string[];
+  phase?: CritiquePhase;
+}
+
+// ============================================
+// Stakeholder Mode Types
+// ============================================
+
+export type StakeholderPhase = 'context' | 'objections' | 'evidence' | 'synthesize';
+
+export interface Objection {
+  id: string;
+  stakeholder: string;
+  objection: string;
+  counterArguments: string[];
+  evidenceNeeded: string[];
+}
+
+export interface StakeholderPrep {
+  designDecision: string | null;
+  context: string[];
+  objections: Objection[];
+  talkingPoints: string[];
+  riskMitigations: string[];
+  currentPhase: StakeholderPhase;
+}
+
+export interface StakeholderUpdate {
+  designDecision?: string;
   context?: string[];
-  addDecisions?: DesignDecision[];
-  updateDecisions?: (Partial<DesignDecision> & { id: string })[];
-  assumptions?: string[];
+  addObjections?: Objection[];
+  updateObjections?: (Partial<Objection> & { id: string })[];
+  talkingPoints?: string[];
+  riskMitigations?: string[];
+  phase?: StakeholderPhase;
+}
+
+// ============================================
+// IA Mode Types
+// ============================================
+
+export type IAPhase = 'understand' | 'inventory' | 'structure' | 'navigation' | 'synthesize';
+
+export interface ContentItem {
+  id: string;
+  name: string;
+  type: 'page' | 'section' | 'component' | 'data';
+  description: string;
+  parent?: string;
+  children?: string[];
+}
+
+export interface NavigationItem {
+  id: string;
+  label: string;
+  path: string;
+  children?: NavigationItem[];
+}
+
+export interface InformationArchitecture {
+  projectName: string | null;
+  contentInventory: ContentItem[];
+  hierarchy: ContentItem[]; // Tree structure
+  navigation: NavigationItem[];
+  openQuestions: string[];
+  currentPhase: IAPhase;
+}
+
+export interface IAUpdate {
+  projectName?: string;
+  addContent?: ContentItem[];
+  updateContent?: (Partial<ContentItem> & { id: string })[];
+  removeContentIds?: string[];
+  navigation?: NavigationItem[];
   openQuestions?: string[];
-  phase?: RationalePhase;
+  phase?: IAPhase;
 }
 
 // Conversation phases for design map workshop

@@ -52,7 +52,7 @@ const MapIcon = ({ className = 'h-5 w-5' }: { className?: string }) => (
   </svg>
 );
 
-const ScaleIcon = ({ className = 'h-5 w-5' }: { className?: string }) => (
+const MagnifyingGlassIcon = ({ className = 'h-5 w-5' }: { className?: string }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
@@ -64,7 +64,41 @@ const ScaleIcon = ({ className = 'h-5 w-5' }: { className?: string }) => (
     <path
       strokeLinecap="round"
       strokeLinejoin="round"
-      d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.97A48.416 48.416 0 0 0 12 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52 2.62 10.726c.122.499-.106 1.028-.589 1.202a5.988 5.988 0 0 1-2.031.352 5.988 5.988 0 0 1-2.031-.352c-.483-.174-.711-.703-.59-1.202L18.75 4.971Zm-16.5.52c.99-.203 1.99-.377 3-.52m0 0 2.62 10.726c.122.499-.106 1.028-.589 1.202a5.989 5.989 0 0 1-2.031.352 5.989 5.989 0 0 1-2.031-.352c-.483-.174-.711-.703-.59-1.202L5.25 4.971Z"
+      d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+    />
+  </svg>
+);
+
+const UserGroupIcon = ({ className = 'h-5 w-5' }: { className?: string }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="currentColor"
+    className={className}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z"
+    />
+  </svg>
+);
+
+const Squares2X2Icon = ({ className = 'h-5 w-5' }: { className?: string }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="currentColor"
+    className={className}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z"
     />
   </svg>
 );
@@ -98,7 +132,31 @@ interface Mode {
   href: string;
 }
 
+const ChatBubbleLeftRightIcon = ({ className = 'h-5 w-5' }: { className?: string }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="currentColor"
+    className={className}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334a2.126 2.126 0 0 0-.476-.095 48.64 48.64 0 0 0-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0 0 11.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155"
+    />
+  </svg>
+);
+
 const MODES: Mode[] = [
+  {
+    id: 'chat',
+    name: 'Chat',
+    icon: <ChatBubbleLeftRightIcon className="h-5 w-5" />,
+    description: 'Auto-detects mode',
+    href: '/chat',
+  },
   {
     id: 'brief',
     name: 'Brief',
@@ -114,11 +172,25 @@ const MODES: Mode[] = [
     href: '/map',
   },
   {
-    id: 'rationale',
-    name: 'Rationale',
-    icon: <ScaleIcon className="h-5 w-5" />,
-    description: 'Capture decisions',
-    href: '/rationale',
+    id: 'critique',
+    name: 'Critique',
+    icon: <MagnifyingGlassIcon className="h-5 w-5" />,
+    description: 'Get design feedback',
+    href: '/critique',
+  },
+  {
+    id: 'stakeholder',
+    name: 'Stakeholder',
+    icon: <UserGroupIcon className="h-5 w-5" />,
+    description: 'Prep for hard questions',
+    href: '/stakeholder',
+  },
+  {
+    id: 'ia',
+    name: 'IA',
+    icon: <Squares2X2Icon className="h-5 w-5" />,
+    description: 'Structure content',
+    href: '/ia',
   },
 ];
 

@@ -2,22 +2,31 @@
 
 import { useState, useCallback, useRef, useEffect, Suspense, ReactNode } from 'react';
 import Link from 'next/link';
-import { useSearchParams, useRouter } from 'next/navigation';
-import { Message, DesignRationale } from '@/types';
-import { INITIAL_RATIONALE, RATIONALE_INITIAL_MESSAGES } from '@/lib/constants';
-import {
-  parseRationaleUpdate,
-  mergeRationaleUpdate,
-  addPatternToDecision,
-  isPatternInRationale,
-  generateRationaleMarkdown,
-} from '@/lib/rationaleParser';
-import { RationaleModal, RationalePanel } from '@/components/Rationale';
+import { useRouter } from 'next/navigation';
+import { Message } from '@/types';
+import { CHAT_INITIAL_MESSAGES } from '@/lib/constants';
 import { Toast } from '@/components/Toast';
 import { PatternCard } from '@/components/Chat/PatternCard';
 import { getPatternById } from '@/lib/patterns/patterns';
 
 // Heroicons for Mode Dropdown
+const ChatBubbleLeftRightIcon = ({ className = 'h-5 w-5' }: { className?: string }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="currentColor"
+    className={className}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334a2.126 2.126 0 0 0-.476-.095 48.64 48.64 0 0 0-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0 0 11.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155"
+    />
+  </svg>
+);
+
 const ClipboardDocumentIcon = ({ className = 'h-5 w-5' }: { className?: string }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -52,7 +61,7 @@ const MapIcon = ({ className = 'h-5 w-5' }: { className?: string }) => (
   </svg>
 );
 
-const ScaleIcon = ({ className = 'h-5 w-5' }: { className?: string }) => (
+const MagnifyingGlassIcon = ({ className = 'h-5 w-5' }: { className?: string }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
@@ -64,25 +73,58 @@ const ScaleIcon = ({ className = 'h-5 w-5' }: { className?: string }) => (
     <path
       strokeLinecap="round"
       strokeLinejoin="round"
-      d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.97A48.416 48.416 0 0 0 12 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52 2.62 10.726c.122.499-.106 1.028-.589 1.202a5.988 5.988 0 0 1-2.031.352 5.988 5.988 0 0 1-2.031-.352c-.483-.174-.711-.703-.59-1.202L18.75 4.971Zm-16.5.52c.99-.203 1.99-.377 3-.52m0 0 2.62 10.726c.122.499-.106 1.028-.589 1.202a5.989 5.989 0 0 1-2.031.352 5.989 5.989 0 0 1-2.031-.352c-.483-.174-.711-.703-.59-1.202L5.25 4.971Z"
+      d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
     />
   </svg>
 );
 
-// Wrapper component to handle search params with Suspense
-function RationaleModeContent() {
-  return <RationaleModeInner />;
+const UserGroupIcon = ({ className = 'h-5 w-5' }: { className?: string }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="currentColor"
+    className={className}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z"
+    />
+  </svg>
+);
+
+const Squares2X2Icon = ({ className = 'h-5 w-5' }: { className?: string }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="currentColor"
+    className={className}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z"
+    />
+  </svg>
+);
+
+function ChatModeContent() {
+  return <ChatModeInner />;
 }
 
-export default function RationaleMode() {
+export default function ChatMode() {
   return (
-    <Suspense fallback={<RationaleModeLoading />}>
-      <RationaleModeContent />
+    <Suspense fallback={<ChatModeLoading />}>
+      <ChatModeContent />
     </Suspense>
   );
 }
 
-function RationaleModeLoading() {
+function ChatModeLoading() {
   return (
     <div className="flex h-screen items-center justify-center">
       <div className="text-text-tertiary">Loading...</div>
@@ -100,6 +142,13 @@ interface Mode {
 
 const MODES: Mode[] = [
   {
+    id: 'chat',
+    name: 'Chat',
+    icon: <ChatBubbleLeftRightIcon className="h-5 w-5" />,
+    description: 'Auto-detects mode',
+    href: '/chat',
+  },
+  {
     id: 'brief',
     name: 'Brief',
     icon: <ClipboardDocumentIcon className="h-5 w-5" />,
@@ -114,30 +163,85 @@ const MODES: Mode[] = [
     href: '/map',
   },
   {
-    id: 'rationale',
-    name: 'Rationale',
-    icon: <ScaleIcon className="h-5 w-5" />,
-    description: 'Capture decisions',
-    href: '/rationale',
+    id: 'critique',
+    name: 'Critique',
+    icon: <MagnifyingGlassIcon className="h-5 w-5" />,
+    description: 'Get design feedback',
+    href: '/critique',
+  },
+  {
+    id: 'stakeholder',
+    name: 'Stakeholder',
+    icon: <UserGroupIcon className="h-5 w-5" />,
+    description: 'Prep for hard questions',
+    href: '/stakeholder',
+  },
+  {
+    id: 'ia',
+    name: 'IA',
+    icon: <Squares2X2Icon className="h-5 w-5" />,
+    description: 'Structure content',
+    href: '/ia',
   },
 ];
+
+interface ModeSuggestion {
+  suggestedMode: string;
+  reason: string;
+}
+
+interface IdentifiedPattern {
+  patternId: string;
+  reason: string;
+}
+
+function parseModeSuggestion(content: string): {
+  displayContent: string;
+  modeSuggestion: ModeSuggestion | null;
+  identifiedPattern: IdentifiedPattern | null;
+} {
+  let displayContent = content;
+  let modeSuggestion: ModeSuggestion | null = null;
+  let identifiedPattern: IdentifiedPattern | null = null;
+
+  // Extract mode suggestion
+  const modeSuggestionMatch = content.match(/<mode_suggestion>\s*([\s\S]*?)\s*<\/mode_suggestion>/);
+  if (modeSuggestionMatch) {
+    displayContent = displayContent.replace(modeSuggestionMatch[0], '').trim();
+    try {
+      modeSuggestion = JSON.parse(modeSuggestionMatch[1]);
+    } catch {
+      console.error('Failed to parse mode suggestion');
+    }
+  }
+
+  // Extract pattern
+  const patternMatch = content.match(/<pattern_identified>\s*([\s\S]*?)\s*<\/pattern_identified>/);
+  if (patternMatch) {
+    displayContent = displayContent.replace(patternMatch[0], '').trim();
+    try {
+      identifiedPattern = JSON.parse(patternMatch[1]);
+    } catch {
+      console.error('Failed to parse pattern');
+    }
+  }
+
+  return { displayContent, modeSuggestion, identifiedPattern };
+}
 
 function generateId(): string {
   return Math.random().toString(36).substring(2, 15);
 }
 
-function RationaleModeInner() {
-  const searchParams = useSearchParams();
+function ChatModeInner() {
   const router = useRouter();
-  const [messages, setMessages] = useState<Message[]>(RATIONALE_INITIAL_MESSAGES);
-  const [rationale, setRationale] = useState<DesignRationale>(INITIAL_RATIONALE);
+  const [messages, setMessages] = useState<Message[]>(CHAT_INITIAL_MESSAGES);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [inputValue, setInputValue] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [toast, setToast] = useState({ isVisible: false, message: '' });
   const [isModeDropdownOpen, setIsModeDropdownOpen] = useState(false);
-  const [initialMessageSent, setInitialMessageSent] = useState(false);
+  const [suggestedMode, setSuggestedMode] = useState<ModeSuggestion | null>(null);
   const modeDropdownRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -152,72 +256,10 @@ function RationaleModeInner() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Auto-scroll to bottom on new messages
+  // Scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
-
-  // Handle initial message from URL query parameter
-  useEffect(() => {
-    const initialQuery = searchParams.get('q');
-    if (initialQuery && !initialMessageSent && !isLoading) {
-      setInitialMessageSent(true);
-      router.replace('/rationale', { scroll: false });
-      handleSendMessageDirect(initialQuery);
-    }
-  }, [searchParams, initialMessageSent, isLoading, router]);
-
-  // Direct send function that doesn't depend on state (for initial message)
-  const handleSendMessageDirect = async (content: string) => {
-    if (!content.trim()) return;
-
-    setError(null);
-
-    const userMessage: Message = {
-      id: generateId(),
-      role: 'user',
-      content: content.trim(),
-      timestamp: new Date(),
-    };
-    const newMessages = [...RATIONALE_INITIAL_MESSAGES, userMessage];
-    setMessages(newMessages);
-    setIsLoading(true);
-
-    try {
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: newMessages, mode: 'rationale' }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to get response');
-      }
-
-      const data = await response.json();
-      const { displayContent, rationaleUpdate, identifiedPattern } = parseRationaleUpdate(
-        data.message
-      );
-
-      const aiMessage: Message = {
-        id: generateId(),
-        role: 'assistant',
-        content: displayContent,
-        timestamp: new Date(),
-        identifiedPattern: identifiedPattern ?? undefined,
-      };
-      setMessages((prev) => [...prev, aiMessage]);
-
-      if (rationaleUpdate) {
-        setRationale((prev) => mergeRationaleUpdate(prev, rationaleUpdate));
-      }
-    } catch (err) {
-      console.error('Chat error:', err);
-      setError('Failed to get response. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const showToast = (message: string) => {
     setToast({ isVisible: true, message });
@@ -244,7 +286,7 @@ function RationaleModeInner() {
         const response = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ messages: newMessages, mode: 'rationale' }),
+          body: JSON.stringify({ messages: newMessages, mode: 'chat' }),
         });
 
         if (!response.ok) {
@@ -252,7 +294,7 @@ function RationaleModeInner() {
         }
 
         const data = await response.json();
-        const { displayContent, rationaleUpdate, identifiedPattern } = parseRationaleUpdate(
+        const { displayContent, modeSuggestion, identifiedPattern } = parseModeSuggestion(
           data.message
         );
 
@@ -265,8 +307,8 @@ function RationaleModeInner() {
         };
         setMessages((prev) => [...prev, aiMessage]);
 
-        if (rationaleUpdate) {
-          setRationale((prev) => mergeRationaleUpdate(prev, rationaleUpdate));
+        if (modeSuggestion) {
+          setSuggestedMode(modeSuggestion);
         }
       } catch (err) {
         console.error('Chat error:', err);
@@ -279,11 +321,11 @@ function RationaleModeInner() {
   );
 
   const handleNewChat = useCallback(() => {
-    if (messages.length > 1 && !confirm('Start over? Current rationale will be lost.')) {
+    if (messages.length > 1 && !confirm('Start over? Current conversation will be lost.')) {
       return;
     }
-    setMessages(RATIONALE_INITIAL_MESSAGES);
-    setRationale(INITIAL_RATIONALE);
+    setMessages(CHAT_INITIAL_MESSAGES);
+    setSuggestedMode(null);
     setError(null);
     setInputValue('');
   }, [messages.length]);
@@ -295,35 +337,12 @@ function RationaleModeInner() {
     }
   };
 
-  const handleCopyRationale = useCallback(async () => {
-    const markdown = generateRationaleMarkdown(rationale);
-    await navigator.clipboard.writeText(markdown);
-    showToast('Rationale copied to clipboard');
-  }, [rationale]);
-
-  const handleDownloadRationale = useCallback(() => {
-    const markdown = generateRationaleMarkdown(rationale);
-    const blob = new Blob([markdown], { type: 'text/markdown' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `design-rationale-${new Date().toISOString().split('T')[0]}.md`;
-    a.click();
-    URL.revokeObjectURL(url);
-  }, [rationale]);
-
-  const handleAddPatternToDecision = useCallback(
-    (patternId: string, reason: string, decisionId?: string) => {
-      // If no specific decision, add to the most recent decision
-      const targetDecisionId =
-        decisionId ?? rationale.decisions[rationale.decisions.length - 1]?.id;
-      if (targetDecisionId) {
-        setRationale((prev) => addPatternToDecision(prev, targetDecisionId, patternId, reason));
-        showToast('Pattern added to decision');
-      }
-    },
-    [rationale.decisions]
-  );
+  const handleSwitchMode = (modeId: string) => {
+    const mode = MODES.find((m) => m.id === modeId);
+    if (mode) {
+      router.push(mode.href);
+    }
+  };
 
   return (
     <div className="flex h-screen flex-col">
@@ -345,9 +364,9 @@ function RationaleModeInner() {
               className="bg-bg-secondary hover:bg-bg-tertiary flex items-center gap-2 rounded-full px-3 py-1 text-sm font-medium transition-colors"
             >
               <span className="text-accent-primary">
-                <ScaleIcon className="h-4 w-4" />
+                <ChatBubbleLeftRightIcon className="h-4 w-4" />
               </span>
-              <span className="text-text-secondary">Rationale Mode</span>
+              <span className="text-text-secondary">Chat</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="14"
@@ -376,7 +395,7 @@ function RationaleModeInner() {
                       href={mode.href}
                       onClick={() => setIsModeDropdownOpen(false)}
                       className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-colors ${
-                        mode.id === 'rationale'
+                        mode.id === 'chat'
                           ? 'bg-accent-primary/10 text-accent-primary'
                           : 'hover:bg-bg-secondary text-text-primary'
                       }`}
@@ -388,7 +407,7 @@ function RationaleModeInner() {
                         </div>
                         <p className="text-text-tertiary text-xs">{mode.description}</p>
                       </div>
-                      {mode.id === 'rationale' && (
+                      {mode.id === 'chat' && (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="16"
@@ -420,10 +439,9 @@ function RationaleModeInner() {
         </div>
       </header>
 
-      {/* Main content */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Left panel - Conversation */}
-        <div className="border-border-light flex w-1/2 flex-col border-r">
+      {/* Main content - centered chat */}
+      <div className="flex flex-1 flex-col overflow-hidden">
+        <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col">
           <div className="flex-1 overflow-y-auto p-6">
             <div className="space-y-4">
               {messages.map((message) => {
@@ -454,15 +472,8 @@ function RationaleModeInner() {
                           <PatternCard
                             pattern={identifiedPattern}
                             reason={message.identifiedPattern.reason}
-                            onAdd={() =>
-                              handleAddPatternToDecision(
-                                identifiedPattern.id,
-                                message.identifiedPattern!.reason,
-                                message.identifiedPattern!.decisionId
-                              )
-                            }
-                            isAdded={isPatternInRationale(rationale, identifiedPattern.id)}
-                            addLabel="Add to decision"
+                            onAddToBrief={() => showToast('Switch to Brief mode to add patterns')}
+                            isAddedToBrief={false}
                           />
                         </div>
                       </div>
@@ -485,6 +496,37 @@ function RationaleModeInner() {
             </div>
           </div>
 
+          {/* Mode suggestion banner */}
+          {suggestedMode && (
+            <div className="border-border-light bg-accent-primary/5 border-t px-6 py-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-text-primary text-sm font-medium">
+                    Switch to{' '}
+                    {suggestedMode.suggestedMode.charAt(0).toUpperCase() +
+                      suggestedMode.suggestedMode.slice(1)}{' '}
+                    mode?
+                  </p>
+                  <p className="text-text-tertiary text-xs">{suggestedMode.reason}</p>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setSuggestedMode(null)}
+                    className="text-text-secondary hover:text-text-primary text-sm"
+                  >
+                    Dismiss
+                  </button>
+                  <button
+                    onClick={() => handleSwitchMode(suggestedMode.suggestedMode)}
+                    className="bg-accent-primary hover:bg-accent-hover rounded-lg px-3 py-1 text-sm font-medium text-white"
+                  >
+                    Switch
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Input area */}
           <div className="border-border-light border-t p-4">
             {error && <p className="mb-2 text-sm text-red-500">{error}</p>}
@@ -493,7 +535,7 @@ function RationaleModeInner() {
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Tell me about a decision you've made..."
+                placeholder="What are you working on?"
                 disabled={isLoading}
                 rows={1}
                 className="border-border-light focus:border-accent-primary disabled:bg-bg-secondary disabled:text-text-tertiary flex-1 resize-none rounded-xl border px-4 py-3 text-base transition-colors outline-none"
@@ -508,24 +550,7 @@ function RationaleModeInner() {
             </div>
           </div>
         </div>
-
-        {/* Right panel - Design Rationale */}
-        <div className="bg-bg-secondary w-1/2">
-          <RationalePanel
-            rationale={rationale}
-            onViewRationale={() => setIsModalOpen(true)}
-            onCopyRationale={handleCopyRationale}
-            onDownloadRationale={handleDownloadRationale}
-          />
-        </div>
       </div>
-
-      <RationaleModal
-        rationale={rationale}
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onCopy={() => showToast('Rationale copied to clipboard')}
-      />
 
       <Toast
         message={toast.message}

@@ -10,6 +10,12 @@
 
 ## Recent Sessions
 
+### Session: February 1, 2026 (MacBook) - Six Modes Restructure
+
+- **Files changed:** 34
+- **Pattern:** Multi-mode architecture
+- **Notes:** Replaced 3-mode structure (Brief, Map, Rationale) with 6 modes: Chat (auto-detect), Brief, Map, Critique, Stakeholder, and IA. Removed Rationale mode completely. Created new parsers, components, and pages for Critique, Stakeholder, and IA modes. Added general Chat mode with auto-detection. Redesigned landing page to minimal centered layout with 2x3 card grid. Updated mode switcher in all pages.
+
 ### Session: January 30, 2026 (MacBook) - Three Modes Implementation
 
 - **Files changed:** 22
@@ -48,29 +54,40 @@
 
 ## Key Files
 
-- `src/app/page.tsx` - Landing page with three mode cards
+- `src/app/page.tsx` - Landing page with six mode cards
+- `src/app/chat/page.tsx` - General chat with auto-detect mode
 - `src/app/brief/page.tsx` - Brief mode chat interface
 - `src/app/map/page.tsx` - Map mode for user journey flows
-- `src/app/rationale/page.tsx` - Rationale mode for design decisions
+- `src/app/critique/page.tsx` - Critique mode for design feedback
+- `src/app/stakeholder/page.tsx` - Stakeholder prep mode
+- `src/app/ia/page.tsx` - Information architecture mode
 - `src/lib/constants.ts` - System prompts and initial states for all modes
 - `src/lib/briefParser.ts` - Parse AI responses for brief updates
 - `src/lib/designMapParser.ts` - Parse AI responses for map updates
-- `src/lib/rationaleParser.ts` - Parse AI responses for rationale updates
+- `src/lib/critiqueParser.ts` - Parse AI responses for critique updates
+- `src/lib/stakeholderParser.ts` - Parse AI responses for stakeholder updates
+- `src/lib/iaParser.ts` - Parse AI responses for IA updates
 - `src/components/Brief/` - Brief document cards, modal viewer
 - `src/components/DesignMap/` - Map panel, flow timeline, step cards
-- `src/components/Rationale/` - Rationale panel, decision cards
+- `src/components/Critique/` - Critique panel, issue cards, image upload
+- `src/components/Stakeholder/` - Stakeholder panel, objection cards
+- `src/components/IA/` - IA panel, content tree, navigation preview
 - `src/components/Chat/PatternCard.tsx` - Pattern identification cards
 - `src/lib/patterns/` - Pattern data loader and matcher
 - `src/data/patterns.json` - All 28 AI UX patterns
 
 ## Architecture Notes
 
-- Three modes: Brief, Map, Rationale (each with distinct conversation flow)
+- Six modes: Chat (auto-detect), Brief, Map, Critique, Stakeholder, IA
 - Two-panel layout: Chat (left), Artifact (right) - artifact varies by mode
+- Chat mode uses single-panel centered layout with mode suggestions
 - AI responses contain mode-specific XML tags:
   - Brief: `<brief_update>` for brief state updates
   - Map: `<designmap_update>` for flow step updates
-  - Rationale: `<rationale_update>` for decision updates
+  - Critique: `<critique_update>` for issue updates
+  - Stakeholder: `<stakeholder_update>` for objection updates
+  - IA: `<ia_update>` for content/navigation updates
+  - Chat: `<mode_suggestion>` for mode recommendations
 - AI responses can contain `<pattern_identified>` JSON tags for pattern cards
 - PatternCard appears inline in chat when AI identifies relevant patterns
 - Mock mode (`MOCK_MODE=true`) for testing without API key
