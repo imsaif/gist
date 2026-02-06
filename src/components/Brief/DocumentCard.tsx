@@ -40,7 +40,7 @@ export function DocumentCard({
 
   return (
     <div
-      className={`group relative flex h-36 w-full flex-col rounded-xl border bg-white p-4 transition-all hover:shadow-md ${
+      className={`group relative flex h-36 w-full flex-col rounded-xl border bg-white p-4 shadow-sm transition-all hover:shadow-md ${
         isSelected
           ? 'border-accent-primary ring-accent-primary/20 ring-2'
           : 'border-border-light hover:border-border-medium'

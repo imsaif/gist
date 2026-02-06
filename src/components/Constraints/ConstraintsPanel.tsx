@@ -115,7 +115,7 @@ export function ConstraintsPanel({
             <h3 className="text-text-tertiary mb-2 text-xs font-medium uppercase">
               Project Context
             </h3>
-            <div className="border-border-light rounded-xl border bg-white p-4">
+            <div className="border-border-light rounded-xl border bg-white p-4 shadow-sm">
               <p className="text-text-primary font-medium">{constraintMap.projectContext}</p>
             </div>
           </div>
@@ -131,7 +131,10 @@ export function ConstraintsPanel({
               {constraintMap.constraints.map((c) => {
                 const colors = CATEGORY_COLORS[c.category] || CATEGORY_COLORS.technical;
                 return (
-                  <div key={c.id} className="border-border-light rounded-xl border bg-white p-3">
+                  <div
+                    key={c.id}
+                    className="border-border-light rounded-xl border bg-white p-3 shadow-sm"
+                  >
                     <div className="mb-2 flex items-center gap-2">
                       <span
                         className={`rounded-full px-2 py-0.5 text-xs font-medium ${colors.badge} ${colors.text}`}
@@ -163,7 +166,10 @@ export function ConstraintsPanel({
             </h3>
             <div className="space-y-3">
               {constraintMap.designImplications.map((di) => (
-                <div key={di.id} className="border-border-light rounded-xl border bg-white p-3">
+                <div
+                  key={di.id}
+                  className="border-border-light rounded-xl border bg-white p-3 shadow-sm"
+                >
                   <p className="text-text-primary mb-2 text-sm font-medium">{di.implication}</p>
                   <div className="rounded-lg bg-blue-50/50 p-2">
                     <span className="text-xs font-medium text-blue-700">Design response: </span>
@@ -179,7 +185,7 @@ export function ConstraintsPanel({
         {constraintMap.opportunities.length > 0 && (
           <div className="mb-6">
             <h3 className="text-text-tertiary mb-2 text-xs font-medium uppercase">Opportunities</h3>
-            <div className="rounded-xl border border-green-100 bg-green-50/50 p-4">
+            <div className="rounded-xl border border-green-100 bg-green-50/50 p-4 shadow-sm">
               <ul className="space-y-2">
                 {constraintMap.opportunities.map((opp, i) => (
                   <li key={i} className="flex items-start gap-2 text-sm text-green-700">

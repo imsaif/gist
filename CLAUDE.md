@@ -10,6 +10,12 @@
 
 ## Recent Sessions
 
+### Session: February 6, 2026 (MacBook) - Artifact Panel Redesign
+
+- **Files changed:** 19
+- **Pattern:** Layout and visual polish
+- **Notes:** Changed skill page layout from 50/50 to 40/60 split (chat w-2/5, artifact w-3/5) across all 8 skill pages. Added shadow-sm to content cards in 4 sub-card components (FlowStepCard, ObjectionCard, IssueCard, DocumentCard), 7 panel components, and brief page pattern link cards for subtle depth on the gray background.
+
 ### Session: February 6, 2026 (MacBook) - Skill Pill UX & Key Fix
 
 - **Files changed:** 1

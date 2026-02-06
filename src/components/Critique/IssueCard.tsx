@@ -34,7 +34,7 @@ export function IssueCard({ issue, index }: IssueCardProps) {
   const pattern = issue.patternId ? getPatternById(issue.patternId) : null;
 
   return (
-    <div className={`rounded-xl border ${styles.border} ${styles.bg} p-4`}>
+    <div className={`rounded-xl border shadow-sm ${styles.border} ${styles.bg} p-4`}>
       <div className="mb-2 flex items-start justify-between">
         <div className="flex items-center gap-2">
           <span className="text-text-tertiary text-xs font-medium">#{index + 1}</span>

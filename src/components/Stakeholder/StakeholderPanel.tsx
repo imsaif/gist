@@ -101,7 +101,7 @@ export function StakeholderPanel({
             {stakeholder.designDecision && (
               <div className="mb-4">
                 <h3 className="text-text-tertiary mb-2 text-xs font-medium uppercase">Decision</h3>
-                <div className="border-border-light rounded-xl border bg-white p-4">
+                <div className="border-border-light rounded-xl border bg-white p-4 shadow-sm">
                   <p className="text-text-primary font-medium">{stakeholder.designDecision}</p>
                 </div>
               </div>
@@ -110,7 +110,7 @@ export function StakeholderPanel({
             {stakeholder.context.length > 0 && (
               <div>
                 <h3 className="text-text-tertiary mb-2 text-xs font-medium uppercase">Context</h3>
-                <div className="border-border-light rounded-xl border bg-white p-4">
+                <div className="border-border-light rounded-xl border bg-white p-4 shadow-sm">
                   <ul className="space-y-1">
                     {stakeholder.context.map((item, i) => (
                       <li key={i} className="text-text-secondary flex items-start gap-2 text-sm">
@@ -145,7 +145,7 @@ export function StakeholderPanel({
             <h3 className="text-text-tertiary mb-2 text-xs font-medium uppercase">
               Key Talking Points
             </h3>
-            <div className="rounded-xl border border-green-100 bg-green-50/50 p-4">
+            <div className="rounded-xl border border-green-100 bg-green-50/50 p-4 shadow-sm">
               <ol className="list-inside list-decimal space-y-2">
                 {stakeholder.talkingPoints.map((point, i) => (
                   <li key={i} className="text-sm text-green-700">
@@ -163,7 +163,7 @@ export function StakeholderPanel({
             <h3 className="text-text-tertiary mb-2 text-xs font-medium uppercase">
               Risk Mitigations
             </h3>
-            <div className="rounded-xl border border-amber-100 bg-amber-50/50 p-4">
+            <div className="rounded-xl border border-amber-100 bg-amber-50/50 p-4 shadow-sm">
               <ul className="space-y-1">
                 {stakeholder.riskMitigations.map((mitigation, i) => (
                   <li key={i} className="flex items-start gap-2 text-sm text-amber-700">

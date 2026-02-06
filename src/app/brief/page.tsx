@@ -578,7 +578,7 @@ function BriefModeInner() {
       {/* Main content */}
       <div className="flex flex-1 overflow-hidden">
         {/* Left panel - Conversation */}
-        <div className="border-border-light flex w-1/2 flex-col border-r">
+        <div className="border-border-light flex w-2/5 flex-col border-r">
           <div className="flex-1 overflow-y-auto p-6">
             <div className="space-y-4">
               {messages.map((message) => {
@@ -662,7 +662,7 @@ function BriefModeInner() {
         </div>
 
         {/* Right panel - Brief */}
-        <div className="bg-bg-secondary flex w-1/2 flex-col">
+        <div className="bg-bg-secondary flex w-3/5 flex-col">
           <div className="flex-1 overflow-y-auto p-6">
             {/* Building sections - show while not ready */}
             {!isReady && (
@@ -754,7 +754,7 @@ function BriefModeInner() {
                             href={pattern.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="border-border-light hover:border-accent-primary block rounded-lg border bg-white p-3 transition-colors"
+                            className="border-border-light hover:border-accent-primary block rounded-lg border bg-white p-3 shadow-sm transition-colors"
                           >
                             <div className="text-text-primary text-sm font-medium">
                               {pattern.name}

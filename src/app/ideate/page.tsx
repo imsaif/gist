@@ -510,7 +510,7 @@ function IdeateModeInner() {
       </header>
 
       <div className="flex flex-1 overflow-hidden">
-        <div className="border-border-light flex w-1/2 flex-col border-r">
+        <div className="border-border-light flex w-2/5 flex-col border-r">
           <div className="flex-1 overflow-y-auto p-6">
             <div className="space-y-4">
               {messages.map((message) => {
@@ -580,7 +580,7 @@ function IdeateModeInner() {
             </div>
           </div>
         </div>
-        <div className="bg-bg-secondary w-1/2">
+        <div className="bg-bg-secondary w-3/5">
           <IdeationPanel
             ideation={ideation}
             onViewIdeation={() => setIsModalOpen(true)}

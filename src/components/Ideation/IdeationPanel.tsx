@@ -119,7 +119,7 @@ export function IdeationPanel({
             <h3 className="text-text-tertiary mb-2 text-xs font-medium uppercase">
               Problem Statement
             </h3>
-            <div className="border-border-light rounded-xl border bg-white p-4">
+            <div className="border-border-light rounded-xl border bg-white p-4 shadow-sm">
               <p className="text-text-primary font-medium">{ideation.problemStatement}</p>
             </div>
           </div>
@@ -137,7 +137,7 @@ export function IdeationPanel({
                 return (
                   <div
                     key={approach.id}
-                    className={`rounded-xl border p-4 ${isRecommended ? 'border-green-200 bg-green-50/50' : 'border-border-light bg-white'}`}
+                    className={`rounded-xl border p-4 shadow-sm ${isRecommended ? 'border-green-200 bg-green-50/50' : 'border-border-light bg-white'}`}
                   >
                     <div className="mb-2 flex items-start justify-between">
                       <div className="flex items-center gap-2">
@@ -202,7 +202,7 @@ export function IdeationPanel({
               {ideation.evaluationCriteria.map((ec) => (
                 <div
                   key={ec.id}
-                  className="border-border-light flex items-center justify-between rounded-xl border bg-white p-3"
+                  className="border-border-light flex items-center justify-between rounded-xl border bg-white p-3 shadow-sm"
                 >
                   <span className="text-text-primary text-sm">{ec.criterion}</span>
                   <span
@@ -222,7 +222,7 @@ export function IdeationPanel({
             <h3 className="text-text-tertiary mb-2 text-xs font-medium uppercase">
               Recommendation
             </h3>
-            <div className="rounded-xl border border-green-100 bg-green-50/50 p-4">
+            <div className="rounded-xl border border-green-100 bg-green-50/50 p-4 shadow-sm">
               <p className="text-sm text-green-700">{ideation.recommendation.reasoning}</p>
               {ideation.recommendation.nextSteps.length > 0 && (
                 <div className="mt-3">

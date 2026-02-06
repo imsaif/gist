@@ -91,7 +91,7 @@ export function IAPanel({ ia, onViewIA, onCopyIA, onDownloadIA }: IAPanelProps) 
         {ia.projectName && (
           <div className="mb-6">
             <h3 className="text-text-tertiary mb-2 text-xs font-medium uppercase">Project</h3>
-            <div className="border-border-light rounded-xl border bg-white p-4">
+            <div className="border-border-light rounded-xl border bg-white p-4 shadow-sm">
               <p className="text-text-primary font-medium">{ia.projectName}</p>
             </div>
           </div>
@@ -139,7 +139,7 @@ export function IAPanel({ ia, onViewIA, onCopyIA, onDownloadIA }: IAPanelProps) 
             <h3 className="text-text-tertiary mb-3 text-xs font-medium uppercase">
               Navigation Structure
             </h3>
-            <div className="border-border-light rounded-xl border bg-white p-4">
+            <div className="border-border-light rounded-xl border bg-white p-4 shadow-sm">
               <NavigationPreview items={ia.navigation} />
             </div>
           </div>
@@ -151,7 +151,7 @@ export function IAPanel({ ia, onViewIA, onCopyIA, onDownloadIA }: IAPanelProps) 
             <h3 className="text-text-tertiary mb-2 text-xs font-medium uppercase">
               Open Questions
             </h3>
-            <div className="rounded-xl border border-amber-100 bg-amber-50/50 p-4">
+            <div className="rounded-xl border border-amber-100 bg-amber-50/50 p-4 shadow-sm">
               <ul className="space-y-1">
                 {ia.openQuestions.map((q, i) => (
                   <li key={i} className="flex items-start gap-2 text-sm text-amber-700">

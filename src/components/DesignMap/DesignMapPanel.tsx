@@ -128,7 +128,7 @@ export function DesignMapPanel({ map, onViewMap, onCopyMap, onDownloadMap }: Des
               {map.alternatives.map((alt, i) => (
                 <div
                   key={i}
-                  className={`rounded-lg border p-3 ${
+                  className={`rounded-lg border p-3 shadow-sm ${
                     alt.rejected
                       ? 'border-border-light bg-bg-secondary'
                       : 'border-green-200 bg-green-50'

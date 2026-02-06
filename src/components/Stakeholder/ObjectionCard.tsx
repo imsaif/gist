@@ -19,7 +19,7 @@ export function ObjectionCard({ objection, index }: ObjectionCardProps) {
   const colors = STAKEHOLDER_COLORS[objection.stakeholder] || STAKEHOLDER_COLORS.Other;
 
   return (
-    <div className={`border-border-light rounded-xl border bg-white p-4`}>
+    <div className={`border-border-light rounded-xl border bg-white p-4 shadow-sm`}>
       <div className="mb-3 flex items-start justify-between">
         <div className="flex items-center gap-2">
           <span className="text-text-tertiary text-xs font-medium">#{index + 1}</span>

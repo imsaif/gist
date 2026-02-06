@@ -130,7 +130,7 @@ export function CritiquePanel({
             <h3 className="text-text-tertiary mb-2 text-xs font-medium uppercase">
               What&apos;s Working
             </h3>
-            <div className="rounded-xl border border-green-100 bg-green-50/50 p-4">
+            <div className="rounded-xl border border-green-100 bg-green-50/50 p-4 shadow-sm">
               <ul className="space-y-1">
                 {critique.whatsWorking.map((item, i) => (
                   <li key={i} className="flex items-start gap-2 text-sm text-green-700">
@@ -171,7 +171,7 @@ export function CritiquePanel({
                     href={pattern.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="border-border-light hover:border-accent-primary block rounded-lg border bg-white p-3 transition-colors"
+                    className="border-border-light hover:border-accent-primary block rounded-lg border bg-white p-3 shadow-sm transition-colors"
                   >
                     <div className="text-text-primary text-sm font-medium">{pattern.name}</div>
                     <div className="text-text-tertiary text-xs">{p.reason}</div>
@@ -188,7 +188,7 @@ export function CritiquePanel({
             <h3 className="text-text-tertiary mb-2 text-xs font-medium uppercase">
               Priority Fixes
             </h3>
-            <div className="rounded-xl border border-purple-100 bg-purple-50/50 p-4">
+            <div className="rounded-xl border border-purple-100 bg-purple-50/50 p-4 shadow-sm">
               <ol className="list-inside list-decimal space-y-1">
                 {critique.priorityFixes.map((fix, i) => (
                   <li key={i} className="text-sm text-purple-700">

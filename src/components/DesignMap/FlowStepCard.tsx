@@ -35,7 +35,7 @@ export function FlowStepCard({ step, index }: FlowStepCardProps) {
           onClick={() => hasDetails && setIsExpanded(!isExpanded)}
           className={`w-full text-left ${hasDetails ? 'cursor-pointer' : 'cursor-default'}`}
         >
-          <div className="border-border-light hover:border-border-medium rounded-xl border bg-white p-4 transition-all hover:shadow-sm">
+          <div className="border-border-light hover:border-border-medium rounded-xl border bg-white p-4 shadow-sm transition-all hover:shadow-md">
             {/* Header */}
             <div className="flex items-start justify-between gap-2">
               <div className="flex-1">

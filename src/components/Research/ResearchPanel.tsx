@@ -120,7 +120,7 @@ export function ResearchPanel({
             <h3 className="text-text-tertiary mb-2 text-xs font-medium uppercase">
               Product Context
             </h3>
-            <div className="border-border-light rounded-xl border bg-white p-4">
+            <div className="border-border-light rounded-xl border bg-white p-4 shadow-sm">
               <p className="text-text-primary font-medium">{research.productContext}</p>
             </div>
           </div>
@@ -136,7 +136,7 @@ export function ResearchPanel({
               {research.segments.map((segment) => (
                 <div
                   key={segment.id}
-                  className="border-border-light rounded-xl border bg-white p-4"
+                  className="border-border-light rounded-xl border bg-white p-4 shadow-sm"
                 >
                   <h4 className="text-text-primary mb-1 font-medium">{segment.name}</h4>
                   <p className="text-text-secondary mb-3 text-sm">{segment.description}</p>
@@ -182,7 +182,7 @@ export function ResearchPanel({
               {research.painPoints.map((pp) => (
                 <div
                   key={pp.id}
-                  className="border-border-light flex items-start gap-3 rounded-xl border bg-white p-3"
+                  className="border-border-light flex items-start gap-3 rounded-xl border bg-white p-3 shadow-sm"
                 >
                   <span
                     className={`rounded-full px-2 py-0.5 text-xs font-medium ${SEVERITY_COLORS[pp.severity]}`}
@@ -205,7 +205,7 @@ export function ResearchPanel({
             <h3 className="text-text-tertiary mb-2 text-xs font-medium uppercase">
               Current Solutions
             </h3>
-            <div className="border-border-light rounded-xl border bg-white p-4">
+            <div className="border-border-light rounded-xl border bg-white p-4 shadow-sm">
               <ul className="space-y-1">
                 {research.currentSolutions.map((s, i) => (
                   <li key={i} className="text-text-secondary flex items-start gap-2 text-sm">
@@ -222,7 +222,7 @@ export function ResearchPanel({
         {research.unmetNeeds.length > 0 && (
           <div className="mb-6">
             <h3 className="text-text-tertiary mb-2 text-xs font-medium uppercase">Unmet Needs</h3>
-            <div className="rounded-xl border border-purple-100 bg-purple-50/50 p-4">
+            <div className="rounded-xl border border-purple-100 bg-purple-50/50 p-4 shadow-sm">
               <ul className="space-y-1">
                 {research.unmetNeeds.map((n, i) => (
                   <li key={i} className="flex items-start gap-2 text-sm text-purple-700">
@@ -243,7 +243,10 @@ export function ResearchPanel({
             </h3>
             <div className="space-y-2">
               {research.researchMethods.map((rm) => (
-                <div key={rm.id} className="border-border-light rounded-xl border bg-white p-3">
+                <div
+                  key={rm.id}
+                  className="border-border-light rounded-xl border bg-white p-3 shadow-sm"
+                >
                   <div className="mb-1 flex items-center gap-2">
                     <span className="text-text-primary text-sm font-medium">{rm.method}</span>
                     <span
@@ -263,7 +266,7 @@ export function ResearchPanel({
         {research.keyInsights.length > 0 && (
           <div className="mb-6">
             <h3 className="text-text-tertiary mb-2 text-xs font-medium uppercase">Key Insights</h3>
-            <div className="rounded-xl border border-blue-100 bg-blue-50/50 p-4">
+            <div className="rounded-xl border border-blue-100 bg-blue-50/50 p-4 shadow-sm">
               <ol className="list-inside list-decimal space-y-2">
                 {research.keyInsights.map((insight, i) => (
                   <li key={i} className="text-sm text-blue-700">
