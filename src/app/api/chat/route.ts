@@ -16,7 +16,7 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
-type Mode =
+type Skill =
   | 'chat'
   | 'brief'
   | 'map'
@@ -27,9 +27,9 @@ type Mode =
   | 'ideate'
   | 'constraints';
 
-// Get system prompt based on mode
-function getSystemPromptForMode(mode: Mode): string {
-  switch (mode) {
+// Get system prompt based on skill
+function getSystemPromptForSkill(skill: Skill): string {
+  switch (skill) {
     case 'chat':
       return getChatSystemPrompt();
     case 'map':
@@ -52,7 +52,7 @@ function getSystemPromptForMode(mode: Mode): string {
   }
 }
 
-// Mock responses for Brief mode
+// Mock responses for Brief skill
 function getBriefMockResponse(messages: Message[]): string {
   const userMessages = messages.filter((m) => m.role === 'user');
   const messageCount = userMessages.length;
@@ -143,7 +143,7 @@ This sounds like a classic Human-in-the-Loop situation — where users stay in c
   return '';
 }
 
-// Mock responses for Map mode
+// Mock responses for Map skill
 function getMapMockResponse(messages: Message[]): string {
   const userMessages = messages.filter((m) => m.role === 'user');
   const messageCount = userMessages.length;
@@ -248,7 +248,7 @@ function getMapMockResponse(messages: Message[]): string {
   return '';
 }
 
-// Mock responses for Critique mode
+// Mock responses for Critique skill
 function getCritiqueMockResponse(messages: Message[]): string {
   const userMessages = messages.filter((m) => m.role === 'user');
   const messageCount = userMessages.length;
@@ -324,7 +324,7 @@ First, what's working well:
   return '';
 }
 
-// Mock responses for Stakeholder mode
+// Mock responses for Stakeholder skill
 function getStakeholderMockResponse(messages: Message[]): string {
   const userMessages = messages.filter((m) => m.role === 'user');
   const messageCount = userMessages.length;
@@ -401,7 +401,7 @@ function getStakeholderMockResponse(messages: Message[]): string {
   return '';
 }
 
-// Mock responses for IA mode
+// Mock responses for IA skill
 function getIAMockResponse(messages: Message[]): string {
   const userMessages = messages.filter((m) => m.role === 'user');
   const messageCount = userMessages.length;
@@ -506,13 +506,13 @@ function getIAMockResponse(messages: Message[]): string {
   return '';
 }
 
-// Mock responses for Chat mode (general)
+// Mock responses for Chat skill (general)
 function getChatMockResponse(messages: Message[]): string {
   const userMessages = messages.filter((m) => m.role === 'user');
   const messageCount = userMessages.length;
   const lastMessage = userMessages[userMessages.length - 1]?.content.toLowerCase() || '';
 
-  // Detect potential modes from the message
+  // Detect potential skills from the message
   const mentionsFlow =
     lastMessage.includes('flow') || lastMessage.includes('journey') || lastMessage.includes('step');
   const mentionsCritique =
@@ -536,7 +536,7 @@ Want to switch to Map mode to properly walk through this journey? It'll help us 
 
 <mode_suggestion>
 {
-  "suggestedMode": "map",
+  "suggestedSkill": "map",
   "reason": "You're describing a user flow — Map mode helps walk through each step"
 }
 </mode_suggestion>`;
@@ -549,7 +549,7 @@ Want to switch to Critique mode? You can share a screenshot and I'll give you st
 
 <mode_suggestion>
 {
-  "suggestedMode": "critique",
+  "suggestedSkill": "critique",
   "reason": "You want design feedback — Critique mode provides structured analysis"
 }
 </mode_suggestion>`;
@@ -562,7 +562,7 @@ Want to switch to Stakeholder mode to prep for that conversation?
 
 <mode_suggestion>
 {
-  "suggestedMode": "stakeholder",
+  "suggestedSkill": "stakeholder",
   "reason": "You need to present/defend a decision — Stakeholder mode helps prep"
 }
 </mode_suggestion>`;
@@ -575,7 +575,7 @@ Want to switch to IA mode to structure this properly?
 
 <mode_suggestion>
 {
-  "suggestedMode": "ia",
+  "suggestedSkill": "ia",
   "reason": "You're organizing content/navigation — IA mode helps structure it"
 }
 </mode_suggestion>`;
@@ -599,7 +599,7 @@ Want to switch modes, or would you like to continue chatting here?
 
 <mode_suggestion>
 {
-  "suggestedMode": "brief",
+  "suggestedSkill": "brief",
   "reason": "Clarifying requirements before design helps avoid wasted effort"
 }
 </mode_suggestion>`;
@@ -608,7 +608,7 @@ Want to switch modes, or would you like to continue chatting here?
   return '';
 }
 
-// Mock responses for Research mode
+// Mock responses for Research skill
 function getResearchMockResponse(messages: Message[]): string {
   const userMessages = messages.filter((m) => m.role === 'user');
   const messageCount = userMessages.length;
@@ -706,7 +706,7 @@ function getResearchMockResponse(messages: Message[]): string {
   return '';
 }
 
-// Mock responses for Ideation mode
+// Mock responses for Ideation skill
 function getIdeationMockResponse(messages: Message[]): string {
   const userMessages = messages.filter((m) => m.role === 'user');
   const messageCount = userMessages.length;
@@ -819,7 +819,7 @@ Which resonates? Or should we push for more options?
   return '';
 }
 
-// Mock responses for Constraints mode
+// Mock responses for Constraints skill
 function getConstraintsMockResponse(messages: Message[]): string {
   const userMessages = messages.filter((m) => m.role === 'user');
   const messageCount = userMessages.length;
@@ -932,9 +932,9 @@ The API integration means you can't redesign the data model — you work with wh
   return '';
 }
 
-// Get mock response based on mode
-function getMockResponse(messages: Message[], mode: Mode): string {
-  switch (mode) {
+// Get mock response based on skill
+function getMockResponse(messages: Message[], skill: Skill): string {
+  switch (skill) {
     case 'chat':
       return getChatMockResponse(messages);
     case 'map':
@@ -959,14 +959,14 @@ function getMockResponse(messages: Message[], mode: Mode): string {
 
 export async function POST(request: Request) {
   try {
-    const { messages, mode = 'brief' } = await request.json();
+    const { messages, skill = 'brief' } = await request.json();
 
     // Use mock mode if enabled
     if (process.env.MOCK_MODE === 'true') {
       // Simulate a small delay like a real API
       await new Promise((resolve) => setTimeout(resolve, 800));
       return Response.json({
-        message: getMockResponse(messages, mode as Mode),
+        message: getMockResponse(messages, skill as Skill),
       });
     }
 
@@ -976,7 +976,7 @@ export async function POST(request: Request) {
       content: msg.content,
     }));
 
-    const systemPrompt = getSystemPromptForMode(mode as Mode);
+    const systemPrompt = getSystemPromptForSkill(skill as Skill);
 
     const response = await anthropic.messages.create({
       model: 'claude-sonnet-4-20250514',

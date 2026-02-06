@@ -2,10 +2,10 @@
 
 import Link from 'next/link';
 
-export type ModeType = 'brief' | 'critique' | 'research' | 'stakeholder' | 'ia';
+export type SkillType = 'brief' | 'critique' | 'research' | 'stakeholder' | 'ia';
 
-interface ModeCardProps {
-  mode: ModeType;
+interface SkillCardProps {
+  skill: SkillType;
   title: string;
   description: string;
   icon: React.ReactNode;
@@ -13,13 +13,13 @@ interface ModeCardProps {
   disabled?: boolean;
 }
 
-export function ModeCard({
+export function SkillCard({
   title,
   description,
   icon,
   href,
   disabled = false,
-}: Omit<ModeCardProps, 'mode'>) {
+}: Omit<SkillCardProps, 'skill'>) {
   const content = (
     <div
       className={`group flex h-44 w-full flex-col items-center justify-center rounded-2xl border-2 p-6 text-center transition-all ${

@@ -10,6 +10,12 @@
 
 ## Recent Sessions
 
+### Session: February 6, 2026 (MacBook) - Rename Mode→Skill Across Codebase
+
+- **Files changed:** 17
+- **Pattern:** Codebase-wide rename
+- **Notes:** Renamed all "Mode/Modes" references to "Skill/Skills" across 16 files for consistent terminology. Renamed components directory Modes→Skills (SkillCard, SkillSelector), updated API route (type Skill, getSystemPromptForSkill, skill request body), landing page (SKILL_PILLS, SkillPill), all 9 page.tsx files (SKILLS array, skillDropdownRef, isSkillDropdownOpen), chat page (SkillSuggestion, suggestedSkill), and comment headers in types/constants. Kept MOCK_MODE env var and `<mode_suggestion>` XML tag unchanged.
+
 ### Session: February 6, 2026 (MacBook) - Grid Background on Landing Page
 
 - **Files changed:** 1

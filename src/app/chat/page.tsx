@@ -9,7 +9,7 @@ import { Toast } from '@/components/Toast';
 import { PatternCard } from '@/components/Chat/PatternCard';
 import { getPatternById } from '@/lib/patterns/patterns';
 
-// Heroicons for Mode Dropdown
+// Heroicons for Skill Dropdown
 const ChatBubbleLeftRightIcon = ({ className = 'h-5 w-5' }: { className?: string }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -183,7 +183,7 @@ function ChatModeLoading() {
   );
 }
 
-interface Mode {
+interface Skill {
   id: string;
   name: string;
   icon: ReactNode;
@@ -191,12 +191,12 @@ interface Mode {
   href: string;
 }
 
-const MODES: Mode[] = [
+const SKILLS: Skill[] = [
   {
     id: 'chat',
     name: 'Chat',
     icon: <ChatBubbleLeftRightIcon className="h-5 w-5" />,
-    description: 'Auto-detects mode',
+    description: 'Auto-detects skill',
     href: '/chat',
   },
   {
@@ -257,8 +257,8 @@ const MODES: Mode[] = [
   },
 ];
 
-interface ModeSuggestion {
-  suggestedMode: string;
+interface SkillSuggestion {
+  suggestedSkill: string;
   reason: string;
 }
 
@@ -267,23 +267,25 @@ interface IdentifiedPattern {
   reason: string;
 }
 
-function parseModeSuggestion(content: string): {
+function parseSkillSuggestion(content: string): {
   displayContent: string;
-  modeSuggestion: ModeSuggestion | null;
+  skillSuggestion: SkillSuggestion | null;
   identifiedPattern: IdentifiedPattern | null;
 } {
   let displayContent = content;
-  let modeSuggestion: ModeSuggestion | null = null;
+  let skillSuggestion: SkillSuggestion | null = null;
   let identifiedPattern: IdentifiedPattern | null = null;
 
-  // Extract mode suggestion
-  const modeSuggestionMatch = content.match(/<mode_suggestion>\s*([\s\S]*?)\s*<\/mode_suggestion>/);
-  if (modeSuggestionMatch) {
-    displayContent = displayContent.replace(modeSuggestionMatch[0], '').trim();
+  // Extract skill suggestion
+  const skillSuggestionMatch = content.match(
+    /<mode_suggestion>\s*([\s\S]*?)\s*<\/mode_suggestion>/
+  );
+  if (skillSuggestionMatch) {
+    displayContent = displayContent.replace(skillSuggestionMatch[0], '').trim();
     try {
-      modeSuggestion = JSON.parse(modeSuggestionMatch[1]);
+      skillSuggestion = JSON.parse(skillSuggestionMatch[1]);
     } catch {
-      console.error('Failed to parse mode suggestion');
+      console.error('Failed to parse skill suggestion');
     }
   }
 
@@ -298,7 +300,7 @@ function parseModeSuggestion(content: string): {
     }
   }
 
-  return { displayContent, modeSuggestion, identifiedPattern };
+  return { displayContent, skillSuggestion, identifiedPattern };
 }
 
 function generateId(): string {
@@ -313,10 +315,10 @@ function ChatModeInner() {
   const [error, setError] = useState<string | null>(null);
   const [inputValue, setInputValue] = useState('');
   const [toast, setToast] = useState({ isVisible: false, message: '' });
-  const [isModeDropdownOpen, setIsModeDropdownOpen] = useState(false);
-  const [suggestedMode, setSuggestedMode] = useState<ModeSuggestion | null>(null);
+  const [isSkillDropdownOpen, setIsSkillDropdownOpen] = useState(false);
+  const [suggestedSkill, setSuggestedSkill] = useState<SkillSuggestion | null>(null);
   const [initialMessageSent, setInitialMessageSent] = useState(false);
-  const modeDropdownRef = useRef<HTMLDivElement>(null);
+  const skillDropdownRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Handle initial message from URL query parameter
@@ -349,7 +351,7 @@ function ChatModeInner() {
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: newMessages, mode: 'chat' }),
+        body: JSON.stringify({ messages: newMessages, skill: 'chat' }),
       });
 
       if (!response.ok) {
@@ -357,7 +359,7 @@ function ChatModeInner() {
       }
 
       const data = await response.json();
-      const { displayContent, modeSuggestion, identifiedPattern } = parseModeSuggestion(
+      const { displayContent, skillSuggestion, identifiedPattern } = parseSkillSuggestion(
         data.message
       );
 
@@ -370,8 +372,8 @@ function ChatModeInner() {
       };
       setMessages((prev) => [...prev, aiMessage]);
 
-      if (modeSuggestion) {
-        setSuggestedMode(modeSuggestion);
+      if (skillSuggestion) {
+        setSuggestedSkill(skillSuggestion);
       }
     } catch (err) {
       console.error('Chat error:', err);
@@ -384,8 +386,8 @@ function ChatModeInner() {
   // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (modeDropdownRef.current && !modeDropdownRef.current.contains(event.target as Node)) {
-        setIsModeDropdownOpen(false);
+      if (skillDropdownRef.current && !skillDropdownRef.current.contains(event.target as Node)) {
+        setIsSkillDropdownOpen(false);
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
@@ -422,7 +424,7 @@ function ChatModeInner() {
         const response = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ messages: newMessages, mode: 'chat' }),
+          body: JSON.stringify({ messages: newMessages, skill: 'chat' }),
         });
 
         if (!response.ok) {
@@ -430,7 +432,7 @@ function ChatModeInner() {
         }
 
         const data = await response.json();
-        const { displayContent, modeSuggestion, identifiedPattern } = parseModeSuggestion(
+        const { displayContent, skillSuggestion, identifiedPattern } = parseSkillSuggestion(
           data.message
         );
 
@@ -443,8 +445,8 @@ function ChatModeInner() {
         };
         setMessages((prev) => [...prev, aiMessage]);
 
-        if (modeSuggestion) {
-          setSuggestedMode(modeSuggestion);
+        if (skillSuggestion) {
+          setSuggestedSkill(skillSuggestion);
         }
       } catch (err) {
         console.error('Chat error:', err);
@@ -461,7 +463,7 @@ function ChatModeInner() {
       return;
     }
     setMessages(CHAT_INITIAL_MESSAGES);
-    setSuggestedMode(null);
+    setSuggestedSkill(null);
     setError(null);
     setInputValue('');
   }, [messages.length]);
@@ -473,10 +475,10 @@ function ChatModeInner() {
     }
   };
 
-  const handleSwitchMode = (modeId: string) => {
-    const mode = MODES.find((m) => m.id === modeId);
-    if (mode) {
-      router.push(mode.href);
+  const handleSwitchSkill = (skillId: string) => {
+    const skill = SKILLS.find((s) => s.id === skillId);
+    if (skill) {
+      router.push(skill.href);
     }
   };
 
@@ -493,10 +495,10 @@ function ChatModeInner() {
           </Link>
           <span className="text-text-tertiary">/</span>
 
-          {/* Mode Switcher Dropdown */}
-          <div className="relative" ref={modeDropdownRef}>
+          {/* Skill Switcher Dropdown */}
+          <div className="relative" ref={skillDropdownRef}>
             <button
-              onClick={() => setIsModeDropdownOpen(!isModeDropdownOpen)}
+              onClick={() => setIsSkillDropdownOpen(!isSkillDropdownOpen)}
               className="bg-bg-secondary hover:bg-bg-tertiary flex items-center gap-2 rounded-full px-3 py-1 text-sm font-medium transition-colors"
             >
               <span className="text-accent-primary">
@@ -513,37 +515,37 @@ function ChatModeInner() {
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className={`text-text-tertiary transition-transform ${isModeDropdownOpen ? 'rotate-180' : ''}`}
+                className={`text-text-tertiary transition-transform ${isSkillDropdownOpen ? 'rotate-180' : ''}`}
               >
                 <path d="m6 9 6 6 6-6" />
               </svg>
             </button>
 
-            {isModeDropdownOpen && (
+            {isSkillDropdownOpen && (
               <div className="border-border-light absolute top-full left-0 z-50 mt-2 w-64 overflow-hidden rounded-xl border bg-white shadow-lg">
                 <div className="p-2">
                   <p className="text-text-tertiary px-3 py-2 text-xs font-medium uppercase">
-                    Switch Mode
+                    Switch Skill
                   </p>
-                  {MODES.map((mode) => (
+                  {SKILLS.map((skill) => (
                     <Link
-                      key={mode.id}
-                      href={mode.href}
-                      onClick={() => setIsModeDropdownOpen(false)}
+                      key={skill.id}
+                      href={skill.href}
+                      onClick={() => setIsSkillDropdownOpen(false)}
                       className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-colors ${
-                        mode.id === 'chat'
+                        skill.id === 'chat'
                           ? 'bg-accent-primary/10 text-accent-primary'
                           : 'hover:bg-bg-secondary text-text-primary'
                       }`}
                     >
-                      <span className="text-accent-primary">{mode.icon}</span>
+                      <span className="text-accent-primary">{skill.icon}</span>
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
-                          <span className="font-medium">{mode.name}</span>
+                          <span className="font-medium">{skill.name}</span>
                         </div>
-                        <p className="text-text-tertiary text-xs">{mode.description}</p>
+                        <p className="text-text-tertiary text-xs">{skill.description}</p>
                       </div>
-                      {mode.id === 'chat' && (
+                      {skill.id === 'chat' && (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="16"
@@ -633,27 +635,27 @@ function ChatModeInner() {
           </div>
 
           {/* Mode suggestion banner */}
-          {suggestedMode && (
+          {suggestedSkill && (
             <div className="border-border-light bg-accent-primary/5 border-t px-6 py-3">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-text-primary text-sm font-medium">
                     Switch to{' '}
-                    {suggestedMode.suggestedMode.charAt(0).toUpperCase() +
-                      suggestedMode.suggestedMode.slice(1)}{' '}
-                    mode?
+                    {suggestedSkill.suggestedSkill.charAt(0).toUpperCase() +
+                      suggestedSkill.suggestedSkill.slice(1)}{' '}
+                    skill?
                   </p>
-                  <p className="text-text-tertiary text-xs">{suggestedMode.reason}</p>
+                  <p className="text-text-tertiary text-xs">{suggestedSkill.reason}</p>
                 </div>
                 <div className="flex gap-2">
                   <button
-                    onClick={() => setSuggestedMode(null)}
+                    onClick={() => setSuggestedSkill(null)}
                     className="text-text-secondary hover:text-text-primary text-sm"
                   >
                     Dismiss
                   </button>
                   <button
-                    onClick={() => handleSwitchMode(suggestedMode.suggestedMode)}
+                    onClick={() => handleSwitchSkill(suggestedSkill.suggestedSkill)}
                     className="bg-accent-primary hover:bg-accent-hover rounded-lg px-3 py-1 text-sm font-medium text-white"
                   >
                     Switch

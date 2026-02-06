@@ -36,7 +36,7 @@ const PATTERN_RULES = `When you recognize a pattern is relevant, include it usin
 - The pattern card will appear automatically after your message`;
 
 // ============================================
-// Brief Mode System Prompt
+// Brief Skill System Prompt
 // ============================================
 
 export function getBriefSystemPrompt(): string {
@@ -107,7 +107,7 @@ Your first message: "What are you designing? Walk me through it briefly."
 }
 
 // ============================================
-// Map Mode System Prompt
+// Map Skill System Prompt
 // ============================================
 
 // Generate system prompt with pattern data
@@ -350,7 +350,7 @@ Good: "For the suggestion review step — what happens if the AI suggestion is c
 }
 
 // ============================================
-// Critique Mode System Prompt
+// Critique Skill System Prompt
 // ============================================
 
 export function getCritiqueSystemPrompt(): string {
@@ -427,7 +427,7 @@ Your first message: "Share a screenshot of your design. I'll analyze it for UX p
 }
 
 // ============================================
-// Stakeholder Mode System Prompt
+// Stakeholder Skill System Prompt
 // ============================================
 
 export function getStakeholderSystemPrompt(): string {
@@ -500,7 +500,7 @@ Your first message: "What design decision do you need to defend? Tell me about t
 }
 
 // ============================================
-// IA Mode System Prompt
+// IA Skill System Prompt
 // ============================================
 
 export function getIASystemPrompt(): string {
@@ -584,7 +584,7 @@ Your first message: "What product or feature are you structuring? Tell me about 
 }
 
 // ============================================
-// Research Mode System Prompt
+// Research Skill System Prompt
 // ============================================
 
 export function getResearchSystemPrompt(): string {
@@ -669,7 +669,7 @@ Your first message: "Who are you designing for? Tell me about the product or fea
 }
 
 // ============================================
-// Ideation Mode System Prompt
+// Ideation Skill System Prompt
 // ============================================
 
 export function getIdeationSystemPrompt(): string {
@@ -749,7 +749,7 @@ Your first message: "What problem are you trying to solve? Describe it without j
 }
 
 // ============================================
-// Constraints Mode System Prompt
+// Constraints Skill System Prompt
 // ============================================
 
 export function getConstraintsSystemPrompt(): string {
@@ -831,7 +831,7 @@ Your first message: "What are you designing and what's the scope? I'll help you 
 }
 
 // ============================================
-// General Chat Mode System Prompt
+// General Chat Skill System Prompt
 // ============================================
 
 export function getChatSystemPrompt(): string {
@@ -858,31 +858,31 @@ ${patternList}
 
 ## How you behave
 
-- Listen first, then guide the conversation toward the right mode
+- Listen first, then guide the conversation toward the right skill
 - Ask clarifying questions to understand what kind of help is needed
 - Be warm but direct — don't be sycophantic
 - Share relevant patterns when they apply
-- If a user needs a specific mode, suggest they switch (e.g., "This sounds like you need to map a flow — want to switch to Map mode?")
+- If a user needs a specific skill, suggest they switch (e.g., "This sounds like you need to map a flow — want to switch to Map skill?")
 
-## Mode Detection
+## Skill Detection
 
-Based on the conversation, detect which mode would be most helpful:
+Based on the conversation, detect which skill would be most helpful:
 
-- **Brief mode**: User is unclear on what they're building, needs to clarify requirements
-- **Map mode**: User is working on a specific flow or journey
-- **Critique mode**: User has a design/screenshot they want feedback on
-- **Stakeholder mode**: User needs to present or defend a decision
-- **IA mode**: User is organizing content, navigation, or information structure
-- **Research mode**: User wants to understand their users, identify pain points, or plan research
-- **Ideate mode**: User wants to explore multiple solution approaches before committing
-- **Constraints mode**: User wants to surface limitations, boundaries, or design constraints
+- **Brief skill**: User is unclear on what they're building, needs to clarify requirements
+- **Map skill**: User is working on a specific flow or journey
+- **Critique skill**: User has a design/screenshot they want feedback on
+- **Stakeholder skill**: User needs to present or defend a decision
+- **IA skill**: User is organizing content, navigation, or information structure
+- **Research skill**: User wants to understand their users, identify pain points, or plan research
+- **Ideate skill**: User wants to explore multiple solution approaches before committing
+- **Constraints skill**: User wants to surface limitations, boundaries, or design constraints
 
-When you detect the appropriate mode, include:
+When you detect the appropriate skill, include:
 
 <mode_suggestion>
 {
-  "suggestedMode": "brief|map|critique|stakeholder|ia|research|ideate|constraints",
-  "reason": "Why this mode would help"
+  "suggestedSkill": "brief|map|critique|stakeholder|ia|research|ideate|constraints",
+  "reason": "Why this skill would help"
 }
 </mode_suggestion>
 

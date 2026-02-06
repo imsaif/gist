@@ -2,8 +2,8 @@
 export interface IdentifiedPatternInMessage {
   patternId: string;
   reason: string;
-  flowStepId?: string; // For Map mode - which step the pattern applies to
-  decisionId?: string; // For Rationale mode - which decision the pattern applies to
+  flowStepId?: string; // For Map skill - which step the pattern applies to
+  decisionId?: string; // For Rationale skill - which decision the pattern applies to
 }
 
 export interface Message {
@@ -15,7 +15,7 @@ export interface Message {
 }
 
 // ============================================
-// Brief Mode Types
+// Brief Skill Types
 // ============================================
 
 export interface BriefDecision {
@@ -55,7 +55,7 @@ export interface BriefUpdate {
 }
 
 // ============================================
-// Critique Mode Types
+// Critique Skill Types
 // ============================================
 
 export type CritiquePhase = 'upload' | 'analyze' | 'deep-dive' | 'synthesize';
@@ -90,7 +90,7 @@ export interface CritiqueUpdate {
 }
 
 // ============================================
-// Stakeholder Mode Types
+// Stakeholder Skill Types
 // ============================================
 
 export type StakeholderPhase = 'context' | 'objections' | 'evidence' | 'synthesize';
@@ -123,7 +123,7 @@ export interface StakeholderUpdate {
 }
 
 // ============================================
-// IA Mode Types
+// IA Skill Types
 // ============================================
 
 export type IAPhase = 'understand' | 'inventory' | 'structure' | 'navigation' | 'synthesize';
@@ -241,7 +241,7 @@ export interface DesignMapUpdate {
 }
 
 // ============================================
-// Research Mode Types
+// Research Skill Types
 // ============================================
 
 export type ResearchPhase = 'context' | 'discover' | 'empathize' | 'methods' | 'synthesize';
@@ -294,7 +294,7 @@ export interface UserResearchUpdate {
 }
 
 // ============================================
-// Ideation Mode Types
+// Ideation Skill Types
 // ============================================
 
 export type IdeationPhase = 'problem' | 'diverge' | 'evaluate' | 'converge' | 'synthesize';
@@ -340,7 +340,7 @@ export interface IdeationUpdate {
 }
 
 // ============================================
-// Constraints Mode Types
+// Constraints Skill Types
 // ============================================
 
 export type ConstraintPhase =

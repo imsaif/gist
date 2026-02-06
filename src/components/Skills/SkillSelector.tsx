@@ -1,8 +1,8 @@
 'use client';
 
-import { ModeCard } from './ModeCard';
+import { SkillCard } from './SkillCard';
 
-export function ModeSelector() {
+export function SkillSelector() {
   return (
     <div className="w-full max-w-4xl">
       <h2 className="text-text-secondary mb-8 text-center text-xl">
@@ -11,20 +11,20 @@ export function ModeSelector() {
 
       {/* Top row - 3 cards */}
       <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <ModeCard
+        <SkillCard
           title="Brief"
           description="Clarify before you build"
           icon={<span>📋</span>}
           href="/brief"
         />
-        <ModeCard
+        <SkillCard
           title="Critique"
           description="Review a design"
           icon={<span>🔍</span>}
           href="/critique"
           disabled
         />
-        <ModeCard
+        <SkillCard
           title="Research"
           description="Plan what to learn"
           icon={<span>🔬</span>}
@@ -35,14 +35,14 @@ export function ModeSelector() {
 
       {/* Bottom row - 2 cards centered */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:px-16">
-        <ModeCard
+        <SkillCard
           title="Stakeholder"
           description="Prepare for hard Qs"
           icon={<span>🎯</span>}
           href="/stakeholder"
           disabled
         />
-        <ModeCard
+        <SkillCard
           title="IA"
           description="Structure info & nav"
           icon={<span>🗂️</span>}

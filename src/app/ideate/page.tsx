@@ -15,7 +15,7 @@ import { Toast } from '@/components/Toast';
 import { PatternCard } from '@/components/Chat/PatternCard';
 import { getPatternById } from '@/lib/patterns/patterns';
 
-// Heroicons for Mode Dropdown
+// Heroicons for Skill Dropdown
 const ClipboardDocumentIcon = ({ className = 'h-5 w-5' }: { className?: string }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -172,7 +172,7 @@ function IdeateModeLoading() {
   );
 }
 
-interface Mode {
+interface Skill {
   id: string;
   name: string;
   icon: ReactNode;
@@ -197,12 +197,12 @@ const ChatBubbleLeftRightIcon = ({ className = 'h-5 w-5' }: { className?: string
   </svg>
 );
 
-const MODES: Mode[] = [
+const SKILLS: Skill[] = [
   {
     id: 'chat',
     name: 'Chat',
     icon: <ChatBubbleLeftRightIcon className="h-5 w-5" />,
-    description: 'Auto-detects mode',
+    description: 'Auto-detects skill',
     href: '/chat',
   },
   {
@@ -277,9 +277,9 @@ function IdeateModeInner() {
   const [inputValue, setInputValue] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [toast, setToast] = useState({ isVisible: false, message: '' });
-  const [isModeDropdownOpen, setIsModeDropdownOpen] = useState(false);
+  const [isSkillDropdownOpen, setIsSkillDropdownOpen] = useState(false);
   const [initialMessageSent, setInitialMessageSent] = useState(false);
-  const modeDropdownRef = useRef<HTMLDivElement>(null);
+  const skillDropdownRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -307,7 +307,7 @@ function IdeateModeInner() {
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: newMessages, mode: 'ideate' }),
+        body: JSON.stringify({ messages: newMessages, skill: 'ideate' }),
       });
       if (!response.ok) throw new Error('Failed to get response');
       const data = await response.json();
@@ -333,8 +333,8 @@ function IdeateModeInner() {
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (modeDropdownRef.current && !modeDropdownRef.current.contains(event.target as Node))
-        setIsModeDropdownOpen(false);
+      if (skillDropdownRef.current && !skillDropdownRef.current.contains(event.target as Node))
+        setIsSkillDropdownOpen(false);
     }
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
@@ -366,7 +366,7 @@ function IdeateModeInner() {
         const response = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ messages: newMessages, mode: 'ideate' }),
+          body: JSON.stringify({ messages: newMessages, skill: 'ideate' }),
         });
         if (!response.ok) throw new Error('Failed to get response');
         const data = await response.json();
@@ -435,15 +435,15 @@ function IdeateModeInner() {
             Gist
           </Link>
           <span className="text-text-tertiary">/</span>
-          <div className="relative" ref={modeDropdownRef}>
+          <div className="relative" ref={skillDropdownRef}>
             <button
-              onClick={() => setIsModeDropdownOpen(!isModeDropdownOpen)}
+              onClick={() => setIsSkillDropdownOpen(!isSkillDropdownOpen)}
               className="bg-bg-secondary hover:bg-bg-tertiary flex items-center gap-2 rounded-full px-3 py-1 text-sm font-medium transition-colors"
             >
               <span className="text-accent-primary">
                 <LightBulbIcon className="h-4 w-4" />
               </span>
-              <span className="text-text-secondary">Ideate Mode</span>
+              <span className="text-text-secondary">Ideate</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="14"
@@ -454,30 +454,30 @@ function IdeateModeInner() {
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className={`text-text-tertiary transition-transform ${isModeDropdownOpen ? 'rotate-180' : ''}`}
+                className={`text-text-tertiary transition-transform ${isSkillDropdownOpen ? 'rotate-180' : ''}`}
               >
                 <path d="m6 9 6 6 6-6" />
               </svg>
             </button>
-            {isModeDropdownOpen && (
+            {isSkillDropdownOpen && (
               <div className="border-border-light absolute top-full left-0 z-50 mt-2 w-64 overflow-hidden rounded-xl border bg-white shadow-lg">
                 <div className="p-2">
                   <p className="text-text-tertiary px-3 py-2 text-xs font-medium uppercase">
-                    Switch Mode
+                    Switch Skill
                   </p>
-                  {MODES.map((mode) => (
+                  {SKILLS.map((skill) => (
                     <Link
-                      key={mode.id}
-                      href={mode.href}
-                      onClick={() => setIsModeDropdownOpen(false)}
-                      className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-colors ${mode.id === 'ideate' ? 'bg-accent-primary/10 text-accent-primary' : 'hover:bg-bg-secondary text-text-primary'}`}
+                      key={skill.id}
+                      href={skill.href}
+                      onClick={() => setIsSkillDropdownOpen(false)}
+                      className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-colors ${skill.id === 'ideate' ? 'bg-accent-primary/10 text-accent-primary' : 'hover:bg-bg-secondary text-text-primary'}`}
                     >
-                      <span className="text-accent-primary">{mode.icon}</span>
+                      <span className="text-accent-primary">{skill.icon}</span>
                       <div className="flex-1">
-                        <span className="font-medium">{mode.name}</span>
-                        <p className="text-text-tertiary text-xs">{mode.description}</p>
+                        <span className="font-medium">{skill.name}</span>
+                        <p className="text-text-tertiary text-xs">{skill.description}</p>
                       </div>
-                      {mode.id === 'ideate' && (
+                      {skill.id === 'ideate' && (
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="16"

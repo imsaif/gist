@@ -140,7 +140,7 @@ const ShieldCheckIcon = ({ className = 'h-5 w-5' }: { className?: string }) => (
   </svg>
 );
 
-interface ModePill {
+interface SkillPill {
   id: string;
   label: string;
   icon: ReactNode;
@@ -148,7 +148,7 @@ interface ModePill {
   starterPrompts: string[];
 }
 
-const MODE_PILLS: ModePill[] = [
+const SKILL_PILLS: SkillPill[] = [
   {
     id: 'brief',
     label: 'Brief',
@@ -293,19 +293,19 @@ export default function Home() {
       setInputValue('');
     } else {
       setActivePill(pillId);
-      const pill = MODE_PILLS.find((p) => p.id === pillId);
+      const pill = SKILL_PILLS.find((p) => p.id === pillId);
       if (pill) {
         setInputValue(`@${pill.label} `);
       }
     }
   };
 
-  const handleStarterPromptClick = (pill: ModePill, prompt: string) => {
+  const handleStarterPromptClick = (pill: SkillPill, prompt: string) => {
     setActivePill(null);
     router.push(`${pill.href}?q=${encodeURIComponent(prompt)}`);
   };
 
-  const activeMode = MODE_PILLS.find((p) => p.id === activePill);
+  const activeSkill = SKILL_PILLS.find((p) => p.id === activePill);
 
   const SKILLS = [
     {
@@ -494,7 +494,7 @@ export default function Home() {
               <span className="text-accent-primary">{HERO_WORDS[heroWordIndex]}</span> before you
               design
             </h2>
-            <p className="text-text-secondary mx-auto max-w-xl text-base md:text-lg">
+            <p className="text-text-secondary mx-auto max-w-2xl text-base md:text-lg">
               Your design thinking partner. Clarify, map, and critique before you open Figma.
             </p>
           </div>
@@ -538,7 +538,7 @@ export default function Home() {
             </div>
 
             {/* Starter prompts dropdown - appears below input when pill is active */}
-            {activeMode && (
+            {activeSkill && (
               <div
                 ref={dropdownRef}
                 className="border-border-light absolute right-0 left-0 z-20 -mt-1 overflow-hidden rounded-b-2xl border-2 border-t-0 bg-white shadow-lg"
@@ -546,10 +546,10 @@ export default function Home() {
                 <div className="border-t border-slate-100 px-4 py-3">
                   <p className="text-text-tertiary mb-2 text-sm font-medium">Try asking...</p>
                   <div className="space-y-1">
-                    {activeMode.starterPrompts.map((prompt) => (
+                    {activeSkill.starterPrompts.map((prompt) => (
                       <button
                         key={prompt}
-                        onClick={() => handleStarterPromptClick(activeMode, prompt)}
+                        onClick={() => handleStarterPromptClick(activeSkill, prompt)}
                         className="text-text-primary hover:bg-bg-secondary w-full rounded-xl px-4 py-3 text-left text-lg font-medium transition-colors"
                       >
                         {prompt}
@@ -561,9 +561,9 @@ export default function Home() {
             )}
           </div>
 
-          {/* Mode pills */}
+          {/* Skill pills */}
           <div ref={pillsRef} className="flex flex-wrap justify-center gap-3">
-            {MODE_PILLS.map((pill) => (
+            {SKILL_PILLS.map((pill) => (
               <button
                 key={pill.id}
                 onClick={() => handlePillClick(pill.id)}
@@ -581,7 +581,12 @@ export default function Home() {
         </div>
 
         {/* Skills section */}
-        <div className="mt-24 w-full max-w-6xl rounded-2xl bg-white/50 p-8 backdrop-blur-sm md:mt-32 md:p-12">
+        <div
+          className="relative mt-24 w-full max-w-6xl rounded-2xl bg-white/50 p-8 backdrop-blur-sm md:mt-32 md:p-12"
+          style={{
+            boxShadow: '0 0 50px 15px rgba(186,210,255,0.2), 0 0 100px 30px rgba(216,191,255,0.12)',
+          }}
+        >
           <div className="mb-14">
             <p className="mb-3 text-xs font-semibold tracking-widest text-slate-500 uppercase">
               Gist Design Skills
