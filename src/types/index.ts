@@ -240,6 +240,149 @@ export interface DesignMapUpdate {
   phase?: ConversationPhase;
 }
 
+// ============================================
+// Research Mode Types
+// ============================================
+
+export type ResearchPhase = 'context' | 'discover' | 'empathize' | 'methods' | 'synthesize';
+
+export interface UserSegment {
+  id: string;
+  name: string;
+  description: string;
+  goals: string[];
+  frustrations: string[];
+}
+
+export interface PainPoint {
+  id: string;
+  segment: string;
+  pain: string;
+  severity: 'high' | 'medium' | 'low';
+  frequency: string;
+}
+
+export interface ResearchMethod {
+  id: string;
+  method: string;
+  goal: string;
+  effort: 'low' | 'medium' | 'high';
+}
+
+export interface UserResearch {
+  productContext: string | null;
+  segments: UserSegment[];
+  painPoints: PainPoint[];
+  currentSolutions: string[];
+  unmetNeeds: string[];
+  researchMethods: ResearchMethod[];
+  keyInsights: string[];
+  currentPhase: ResearchPhase;
+}
+
+export interface UserResearchUpdate {
+  productContext?: string;
+  addSegments?: UserSegment[];
+  updateSegments?: (Partial<UserSegment> & { id: string })[];
+  addPainPoints?: PainPoint[];
+  updatePainPoints?: (Partial<PainPoint> & { id: string })[];
+  currentSolutions?: string[];
+  unmetNeeds?: string[];
+  addResearchMethods?: ResearchMethod[];
+  keyInsights?: string[];
+  phase?: ResearchPhase;
+}
+
+// ============================================
+// Ideation Mode Types
+// ============================================
+
+export type IdeationPhase = 'problem' | 'diverge' | 'evaluate' | 'converge' | 'synthesize';
+
+export interface Approach {
+  id: string;
+  title: string;
+  description: string;
+  targetUsers: string;
+  strengths: string[];
+  weaknesses: string[];
+  effort: 'low' | 'medium' | 'high';
+  patterns: string[];
+}
+
+export interface EvaluationCriterion {
+  id: string;
+  criterion: string;
+  weight: 'must-have' | 'important' | 'nice-to-have';
+}
+
+export interface Recommendation {
+  approachId: string;
+  reasoning: string;
+  nextSteps: string[];
+}
+
+export interface Ideation {
+  problemStatement: string | null;
+  approaches: Approach[];
+  evaluationCriteria: EvaluationCriterion[];
+  recommendation: Recommendation | null;
+  currentPhase: IdeationPhase;
+}
+
+export interface IdeationUpdate {
+  problemStatement?: string;
+  addApproaches?: Approach[];
+  updateApproaches?: (Partial<Approach> & { id: string })[];
+  addEvaluationCriteria?: EvaluationCriterion[];
+  recommendation?: Recommendation;
+  phase?: IdeationPhase;
+}
+
+// ============================================
+// Constraints Mode Types
+// ============================================
+
+export type ConstraintPhase =
+  | 'context'
+  | 'surface'
+  | 'implications'
+  | 'opportunities'
+  | 'synthesize';
+
+export interface Constraint {
+  id: string;
+  category: 'technical' | 'timeline' | 'resource' | 'business' | 'regulatory';
+  constraint: string;
+  severity: 'hard' | 'soft';
+  source: string;
+}
+
+export interface DesignImplication {
+  id: string;
+  constraintId: string;
+  implication: string;
+  designResponse: string;
+}
+
+export interface ConstraintMap {
+  projectContext: string | null;
+  constraints: Constraint[];
+  designImplications: DesignImplication[];
+  opportunities: string[];
+  currentPhase: ConstraintPhase;
+}
+
+export interface ConstraintMapUpdate {
+  projectContext?: string;
+  addConstraints?: Constraint[];
+  updateConstraints?: (Partial<Constraint> & { id: string })[];
+  addDesignImplications?: DesignImplication[];
+  updateDesignImplications?: (Partial<DesignImplication> & { id: string })[];
+  opportunities?: string[];
+  phase?: ConstraintPhase;
+}
+
 // Chat state
 export interface ChatState {
   messages: Message[];

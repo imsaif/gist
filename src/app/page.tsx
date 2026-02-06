@@ -89,6 +89,57 @@ const Squares2X2Icon = ({ className = 'h-5 w-5' }: { className?: string }) => (
   </svg>
 );
 
+const UsersIcon = ({ className = 'h-5 w-5' }: { className?: string }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="currentColor"
+    className={className}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"
+    />
+  </svg>
+);
+
+const LightBulbIcon = ({ className = 'h-5 w-5' }: { className?: string }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="currentColor"
+    className={className}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M12 18v-5.25m0 0a6.01 6.01 0 0 0 1.5-.189m-1.5.189a6.01 6.01 0 0 1-1.5-.189m3.75 7.478a12.06 12.06 0 0 1-4.5 0m3.75 2.383a14.406 14.406 0 0 1-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 1 0-7.517 0c.85.493 1.509 1.333 1.509 2.316V18"
+    />
+  </svg>
+);
+
+const ShieldCheckIcon = ({ className = 'h-5 w-5' }: { className?: string }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="currentColor"
+    className={className}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z"
+    />
+  </svg>
+);
+
 interface ModePill {
   id: string;
   label: string;
@@ -158,6 +209,42 @@ const MODE_PILLS: ModePill[] = [
       'Design navigation for a dashboard',
     ],
   },
+  {
+    id: 'research',
+    label: 'Research',
+    icon: <UsersIcon className="h-5 w-5" />,
+    href: '/research',
+    starterPrompts: [
+      'Understand my users better',
+      'Identify pain points for a feature',
+      'Plan user research methods',
+      'Create a user research canvas',
+    ],
+  },
+  {
+    id: 'ideate',
+    label: 'Ideate',
+    icon: <LightBulbIcon className="h-5 w-5" />,
+    href: '/ideate',
+    starterPrompts: [
+      'Explore solution approaches',
+      'Generate ideas for a feature',
+      'Compare design approaches',
+      'Find the best solution path',
+    ],
+  },
+  {
+    id: 'constraints',
+    label: 'Constraints',
+    icon: <ShieldCheckIcon className="h-5 w-5" />,
+    href: '/constraints',
+    starterPrompts: [
+      'Surface project constraints',
+      'Map technical limitations',
+      'Identify design boundaries',
+      'Turn constraints into opportunities',
+    ],
+  },
 ];
 
 const HERO_WORDS = ['Gist', 'Think'];
@@ -220,6 +307,152 @@ export default function Home() {
 
   const activeMode = MODE_PILLS.find((p) => p.id === activePill);
 
+  const SKILLS = [
+    {
+      icon: <ClipboardDocumentIcon className="h-5 w-5" />,
+      title: 'Brief',
+      description: "Clarify what you're building before you open Figma.",
+    },
+    {
+      icon: <MapIcon className="h-5 w-5" />,
+      title: 'Map',
+      description: 'Walk through user journeys step-by-step with states and edge cases.',
+    },
+    {
+      icon: <MagnifyingGlassIcon className="h-5 w-5" />,
+      title: 'Critique',
+      description: 'Get honest, structured feedback on your designs.',
+    },
+    {
+      icon: <UserGroupIcon className="h-5 w-5" />,
+      title: 'Stakeholder Prep',
+      description: 'Anticipate tough questions and defend your decisions.',
+    },
+    {
+      icon: <Squares2X2Icon className="h-5 w-5" />,
+      title: 'Information Architecture',
+      description: 'Structure content and plan navigation that makes sense.',
+    },
+    {
+      icon: <UsersIcon className="h-5 w-5" />,
+      title: 'Research',
+      description: 'Understand your users deeply before defining solutions.',
+    },
+    {
+      icon: <LightBulbIcon className="h-5 w-5" />,
+      title: 'Ideate',
+      description: 'Generate multiple approaches before committing to one.',
+    },
+    {
+      icon: <ShieldCheckIcon className="h-5 w-5" />,
+      title: 'Constraints',
+      description: 'Surface hard limits and design within them intentionally.',
+    },
+  ];
+
+  const BUILT_IN = [
+    {
+      icon: (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="h-5 w-5"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 0 0-2.455 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z"
+          />
+        </svg>
+      ),
+      title: 'Pattern Library',
+      description: '28 proven AI/UX patterns to guide your design decisions.',
+    },
+    {
+      icon: (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="h-5 w-5"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.076-4.076a1.526 1.526 0 0 1 1.037-.443 48.282 48.282 0 0 0 5.68-.494c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
+          />
+        </svg>
+      ),
+      title: 'Smart Detection',
+      description: 'Auto-detects the right design skill from your message.',
+    },
+    {
+      icon: (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="h-5 w-5"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m.75 12 3 3m0 0 3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"
+          />
+        </svg>
+      ),
+      title: 'Export',
+      description: 'Download briefs, maps, and rationale as markdown.',
+    },
+    {
+      icon: (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="h-5 w-5"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z"
+          />
+        </svg>
+      ),
+      title: 'Real-time Artifacts',
+      description: 'Build living documents as you talk, not after.',
+    },
+    {
+      icon: (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="h-5 w-5"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25"
+          />
+        </svg>
+      ),
+      title: 'Decision Log',
+      description: 'Track and revisit your design rationale.',
+    },
+  ];
+
   return (
     <div className="hero-gradient-bg relative min-h-screen overflow-hidden">
       {/* Header */}
@@ -233,21 +466,21 @@ export default function Home() {
       </header>
 
       {/* Main content */}
-      <main className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6">
+      <main className="relative z-10 flex min-h-screen flex-col items-center px-6 pt-20 md:px-10 md:pt-24">
         <div className="w-full max-w-3xl">
           {/* Hero */}
           <div className="mb-8 text-center">
-            <h2 className="text-text-primary mb-4 text-5xl font-extrabold tracking-tight md:text-6xl">
+            <h2 className="text-text-primary mb-4 text-4xl font-extrabold tracking-tight md:text-5xl">
               <span className="text-accent-primary">{HERO_WORDS[heroWordIndex]}</span> before you
               design
             </h2>
-            <p className="text-text-secondary mx-auto max-w-xl text-lg md:text-xl">
+            <p className="text-text-secondary mx-auto max-w-xl text-base md:text-lg">
               Your design thinking partner. Clarify, map, and critique before you open Figma.
             </p>
           </div>
 
           {/* Chat input */}
-          <div className="relative mb-8">
+          <div className="relative mb-6">
             <div className="border-border-light focus-within:border-accent-primary flex items-center rounded-2xl border-2 bg-white shadow-lg transition-colors">
               <input
                 type="text"
@@ -260,12 +493,12 @@ export default function Home() {
                   }
                 }}
                 placeholder="What are you working on?"
-                className="flex-1 rounded-2xl px-6 py-5 text-xl outline-none placeholder:text-slate-400"
+                className="flex-1 rounded-2xl px-6 py-4 text-lg outline-none placeholder:text-slate-400"
               />
               <button
                 onClick={handleSubmit}
                 disabled={!inputValue.trim()}
-                className="bg-accent-primary hover:bg-accent-hover disabled:bg-bg-tertiary disabled:text-text-tertiary mr-3 flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl text-white transition-colors"
+                className="bg-accent-primary hover:bg-accent-hover disabled:bg-bg-tertiary disabled:text-text-tertiary mr-3 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl text-white transition-colors"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -324,6 +557,57 @@ export default function Home() {
                 {pill.label}
               </button>
             ))}
+          </div>
+        </div>
+
+        {/* Skills section */}
+        <div className="mt-24 w-full max-w-6xl md:mt-32">
+          <div className="mb-14">
+            <p className="text-text-tertiary mb-3 text-xs font-semibold tracking-widest uppercase">
+              Gist Design Skills
+            </p>
+            <h3 className="text-text-primary mb-5 text-3xl font-extrabold tracking-tight md:text-4xl">
+              Get to know Gist
+            </h3>
+            <div className="mb-5 h-px w-full bg-gradient-to-r from-slate-200 via-slate-300 to-transparent" />
+            <p className="text-text-secondary max-w-xl text-base md:text-lg">
+              One partner, many design skills. Tell Gist what you&apos;re working on and it
+              activates the right skill automatically.
+            </p>
+          </div>
+
+          <div className="mb-10">
+            <p className="text-text-tertiary mb-5 text-xs font-semibold tracking-wider uppercase">
+              Design Skills
+            </p>
+            <div className="grid grid-cols-2 gap-x-10 gap-y-12 md:grid-cols-4 lg:grid-cols-4">
+              {SKILLS.map((skill) => (
+                <div key={skill.title} className="group">
+                  <div className="border-border-light bg-bg-primary mb-4 flex h-11 w-11 items-center justify-center rounded-xl border shadow-sm transition-colors group-hover:border-slate-300">
+                    <span className="text-text-secondary">{skill.icon}</span>
+                  </div>
+                  <h4 className="text-text-primary mb-1.5 text-sm font-bold">{skill.title}</h4>
+                  <p className="text-text-tertiary text-sm leading-relaxed">{skill.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="mb-20">
+            <p className="text-text-tertiary mb-5 text-xs font-semibold tracking-wider uppercase">
+              Built in
+            </p>
+            <div className="grid grid-cols-2 gap-x-10 gap-y-12 md:grid-cols-3 lg:grid-cols-5">
+              {BUILT_IN.map((item) => (
+                <div key={item.title} className="group">
+                  <div className="border-border-light bg-bg-primary mb-4 flex h-11 w-11 items-center justify-center rounded-xl border shadow-sm transition-colors group-hover:border-slate-300">
+                    <span className="text-text-secondary">{item.icon}</span>
+                  </div>
+                  <h4 className="text-text-primary mb-1.5 text-sm font-bold">{item.title}</h4>
+                  <p className="text-text-tertiary text-sm leading-relaxed">{item.description}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </main>

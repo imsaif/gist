@@ -10,6 +10,12 @@
 
 ## Recent Sessions
 
+### Session: February 6, 2026 (MacBook) - Tier 1 Design Skills: Research, Ideate, Constraints
+
+- **Files changed:** 26
+- **Pattern:** Multi-mode architecture expansion
+- **Notes:** Added 3 new Tier 1 design skills: Research (user discovery), Ideate (solution exploration), and Constraints (scoping). Created types, system prompts, parsers, pages, and components for each. Updated API route with new modes and mock responses. Updated landing page with 3 new pills and skills (4-column grid for 8 skills). Updated MODES array across all 9 existing page.tsx files for mode switcher. Updated Chat mode smart detection to recognize new skills.
+
 ### Session: February 6, 2026 (MacBook) - Chat-First Landing Page Redesign
 
 - **Files changed:** 6
@@ -67,24 +73,33 @@
 - `src/app/critique/page.tsx` - Critique mode for design feedback
 - `src/app/stakeholder/page.tsx` - Stakeholder prep mode
 - `src/app/ia/page.tsx` - Information architecture mode
+- `src/app/research/page.tsx` - User research mode
+- `src/app/ideate/page.tsx` - Solution ideation mode
+- `src/app/constraints/page.tsx` - Constraint mapping mode
 - `src/lib/constants.ts` - System prompts and initial states for all modes
 - `src/lib/briefParser.ts` - Parse AI responses for brief updates
 - `src/lib/designMapParser.ts` - Parse AI responses for map updates
 - `src/lib/critiqueParser.ts` - Parse AI responses for critique updates
 - `src/lib/stakeholderParser.ts` - Parse AI responses for stakeholder updates
 - `src/lib/iaParser.ts` - Parse AI responses for IA updates
+- `src/lib/researchParser.ts` - Parse AI responses for research updates
+- `src/lib/ideationParser.ts` - Parse AI responses for ideation updates
+- `src/lib/constraintsParser.ts` - Parse AI responses for constraint updates
 - `src/components/Brief/` - Brief document cards, modal viewer
 - `src/components/DesignMap/` - Map panel, flow timeline, step cards
 - `src/components/Critique/` - Critique panel, issue cards, image upload
 - `src/components/Stakeholder/` - Stakeholder panel, objection cards
 - `src/components/IA/` - IA panel, content tree, navigation preview
+- `src/components/Research/` - Research panel, segment cards, pain points
+- `src/components/Ideation/` - Ideation panel, approach cards, recommendation
+- `src/components/Constraints/` - Constraints panel, constraint cards, implications
 - `src/components/Chat/PatternCard.tsx` - Pattern identification cards
 - `src/lib/patterns/` - Pattern data loader and matcher
 - `src/data/patterns.json` - All 28 AI UX patterns
 
 ## Architecture Notes
 
-- Six modes: Chat (auto-detect), Brief, Map, Critique, Stakeholder, IA
+- Nine modes: Chat (auto-detect), Brief, Map, Critique, Stakeholder, IA, Research, Ideate, Constraints
 - Two-panel layout: Chat (left), Artifact (right) - artifact varies by mode
 - Chat mode uses single-panel centered layout with mode suggestions
 - AI responses contain mode-specific XML tags:
@@ -93,6 +108,9 @@
   - Critique: `<critique_update>` for issue updates
   - Stakeholder: `<stakeholder_update>` for objection updates
   - IA: `<ia_update>` for content/navigation updates
+  - Research: `<research_update>` for user research canvas updates
+  - Ideation: `<ideation_update>` for solution options board updates
+  - Constraints: `<constraints_update>` for constraint map updates
   - Chat: `<mode_suggestion>` for mode recommendations
 - AI responses can contain `<pattern_identified>` JSON tags for pattern cards
 - PatternCard appears inline in chat when AI identifies relevant patterns

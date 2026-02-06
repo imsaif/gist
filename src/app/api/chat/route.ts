@@ -5,6 +5,9 @@ import {
   getCritiqueSystemPrompt,
   getStakeholderSystemPrompt,
   getIASystemPrompt,
+  getResearchSystemPrompt,
+  getIdeationSystemPrompt,
+  getConstraintsSystemPrompt,
   getChatSystemPrompt,
 } from '@/lib/constants';
 import { Message } from '@/types';
@@ -13,7 +16,16 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
-type Mode = 'chat' | 'brief' | 'map' | 'critique' | 'stakeholder' | 'ia';
+type Mode =
+  | 'chat'
+  | 'brief'
+  | 'map'
+  | 'critique'
+  | 'stakeholder'
+  | 'ia'
+  | 'research'
+  | 'ideate'
+  | 'constraints';
 
 // Get system prompt based on mode
 function getSystemPromptForMode(mode: Mode): string {
@@ -28,6 +40,12 @@ function getSystemPromptForMode(mode: Mode): string {
       return getStakeholderSystemPrompt();
     case 'ia':
       return getIASystemPrompt();
+    case 'research':
+      return getResearchSystemPrompt();
+    case 'ideate':
+      return getIdeationSystemPrompt();
+    case 'constraints':
+      return getConstraintsSystemPrompt();
     case 'brief':
     default:
       return getBriefSystemPrompt();
@@ -590,6 +608,330 @@ Want to switch modes, or would you like to continue chatting here?
   return '';
 }
 
+// Mock responses for Research mode
+function getResearchMockResponse(messages: Message[]): string {
+  const userMessages = messages.filter((m) => m.role === 'user');
+  const messageCount = userMessages.length;
+
+  if (messageCount === 1) {
+    return `Interesting. Before we go deeper, let me understand the landscape. You mentioned your users — but let's be more specific. Can you describe one real person who would use this? What's their role, and what are they trying to accomplish when they reach for your product?
+
+<research_update>
+{
+  "productContext": "${userMessages[0].content.slice(0, 100)}",
+  "phase": "context"
+}
+</research_update>`;
+  }
+
+  if (messageCount === 2) {
+    return `That's a good start. Now let's dig into the pain. What's the biggest frustration this person faces today when trying to accomplish that goal? How are they currently working around it?
+
+<research_update>
+{
+  "addSegments": [
+    {
+      "id": "seg-1",
+      "name": "Primary User",
+      "description": "Core user segment based on initial description",
+      "goals": ["Complete their primary task efficiently"],
+      "frustrations": ["Current solutions are clunky or slow"]
+    }
+  ],
+  "phase": "discover"
+}
+</research_update>`;
+  }
+
+  if (messageCount === 3) {
+    return `Good insight. The workaround tells us a lot about what they actually value. Let me push further — what would success look like from their perspective? Not your product's success, but their personal win.
+
+<research_update>
+{
+  "addPainPoints": [
+    {
+      "id": "pp-1",
+      "segment": "seg-1",
+      "pain": "Current workflow requires too many manual steps",
+      "severity": "high",
+      "frequency": "Daily"
+    }
+  ],
+  "currentSolutions": ["Manual workarounds with existing tools"],
+  "phase": "empathize"
+}
+</research_update>`;
+  }
+
+  if (messageCount === 4) {
+    return `We're building a solid picture. To validate these assumptions, I'd recommend starting with user interviews — 5-8 people from this segment. Focus on their current workflow, not your solution.
+
+<research_update>
+{
+  "unmetNeeds": ["Automated workflow that reduces manual steps", "Faster time to completion"],
+  "addResearchMethods": [
+    {
+      "id": "rm-1",
+      "method": "User interviews",
+      "goal": "Validate pain points and current workarounds",
+      "effort": "medium"
+    },
+    {
+      "id": "rm-2",
+      "method": "Contextual inquiry",
+      "goal": "Observe actual workflow in context",
+      "effort": "high"
+    }
+  ],
+  "phase": "methods"
+}
+</research_update>`;
+  }
+
+  if (messageCount >= 5) {
+    return `Here's what we've learned. Your research canvas is taking shape — the key insight is that users care more about speed than features.
+
+<research_update>
+{
+  "keyInsights": [
+    "Users prioritize speed over feature richness",
+    "Current workarounds reveal the core value proposition",
+    "The primary segment has clear, validated pain points"
+  ],
+  "phase": "synthesize"
+}
+</research_update>`;
+  }
+
+  return '';
+}
+
+// Mock responses for Ideation mode
+function getIdeationMockResponse(messages: Message[]): string {
+  const userMessages = messages.filter((m) => m.role === 'user');
+  const messageCount = userMessages.length;
+
+  if (messageCount === 1) {
+    return `Got it. Before we jump to approaches, let me make sure I understand the problem clearly. Who is experiencing this problem, and what's the cost of it going unsolved? I want to make sure we're solving the right thing.
+
+<ideation_update>
+{
+  "problemStatement": "${userMessages[0].content.slice(0, 100)}",
+  "phase": "problem"
+}
+</ideation_update>`;
+  }
+
+  if (messageCount === 2) {
+    return `Good — the problem is clear. Now let's diverge. I'm going to suggest three very different approaches. Don't evaluate yet — just consider each one:
+
+**Approach A:** Start minimal — solve the core problem with the simplest possible interface.
+**Approach B:** Go AI-first — let AI handle the heavy lifting with human oversight.
+**Approach C:** Community-driven — leverage users helping each other.
+
+Which resonates? Or should we push for more options?
+
+<ideation_update>
+{
+  "addApproaches": [
+    {
+      "id": "app-1",
+      "title": "Minimal MVP",
+      "description": "Solve the core problem with the simplest possible interface",
+      "targetUsers": "All users equally",
+      "strengths": ["Fast to build", "Easy to test", "Low risk"],
+      "weaknesses": ["May feel underwhelming", "Limited differentiation"],
+      "effort": "low",
+      "patterns": []
+    },
+    {
+      "id": "app-2",
+      "title": "AI-First",
+      "description": "Let AI handle the heavy lifting with human oversight",
+      "targetUsers": "Power users who want automation",
+      "strengths": ["Differentiated", "Scalable", "Reduces manual work"],
+      "weaknesses": ["Trust issues", "Higher complexity", "AI accuracy concerns"],
+      "effort": "high",
+      "patterns": ["human-in-the-loop"]
+    },
+    {
+      "id": "app-3",
+      "title": "Community-Driven",
+      "description": "Leverage users helping each other to solve the problem",
+      "targetUsers": "Users who value peer knowledge",
+      "strengths": ["Network effects", "Self-sustaining", "Rich content"],
+      "weaknesses": ["Cold start problem", "Quality control", "Slow initial traction"],
+      "effort": "medium",
+      "patterns": []
+    }
+  ],
+  "phase": "diverge"
+}
+</ideation_update>`;
+  }
+
+  if (messageCount === 3) {
+    return `Now let's evaluate. Before we compare, what criteria matter most to you? I'd suggest we think about: technical feasibility, time to value for users, and team capacity. Are there other must-haves?
+
+<ideation_update>
+{
+  "addEvaluationCriteria": [
+    {
+      "id": "ec-1",
+      "criterion": "Technical feasibility",
+      "weight": "must-have"
+    },
+    {
+      "id": "ec-2",
+      "criterion": "Time to value for users",
+      "weight": "important"
+    },
+    {
+      "id": "ec-3",
+      "criterion": "Team capacity to build and maintain",
+      "weight": "important"
+    }
+  ],
+  "phase": "evaluate"
+}
+</ideation_update>`;
+  }
+
+  if (messageCount >= 4) {
+    return `Based on our criteria, I'd recommend starting with the Minimal MVP approach but borrowing the AI-assist idea for one key interaction. Ship fast, validate, then layer in intelligence.
+
+<ideation_update>
+{
+  "recommendation": {
+    "approachId": "app-1",
+    "reasoning": "Start minimal to validate the core problem, then iterate toward AI-first for the highest-impact interaction. This balances speed with differentiation.",
+    "nextSteps": [
+      "Define the MVP feature set (1-2 core interactions)",
+      "Prototype the key screen for user testing",
+      "Identify which interaction benefits most from AI-assist"
+    ]
+  },
+  "phase": "converge"
+}
+</ideation_update>`;
+  }
+
+  return '';
+}
+
+// Mock responses for Constraints mode
+function getConstraintsMockResponse(messages: Message[]): string {
+  const userMessages = messages.filter((m) => m.role === 'user');
+  const messageCount = userMessages.length;
+
+  if (messageCount === 1) {
+    return `Got it. Let's start surfacing constraints. First, the technical landscape — what existing systems does this need to integrate with? Any API limitations, browser requirements, or performance budgets?
+
+<constraints_update>
+{
+  "projectContext": "${userMessages[0].content.slice(0, 100)}",
+  "phase": "context"
+}
+</constraints_update>`;
+  }
+
+  if (messageCount === 2) {
+    return `Good to know. Now let's talk timeline and resources. When does this need to ship? How big is the team? And are there any business constraints — revenue targets, compliance requirements, brand guidelines?
+
+<constraints_update>
+{
+  "addConstraints": [
+    {
+      "id": "c-1",
+      "category": "technical",
+      "constraint": "Must integrate with existing system APIs",
+      "severity": "hard",
+      "source": "Engineering team"
+    },
+    {
+      "id": "c-2",
+      "category": "technical",
+      "constraint": "Must support mobile browsers",
+      "severity": "hard",
+      "source": "Product requirements"
+    }
+  ],
+  "phase": "surface"
+}
+</constraints_update>`;
+  }
+
+  if (messageCount === 3) {
+    return `These constraints are actually clarifying. Let me spell out what each means for your design:
+
+The API integration means you can't redesign the data model — you work with what exists. The timeline means you need to cut scope aggressively. These aren't blockers, they're decisions already made for you.
+
+<constraints_update>
+{
+  "addConstraints": [
+    {
+      "id": "c-3",
+      "category": "timeline",
+      "constraint": "Must ship within current quarter",
+      "severity": "hard",
+      "source": "Product roadmap"
+    },
+    {
+      "id": "c-4",
+      "category": "resource",
+      "constraint": "Small team — 2 developers, 1 designer",
+      "severity": "soft",
+      "source": "Team capacity"
+    }
+  ],
+  "addDesignImplications": [
+    {
+      "id": "di-1",
+      "constraintId": "c-1",
+      "implication": "Data model is fixed — design must adapt to existing API structure",
+      "designResponse": "Map UI to existing data fields rather than ideal information architecture"
+    },
+    {
+      "id": "di-2",
+      "constraintId": "c-3",
+      "implication": "Limited time means aggressive scope cutting",
+      "designResponse": "Focus on one core flow, defer secondary features to v2"
+    }
+  ],
+  "phase": "implications"
+}
+</constraints_update>`;
+  }
+
+  if (messageCount === 4) {
+    return `Here's the interesting part — these constraints actually help your design. A small team means less coordination overhead. A tight timeline forces focus. And fixed APIs mean fewer decisions to make.
+
+<constraints_update>
+{
+  "opportunities": [
+    "Tight timeline forces focus on the one flow that matters most",
+    "Small team means faster decisions and less design-by-committee",
+    "Fixed API reduces decision fatigue — work with what exists",
+    "Mobile-first constraint leads to simpler, more focused interfaces"
+  ],
+  "phase": "opportunities"
+}
+</constraints_update>`;
+  }
+
+  if (messageCount >= 5) {
+    return `Your constraint map is complete. The key takeaway: your constraints have already made several design decisions for you. Lean into them.
+
+<constraints_update>
+{
+  "phase": "synthesize"
+}
+</constraints_update>`;
+  }
+
+  return '';
+}
+
 // Get mock response based on mode
 function getMockResponse(messages: Message[], mode: Mode): string {
   switch (mode) {
@@ -603,6 +945,12 @@ function getMockResponse(messages: Message[], mode: Mode): string {
       return getStakeholderMockResponse(messages);
     case 'ia':
       return getIAMockResponse(messages);
+    case 'research':
+      return getResearchMockResponse(messages);
+    case 'ideate':
+      return getIdeationMockResponse(messages);
+    case 'constraints':
+      return getConstraintsMockResponse(messages);
     case 'brief':
     default:
       return getBriefMockResponse(messages);
