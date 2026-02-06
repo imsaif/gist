@@ -10,6 +10,12 @@
 
 ## Recent Sessions
 
+### Session: February 6, 2026 (MacBook) - Why Gist Comparison Section
+
+- **Files changed:** 1
+- **Pattern:** Landing page content redesign
+- **Notes:** Replaced "Built in" section (5 feature cards with SVG icons) with a "Why Gist" 3-column comparison table positioning Gist against ChatGPT/Claude and UI generators. Desktop renders as a 4-column grid table with Gist column visually emphasized; mobile stacks as cards. Moved "Why Gist" above "Design Skills" section for better visitor flow. Comparison covers output quality, process guidance, and design awareness.
+
 ### Session: February 6, 2026 (MacBook) - Rename Mode→Skill Across Codebase
 
 - **Files changed:** 17
