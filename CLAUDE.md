@@ -10,6 +10,12 @@
 
 ## Recent Sessions
 
+### Session: February 6, 2026 (MacBook) - Skill Pill UX & Key Fix
+
+- **Files changed:** 1
+- **Pattern:** Landing page UX improvement
+- **Notes:** Fixed React key warning on COMPARISONS map by moving key to React.Fragment. Changed skill pill click behavior to show friendly text ("Hey Gist, use your Brief design skill and...") instead of "@Brief" to make skill activation more intuitive for users.
+
 ### Session: February 6, 2026 (MacBook) - Why Gist Comparison Section
 
 - **Files changed:** 1

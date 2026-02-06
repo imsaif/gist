@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect, ReactNode } from 'react';
+import React, { useState, useRef, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 
 // SVG Icon Components
@@ -295,7 +295,7 @@ export default function Home() {
       setActivePill(pillId);
       const pill = SKILL_PILLS.find((p) => p.id === pillId);
       if (pill) {
-        setInputValue(`@${pill.label} `);
+        setInputValue(`Hey Gist, use your ${pill.label} design skill and `);
       }
     }
   };
@@ -547,22 +547,22 @@ export default function Home() {
 
                 {/* Data rows */}
                 {COMPARISONS.map((row) => (
-                  <>
-                    <div key={`${row.label}-label`} className="bg-white p-4">
+                  <React.Fragment key={row.label}>
+                    <div className="bg-white p-4">
                       <p className="text-text-primary text-sm font-bold">{row.label}</p>
                     </div>
-                    <div key={`${row.label}-chatgpt`} className="bg-white p-4">
+                    <div className="bg-white p-4">
                       <p className="text-sm leading-relaxed text-slate-500">{row.chatgpt}</p>
                     </div>
-                    <div key={`${row.label}-uigen`} className="bg-white p-4">
+                    <div className="bg-white p-4">
                       <p className="text-sm leading-relaxed text-slate-500">{row.uiGen}</p>
                     </div>
-                    <div key={`${row.label}-gist`} className="bg-slate-50 p-4">
+                    <div className="bg-slate-50 p-4">
                       <p className="text-text-primary text-sm leading-relaxed font-medium">
                         {row.gist}
                       </p>
                     </div>
-                  </>
+                  </React.Fragment>
                 ))}
               </div>
             </div>
