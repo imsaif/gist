@@ -10,6 +10,12 @@
 
 ## Recent Sessions
 
+### Session: February 6, 2026 (MacBook) - Chat-First Landing Page Redesign
+
+- **Files changed:** 6
+- **Pattern:** Landing page redesign
+- **Notes:** Replaced 2x3 mode card grid with Claude.ai-style chat-first interface. Added centered chat input with send button, 5 mode pills (Brief, Map, Critique, Stakeholder, IA) with starter prompt dropdowns, cycling "Gist/Think before you design" hero text, and ?q= query param support for all mode pages (chat, critique, stakeholder, ia). Pills show @Mode prefix in input and display contextual prompts below.
+
 ### Session: February 1, 2026 (MacBook) - Six Modes Restructure
 
 - **Files changed:** 34
@@ -54,7 +60,7 @@
 
 ## Key Files
 
-- `src/app/page.tsx` - Landing page with six mode cards
+- `src/app/page.tsx` - Landing page with chat input and mode pills
 - `src/app/chat/page.tsx` - General chat with auto-detect mode
 - `src/app/brief/page.tsx` - Brief mode chat interface
 - `src/app/map/page.tsx` - Map mode for user journey flows

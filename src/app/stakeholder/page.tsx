@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect, Suspense, ReactNode } from 'react';
 import Link from 'next/link';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { Message, StakeholderPrep } from '@/types';
 import { INITIAL_STAKEHOLDER, STAKEHOLDER_INITIAL_MESSAGES } from '@/lib/constants';
 import {
@@ -195,6 +196,8 @@ function generateId(): string {
 }
 
 function StakeholderModeInner() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const [messages, setMessages] = useState<Message[]>(STAKEHOLDER_INITIAL_MESSAGES);
   const [stakeholder, setStakeholder] = useState<StakeholderPrep>(INITIAL_STAKEHOLDER);
   const [isLoading, setIsLoading] = useState(false);
@@ -203,8 +206,71 @@ function StakeholderModeInner() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [toast, setToast] = useState({ isVisible: false, message: '' });
   const [isModeDropdownOpen, setIsModeDropdownOpen] = useState(false);
+  const [initialMessageSent, setInitialMessageSent] = useState(false);
   const modeDropdownRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Handle initial message from URL query parameter
+  useEffect(() => {
+    const q = searchParams.get('q');
+    if (q && !initialMessageSent && !isLoading) {
+      setInitialMessageSent(true);
+      router.replace('/stakeholder', { scroll: false });
+      handleSendMessageDirect(q);
+    }
+  }, [searchParams, initialMessageSent, isLoading, router]);
+
+  // Direct send function that doesn't depend on state (for initial message)
+  const handleSendMessageDirect = async (content: string) => {
+    if (!content.trim()) return;
+
+    setError(null);
+
+    const userMessage: Message = {
+      id: generateId(),
+      role: 'user',
+      content: content.trim(),
+      timestamp: new Date(),
+    };
+    const newMessages = [...STAKEHOLDER_INITIAL_MESSAGES, userMessage];
+    setMessages(newMessages);
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: newMessages, mode: 'stakeholder' }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to get response');
+      }
+
+      const data = await response.json();
+      const { displayContent, stakeholderUpdate, identifiedPattern } = parseStakeholderUpdate(
+        data.message
+      );
+
+      const aiMessage: Message = {
+        id: generateId(),
+        role: 'assistant',
+        content: displayContent,
+        timestamp: new Date(),
+        identifiedPattern: identifiedPattern ?? undefined,
+      };
+      setMessages((prev) => [...prev, aiMessage]);
+
+      if (stakeholderUpdate) {
+        setStakeholder((prev) => mergeStakeholderUpdate(prev, stakeholderUpdate));
+      }
+    } catch (err) {
+      console.error('Chat error:', err);
+      setError('Failed to get response. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // Close dropdown when clicking outside
   useEffect(() => {

@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect, Suspense, ReactNode } from 'react';
 import Link from 'next/link';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { Message, InformationArchitecture } from '@/types';
 import { INITIAL_IA, IA_INITIAL_MESSAGES } from '@/lib/constants';
 import { parseIAUpdate, mergeIAUpdate, generateIAMarkdown } from '@/lib/iaParser';
@@ -191,6 +192,8 @@ function generateId(): string {
 }
 
 function IAModeInner() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const [messages, setMessages] = useState<Message[]>(IA_INITIAL_MESSAGES);
   const [ia, setIA] = useState<InformationArchitecture>(INITIAL_IA);
   const [isLoading, setIsLoading] = useState(false);
@@ -199,8 +202,69 @@ function IAModeInner() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [toast, setToast] = useState({ isVisible: false, message: '' });
   const [isModeDropdownOpen, setIsModeDropdownOpen] = useState(false);
+  const [initialMessageSent, setInitialMessageSent] = useState(false);
   const modeDropdownRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Handle initial message from URL query parameter
+  useEffect(() => {
+    const q = searchParams.get('q');
+    if (q && !initialMessageSent && !isLoading) {
+      setInitialMessageSent(true);
+      router.replace('/ia', { scroll: false });
+      handleSendMessageDirect(q);
+    }
+  }, [searchParams, initialMessageSent, isLoading, router]);
+
+  // Direct send function that doesn't depend on state (for initial message)
+  const handleSendMessageDirect = async (content: string) => {
+    if (!content.trim()) return;
+
+    setError(null);
+
+    const userMessage: Message = {
+      id: generateId(),
+      role: 'user',
+      content: content.trim(),
+      timestamp: new Date(),
+    };
+    const newMessages = [...IA_INITIAL_MESSAGES, userMessage];
+    setMessages(newMessages);
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: newMessages, mode: 'ia' }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to get response');
+      }
+
+      const data = await response.json();
+      const { displayContent, iaUpdate, identifiedPattern } = parseIAUpdate(data.message);
+
+      const aiMessage: Message = {
+        id: generateId(),
+        role: 'assistant',
+        content: displayContent,
+        timestamp: new Date(),
+        identifiedPattern: identifiedPattern ?? undefined,
+      };
+      setMessages((prev) => [...prev, aiMessage]);
+
+      if (iaUpdate) {
+        setIA((prev) => mergeIAUpdate(prev, iaUpdate));
+      }
+    } catch (err) {
+      console.error('Chat error:', err);
+      setError('Failed to get response. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // Close dropdown when clicking outside
   useEffect(() => {

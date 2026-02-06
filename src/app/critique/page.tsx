@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect, Suspense, ReactNode } from 'react';
 import Link from 'next/link';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { Message, Critique } from '@/types';
 import { INITIAL_CRITIQUE, CRITIQUE_INITIAL_MESSAGES } from '@/lib/constants';
 import {
@@ -197,6 +198,8 @@ function generateId(): string {
 }
 
 function CritiqueModeInner() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const [messages, setMessages] = useState<Message[]>(CRITIQUE_INITIAL_MESSAGES);
   const [critique, setCritique] = useState<Critique>(INITIAL_CRITIQUE);
   const [isLoading, setIsLoading] = useState(false);
@@ -205,11 +208,74 @@ function CritiqueModeInner() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [toast, setToast] = useState({ isVisible: false, message: '' });
   const [isModeDropdownOpen, setIsModeDropdownOpen] = useState(false);
+  const [initialMessageSent, setInitialMessageSent] = useState(false);
   const [pendingImage, setPendingImage] = useState<{ base64: string; mimeType: string } | null>(
     null
   );
   const modeDropdownRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Handle initial message from URL query parameter
+  useEffect(() => {
+    const q = searchParams.get('q');
+    if (q && !initialMessageSent && !isLoading) {
+      setInitialMessageSent(true);
+      router.replace('/critique', { scroll: false });
+      handleSendMessageDirect(q);
+    }
+  }, [searchParams, initialMessageSent, isLoading, router]);
+
+  // Direct send function that doesn't depend on state (for initial message)
+  const handleSendMessageDirect = async (content: string) => {
+    if (!content.trim()) return;
+
+    setError(null);
+
+    const userMessage: Message = {
+      id: generateId(),
+      role: 'user',
+      content: content.trim(),
+      timestamp: new Date(),
+    };
+    const newMessages = [...CRITIQUE_INITIAL_MESSAGES, userMessage];
+    setMessages(newMessages);
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: newMessages, mode: 'critique' }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to get response');
+      }
+
+      const data = await response.json();
+      const { displayContent, critiqueUpdate, identifiedPattern } = parseCritiqueUpdate(
+        data.message
+      );
+
+      const aiMessage: Message = {
+        id: generateId(),
+        role: 'assistant',
+        content: displayContent,
+        timestamp: new Date(),
+        identifiedPattern: identifiedPattern ?? undefined,
+      };
+      setMessages((prev) => [...prev, aiMessage]);
+
+      if (critiqueUpdate) {
+        setCritique((prev) => mergeCritiqueUpdate(prev, critiqueUpdate));
+      }
+    } catch (err) {
+      console.error('Chat error:', err);
+      setError('Failed to get response. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // Close dropdown when clicking outside
   useEffect(() => {

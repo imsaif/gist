@@ -1,10 +1,10 @@
 'use client';
 
-import Link from 'next/link';
-import { ReactNode } from 'react';
+import { useState, useRef, useEffect, ReactNode } from 'react';
+import { useRouter } from 'next/navigation';
 
-// Heroicons for Mode Cards
-const ClipboardDocumentIcon = ({ className = 'h-8 w-8' }: { className?: string }) => (
+// SVG Icon Components
+const ClipboardDocumentIcon = ({ className = 'h-5 w-5' }: { className?: string }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
@@ -21,7 +21,7 @@ const ClipboardDocumentIcon = ({ className = 'h-8 w-8' }: { className?: string }
   </svg>
 );
 
-const MapIcon = ({ className = 'h-8 w-8' }: { className?: string }) => (
+const MapIcon = ({ className = 'h-5 w-5' }: { className?: string }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
@@ -38,7 +38,7 @@ const MapIcon = ({ className = 'h-8 w-8' }: { className?: string }) => (
   </svg>
 );
 
-const MagnifyingGlassIcon = ({ className = 'h-8 w-8' }: { className?: string }) => (
+const MagnifyingGlassIcon = ({ className = 'h-5 w-5' }: { className?: string }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
@@ -55,7 +55,7 @@ const MagnifyingGlassIcon = ({ className = 'h-8 w-8' }: { className?: string }) 
   </svg>
 );
 
-const UserGroupIcon = ({ className = 'h-8 w-8' }: { className?: string }) => (
+const UserGroupIcon = ({ className = 'h-5 w-5' }: { className?: string }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
@@ -72,7 +72,7 @@ const UserGroupIcon = ({ className = 'h-8 w-8' }: { className?: string }) => (
   </svg>
 );
 
-const Squares2X2Icon = ({ className = 'h-8 w-8' }: { className?: string }) => (
+const Squares2X2Icon = ({ className = 'h-5 w-5' }: { className?: string }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
@@ -89,88 +89,141 @@ const Squares2X2Icon = ({ className = 'h-8 w-8' }: { className?: string }) => (
   </svg>
 );
 
-const ChatBubbleLeftRightIcon = ({ className = 'h-8 w-8' }: { className?: string }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    strokeWidth={1.5}
-    stroke="currentColor"
-    className={className}
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334a2.126 2.126 0 0 0-.476-.095 48.64 48.64 0 0 0-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0 0 11.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155"
-    />
-  </svg>
-);
-
-interface ModeCard {
+interface ModePill {
   id: string;
+  label: string;
   icon: ReactNode;
-  title: string;
-  description: string;
   href: string;
-  cta: string;
+  starterPrompts: string[];
 }
 
-const MODE_CARDS: ModeCard[] = [
-  {
-    id: 'chat',
-    icon: <ChatBubbleLeftRightIcon className="h-8 w-8" />,
-    title: 'Chat with Gist',
-    description: 'Auto-detects the right mode',
-    href: '/chat',
-    cta: 'Start chatting',
-  },
+const MODE_PILLS: ModePill[] = [
   {
     id: 'brief',
-    icon: <ClipboardDocumentIcon className="h-8 w-8" />,
-    title: 'Write a Brief',
-    description: 'Clarify before you build',
+    label: 'Brief',
+    icon: <ClipboardDocumentIcon className="h-5 w-5" />,
     href: '/brief',
-    cta: 'Start',
+    starterPrompts: [
+      'Write a product brief',
+      'Define feature requirements',
+      "Clarify what I'm building",
+      'Scope a new project',
+    ],
   },
   {
     id: 'map',
-    icon: <MapIcon className="h-8 w-8" />,
-    title: 'Map a Flow',
-    description: 'Walk through user journeys',
+    label: 'Map',
+    icon: <MapIcon className="h-5 w-5" />,
     href: '/map',
-    cta: 'Start mapping',
+    starterPrompts: [
+      'Map a user onboarding flow',
+      'Design a checkout journey',
+      'Walk through a signup flow',
+      'Map error recovery paths',
+    ],
   },
   {
     id: 'critique',
-    icon: <MagnifyingGlassIcon className="h-8 w-8" />,
-    title: 'Critique a Design',
-    description: 'Get pattern-based feedback',
+    label: 'Critique',
+    icon: <MagnifyingGlassIcon className="h-5 w-5" />,
     href: '/critique',
-    cta: 'Upload design',
+    starterPrompts: [
+      'Review my landing page design',
+      'Critique a mobile screen',
+      'Analyze my dashboard layout',
+      'Check my form design',
+    ],
   },
   {
     id: 'stakeholder',
-    icon: <UserGroupIcon className="h-8 w-8" />,
-    title: 'Prep for Stakeholders',
-    description: 'Prepare for hard questions',
+    label: 'Stakeholder',
+    icon: <UserGroupIcon className="h-5 w-5" />,
     href: '/stakeholder',
-    cta: 'Start prepping',
+    starterPrompts: [
+      'Prepare for a design review',
+      'Defend a UX decision',
+      'Anticipate engineering pushback',
+      'Brief executives on design',
+    ],
   },
   {
     id: 'ia',
-    icon: <Squares2X2Icon className="h-8 w-8" />,
-    title: 'Structure IA',
-    description: 'Map content & navigation',
+    label: 'IA',
+    icon: <Squares2X2Icon className="h-5 w-5" />,
     href: '/ia',
-    cta: 'Start structuring',
+    starterPrompts: [
+      'Structure a SaaS app',
+      'Organize a marketing site',
+      'Plan content hierarchy',
+      'Design navigation for a dashboard',
+    ],
   },
 ];
 
+const HERO_WORDS = ['Gist', 'Think'];
+
 export default function Home() {
+  const router = useRouter();
+  const [inputValue, setInputValue] = useState('');
+  const [activePill, setActivePill] = useState<string | null>(null);
+  const [heroWordIndex, setHeroWordIndex] = useState(0);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const pillsRef = useRef<HTMLDivElement>(null);
+
+  // Cycle hero word every 3 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setHeroWordIndex((prev) => (prev + 1) % HERO_WORDS.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node) &&
+        pillsRef.current &&
+        !pillsRef.current.contains(event.target as Node)
+      ) {
+        setActivePill(null);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleSubmit = () => {
+    const trimmed = inputValue.trim();
+    if (!trimmed) return;
+    router.push(`/chat?q=${encodeURIComponent(trimmed)}`);
+  };
+
+  const handlePillClick = (pillId: string) => {
+    if (activePill === pillId) {
+      setActivePill(null);
+      setInputValue('');
+    } else {
+      setActivePill(pillId);
+      const pill = MODE_PILLS.find((p) => p.id === pillId);
+      if (pill) {
+        setInputValue(`@${pill.label} `);
+      }
+    }
+  };
+
+  const handleStarterPromptClick = (pill: ModePill, prompt: string) => {
+    setActivePill(null);
+    router.push(`${pill.href}?q=${encodeURIComponent(prompt)}`);
+  };
+
+  const activeMode = MODE_PILLS.find((p) => p.id === activePill);
+
   return (
-    <div className="relative min-h-screen bg-white">
-      {/* Header - absolute so it doesn't affect centering */}
-      <header className="absolute top-0 right-0 left-0 flex h-14 items-center justify-between px-6">
+    <div className="hero-gradient-bg relative min-h-screen overflow-hidden">
+      {/* Header */}
+      <header className="absolute top-0 right-0 left-0 z-10 flex h-14 items-center justify-between px-6">
         <h1 className="text-text-primary text-xl font-semibold">Gist</h1>
         <nav className="flex items-center gap-4">
           <button className="border-border-light text-text-secondary hover:bg-bg-secondary rounded-lg border px-4 py-2 text-sm font-medium transition-colors">
@@ -179,33 +232,97 @@ export default function Home() {
         </nav>
       </header>
 
-      {/* Main content - truly centered */}
-      <main className="-mt-20 flex min-h-screen items-center justify-center px-6">
-        <div className="w-full max-w-4xl">
+      {/* Main content */}
+      <main className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6">
+        <div className="w-full max-w-3xl">
           {/* Hero */}
           <div className="mb-8 text-center">
-            <h2 className="text-text-primary mb-3 text-4xl font-bold">Think before you design</h2>
-            <p className="text-text-secondary text-lg">
-              Your design thinking partner — clarify, map, and critique before you open Figma.
+            <h2 className="text-text-primary mb-4 text-5xl font-extrabold tracking-tight md:text-6xl">
+              <span className="text-accent-primary">{HERO_WORDS[heroWordIndex]}</span> before you
+              design
+            </h2>
+            <p className="text-text-secondary mx-auto max-w-xl text-lg md:text-xl">
+              Your design thinking partner. Clarify, map, and critique before you open Figma.
             </p>
           </div>
 
-          {/* Mode Cards - 2x3 Grid */}
-          <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
-            {MODE_CARDS.map((mode) => (
-              <Link
-                key={mode.id}
-                href={mode.href}
-                className="group border-border-light hover:border-accent-primary flex items-center gap-3 rounded-xl border-2 bg-white p-4 transition-all hover:shadow-lg"
+          {/* Chat input */}
+          <div className="relative mb-8">
+            <div className="border-border-light focus-within:border-accent-primary flex items-center rounded-2xl border-2 bg-white shadow-lg transition-colors">
+              <input
+                type="text"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleSubmit();
+                  }
+                }}
+                placeholder="What are you working on?"
+                className="flex-1 rounded-2xl px-6 py-5 text-xl outline-none placeholder:text-slate-400"
+              />
+              <button
+                onClick={handleSubmit}
+                disabled={!inputValue.trim()}
+                className="bg-accent-primary hover:bg-accent-hover disabled:bg-bg-tertiary disabled:text-text-tertiary mr-3 flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl text-white transition-colors"
               >
-                <div className="text-accent-primary flex-shrink-0">{mode.icon}</div>
-                <div className="min-w-0 flex-1">
-                  <h3 className="text-text-primary group-hover:text-accent-primary font-semibold transition-colors">
-                    {mode.title}
-                  </h3>
-                  <p className="text-text-tertiary text-sm">{mode.description}</p>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="h-5 w-5"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            {/* Starter prompts dropdown - appears below input when pill is active */}
+            {activeMode && (
+              <div
+                ref={dropdownRef}
+                className="border-border-light absolute right-0 left-0 z-20 -mt-1 overflow-hidden rounded-b-2xl border-2 border-t-0 bg-white shadow-lg"
+              >
+                <div className="border-t border-slate-100 px-4 py-3">
+                  <p className="text-text-tertiary mb-2 text-sm font-medium">Try asking...</p>
+                  <div className="space-y-1">
+                    {activeMode.starterPrompts.map((prompt) => (
+                      <button
+                        key={prompt}
+                        onClick={() => handleStarterPromptClick(activeMode, prompt)}
+                        className="text-text-primary hover:bg-bg-secondary w-full rounded-xl px-4 py-3 text-left text-lg font-medium transition-colors"
+                      >
+                        {prompt}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </Link>
+              </div>
+            )}
+          </div>
+
+          {/* Mode pills */}
+          <div ref={pillsRef} className="flex flex-wrap justify-center gap-3">
+            {MODE_PILLS.map((pill) => (
+              <button
+                key={pill.id}
+                onClick={() => handlePillClick(pill.id)}
+                className={`flex items-center gap-2.5 rounded-full border-2 px-5 py-2.5 text-base font-bold transition-colors ${
+                  activePill === pill.id
+                    ? 'border-accent-primary bg-accent-primary/10 text-accent-primary'
+                    : 'border-border-light text-text-secondary hover:text-text-primary bg-white shadow-sm hover:border-slate-400'
+                }`}
+              >
+                {pill.icon}
+                {pill.label}
+              </button>
             ))}
           </div>
         </div>
