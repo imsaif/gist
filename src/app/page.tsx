@@ -454,7 +454,27 @@ export default function Home() {
   ];
 
   return (
-    <div className="hero-gradient-bg relative min-h-screen overflow-hidden">
+    <div className="hero-gradient-bg relative min-h-screen overflow-x-clip">
+      {/* Full-page grid background — fades in toward the bottom */}
+      <div
+        className="pointer-events-none absolute inset-0 z-0"
+        style={{
+          backgroundImage:
+            'linear-gradient(to right, rgba(212,212,216,0.4) 1px, transparent 1px), linear-gradient(to bottom, rgba(212,212,216,0.4) 1px, transparent 1px)',
+          backgroundSize: '40px 40px',
+          maskImage: 'linear-gradient(to bottom, transparent 40%, black 70%)',
+          WebkitMaskImage: 'linear-gradient(to bottom, transparent 40%, black 70%)',
+        }}
+      />
+      {/* Radial fade — softens grid edges */}
+      <div
+        className="pointer-events-none absolute inset-0 z-0"
+        style={{
+          background: 'radial-gradient(ellipse at center, transparent 40%, white 80%)',
+          maskImage: 'linear-gradient(to bottom, transparent 40%, black 70%)',
+          WebkitMaskImage: 'linear-gradient(to bottom, transparent 40%, black 70%)',
+        }}
+      />
       {/* Header */}
       <header className="absolute top-0 right-0 left-0 z-10 flex h-14 items-center justify-between px-6">
         <h1 className="text-text-primary text-xl font-semibold">Gist</h1>
@@ -561,50 +581,50 @@ export default function Home() {
         </div>
 
         {/* Skills section */}
-        <div className="mt-24 w-full max-w-6xl md:mt-32">
+        <div className="mt-24 w-full max-w-6xl rounded-2xl bg-white/50 p-8 backdrop-blur-sm md:mt-32 md:p-12">
           <div className="mb-14">
-            <p className="text-text-tertiary mb-3 text-xs font-semibold tracking-widest uppercase">
+            <p className="mb-3 text-xs font-semibold tracking-widest text-slate-500 uppercase">
               Gist Design Skills
             </p>
             <h3 className="text-text-primary mb-5 text-3xl font-extrabold tracking-tight md:text-4xl">
               Get to know Gist
             </h3>
             <div className="mb-5 h-px w-full bg-gradient-to-r from-slate-200 via-slate-300 to-transparent" />
-            <p className="text-text-secondary max-w-xl text-base md:text-lg">
+            <p className="max-w-xl text-base text-slate-600 md:text-lg">
               One partner, many design skills. Tell Gist what you&apos;re working on and it
               activates the right skill automatically.
             </p>
           </div>
 
           <div className="mb-10">
-            <p className="text-text-tertiary mb-5 text-xs font-semibold tracking-wider uppercase">
+            <p className="mb-5 text-xs font-semibold tracking-wider text-slate-500 uppercase">
               Design Skills
             </p>
             <div className="grid grid-cols-2 gap-x-10 gap-y-12 md:grid-cols-4 lg:grid-cols-4">
               {SKILLS.map((skill) => (
                 <div key={skill.title} className="group">
                   <div className="border-border-light bg-bg-primary mb-4 flex h-11 w-11 items-center justify-center rounded-xl border shadow-sm transition-colors group-hover:border-slate-300">
-                    <span className="text-text-secondary">{skill.icon}</span>
+                    <span className="text-slate-700">{skill.icon}</span>
                   </div>
                   <h4 className="text-text-primary mb-1.5 text-sm font-bold">{skill.title}</h4>
-                  <p className="text-text-tertiary text-sm leading-relaxed">{skill.description}</p>
+                  <p className="text-sm leading-relaxed text-slate-600">{skill.description}</p>
                 </div>
               ))}
             </div>
           </div>
 
           <div className="mb-20">
-            <p className="text-text-tertiary mb-5 text-xs font-semibold tracking-wider uppercase">
+            <p className="mb-5 text-xs font-semibold tracking-wider text-slate-500 uppercase">
               Built in
             </p>
             <div className="grid grid-cols-2 gap-x-10 gap-y-12 md:grid-cols-3 lg:grid-cols-5">
               {BUILT_IN.map((item) => (
                 <div key={item.title} className="group">
                   <div className="border-border-light bg-bg-primary mb-4 flex h-11 w-11 items-center justify-center rounded-xl border shadow-sm transition-colors group-hover:border-slate-300">
-                    <span className="text-text-secondary">{item.icon}</span>
+                    <span className="text-slate-700">{item.icon}</span>
                   </div>
                   <h4 className="text-text-primary mb-1.5 text-sm font-bold">{item.title}</h4>
-                  <p className="text-text-tertiary text-sm leading-relaxed">{item.description}</p>
+                  <p className="text-sm leading-relaxed text-slate-600">{item.description}</p>
                 </div>
               ))}
             </div>

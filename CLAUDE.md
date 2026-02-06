@@ -10,6 +10,12 @@
 
 ## Recent Sessions
 
+### Session: February 6, 2026 (MacBook) - Grid Background on Landing Page
+
+- **Files changed:** 1
+- **Pattern:** Landing page visual enhancement
+- **Notes:** Added Aceternity-style CSS line grid background to landing page. Grid covers full page with vertical mask (invisible in hero, fades in toward skills section). Radial gradient softens grid edges. Skills section has frosted white backdrop panel. Upgraded skills section text colors to darker slate tones for better accessibility against grid.
+
 ### Session: February 6, 2026 (MacBook) - Tier 1 Design Skills: Research, Ideate, Constraints
 
 - **Files changed:** 26
