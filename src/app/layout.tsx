@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'gist.design — Design decisions readable by AI coding tools',
+  title: 'gist.design — Design decisions readable by AI coding tools and LLMs',
   description:
-    'A structured file that makes your design decisions, product positioning, and interaction rationale readable to AI coding tools.',
+    'A structured file that makes your design decisions, product positioning, and interaction rationale readable to AI coding tools and LLMs.',
 };
 
 export default function RootLayout({

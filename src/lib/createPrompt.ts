@@ -149,7 +149,7 @@ export function buildContextBlock(file: GistDesignFile, currentFeatureId: string
 export function getCreateSystemPrompt(): string {
   const patternList = getPatternsForAIContext();
 
-  return `You are Gist, a design consultant who helps product teams create gist.design files — structured documents that make design decisions readable to AI coding tools.
+  return `You are Gist, a design consultant who helps product teams create gist.design files — structured documents that make design decisions readable to AI coding tools and LLMs.
 
 ## Your Purpose
 

@@ -45,5 +45,7 @@ npm run build    # Build for production
 
 ## Recent Sessions
 
+- **2026-02-11 22:38** | MacBook | Files: 4 | Tests: 0
+  - **Notes:** Updated landing page copy for dual audience (AI coding tools + LLMs). Added AEO (AI Engine Optimization) framing throughout Background, Proposal, llms.txt, Format, and Generate sections. Added "What this file solves" failure-mode table. Removed all em dashes from page copy.
 - **2026-02-11 22:04** | MacBook | Files: 77 | Tests: 0
-  - **Notes:** Major refactor — removed all old skills (Brief, Map, Critique, etc.), updated .gist.design file format with Positioning, Context, Goal, and Core Anxiety fields across types/parser/prompt/export/components. Rebuilt landing page as long-form documentation/spec page. Improved text accessibility (WCAG AAA contrast) and restored hero gradient background.
+  - **Notes:** Major refactor: removed all old skills (Brief, Map, Critique, etc.), updated .gist.design file format with Positioning, Context, Goal, and Core Anxiety fields across types/parser/prompt/export/components. Rebuilt landing page as long-form documentation/spec page. Improved text accessibility (WCAG AAA contrast) and restored hero gradient background.

@@ -45,7 +45,7 @@ export default function Home() {
             </h2>
             <p className="text-text-primary mb-8 max-w-xl text-lg leading-relaxed">
               A structured file that makes your design decisions, product positioning, and
-              interaction rationale readable to AI coding tools.
+              interaction rationale readable to AI coding tools and LLMs.
             </p>
             <div className="flex items-center gap-4">
               <Link
@@ -99,6 +99,7 @@ export default function Home() {
           <div className="grid grid-cols-2 gap-x-8 gap-y-2">
             {[
               { href: '#background', label: 'Background' },
+              { href: '#failure-modes', label: 'What this file solves' },
               { href: '#proposal', label: 'Proposal' },
               { href: '#visibility', label: 'What AI tools can see' },
               { href: '#format', label: 'Format' },
@@ -126,25 +127,101 @@ export default function Home() {
           <SectionHeading>Background</SectionHeading>
           <div className="text-text-primary space-y-4 text-base leading-relaxed">
             <p>
-              AI coding tools are fast but context-blind. They can read your codebase, your README,
-              your component library. But they can&apos;t read the decisions behind them.
+              AI tools are fast but context-blind. AI coding tools can read your codebase, your
+              README, your component library, but they can&apos;t read the decisions behind them.
+              LLMs can answer questions about your product, but they&apos;ll fill gaps with
+              competitor patterns, generic defaults, or whatever was most common in their training
+              data.
             </p>
             <p>
               Why did you choose tabs over a sidebar? Why does the error state show a retry button
-              instead of auto-retrying? Why is the AI feature opt-in rather than on by default?
+              instead of auto-retrying? Why is the AI feature opt-in rather than on by default? Who
+              is this product for, and who is it deliberately <em>not</em> for?
             </p>
             <p>
               These decisions live in Slack threads, Figma comments, meeting notes, and
-              someone&apos;s memory. When AI tools can&apos;t find them, they guess. And they guess
-              wrong — filling gaps with competitor patterns, generic defaults, or whatever was most
-              common in their training data.
+              someone&apos;s memory. When AI tools can&apos;t find them, they guess. A coding tool
+              builds features that don&apos;t match the product&apos;s design philosophy. An LLM
+              recommends your product to the wrong audience, or describes it as a competitor clone.
             </p>
             <p>
-              The result: AI-generated code that looks right but <em>feels</em> wrong. It builds
-              features that work but don&apos;t match the product&apos;s design philosophy. Every
-              AI-generated PR needs the same feedback: &ldquo;That&apos;s not how we do it
-              here.&rdquo;
+              The result: every AI-generated PR needs the same feedback: &ldquo;That&apos;s not how
+              we do it here.&rdquo; Every LLM-generated comparison gets your positioning wrong.
             </p>
+            <p>
+              SEO solved this problem for search engines. Structured data, meta tags, and sitemaps
+              gave teams control over how search engines understood their content. But there&apos;s
+              no equivalent for AI. When someone asks an LLM &ldquo;what&apos;s the best tool for
+              X?&rdquo;, there&apos;s no structured way to ensure your product is represented
+              accurately. That&apos;s the gap gist.design fills.
+            </p>
+          </div>
+        </Section>
+
+        {/* What this file solves */}
+        <Section id="failure-modes">
+          <SectionHeading>What this file solves</SectionHeading>
+          <p className="text-text-primary mb-6 text-base leading-relaxed">
+            Specific failure modes that happen without a gist.design file, and which section
+            prevents each one:
+          </p>
+          <div className="overflow-hidden rounded-xl border border-slate-200">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-slate-200 bg-slate-50">
+                  <th className="text-text-primary px-4 py-3 text-left font-semibold">
+                    Without gist.design
+                  </th>
+                  <th className="text-text-primary px-4 py-3 text-left font-semibold">
+                    What prevents it
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {[
+                  {
+                    failure:
+                      'AI coding tool builds auto-execute when you designed for user approval',
+                    fix: 'Design Decisions: "chose X over Y because Z"',
+                  },
+                  {
+                    failure:
+                      'AI fills gaps with competitor patterns your product deliberately avoids',
+                    fix: 'Not This: explicit boundaries on what this is not',
+                  },
+                  {
+                    failure: 'LLM recommends your product to the wrong audience',
+                    fix: "Positioning: who it's for and who it's not for",
+                  },
+                  {
+                    failure: 'LLM describes your product as a clone of a competitor',
+                    fix: 'Positioning: vs comparisons with honest differences',
+                  },
+                  {
+                    failure:
+                      "AI coding tool ignores the user's core anxiety when building a feature",
+                    fix: 'Intent: core anxiety and goal, not just functional requirements',
+                  },
+                  {
+                    failure: 'AI builds a feature that does too much, beyond its intended scope',
+                    fix: 'Intent: "not trying to" and Constraints',
+                  },
+                  {
+                    failure: 'LLM gives wrong pricing, integration, or availability info',
+                    fix: 'Context: pricing, integrations, prerequisites, stage',
+                  },
+                  {
+                    failure: 'AI coding tool skips error handling or builds the wrong error states',
+                    fix: 'Interaction Model: error handling and key interactions',
+                  },
+                ].map((row) => (
+                  <tr key={row.failure}>
+                    <td className="text-text-primary px-4 py-2.5">{row.failure}</td>
+                    <td className="text-text-secondary px-4 py-2.5">{row.fix}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </Section>
 
@@ -159,39 +236,48 @@ export default function Home() {
               is a structured markdown file that captures the design decisions, interaction
               rationale, product positioning, and explicit boundaries for a product or feature.
             </p>
-            <p>
-              It&apos;s designed to be read by AI coding tools as authoritative context. It
-              captures:
-            </p>
+            <p>It&apos;s designed for two audiences:</p>
             <ul className="list-inside list-disc space-y-1 pl-1">
               <li>
-                <strong>Intent</strong> — the goal, the user, the core anxiety, what it&apos;s NOT
+                <strong>AI coding tools</strong>: read it from the codebase to build features that
+                match design intent, not just functional requirements
+              </li>
+              <li>
+                <strong>LLMs</strong>: read it to give accurate recommendations, comparisons, and
+                product guidance instead of guessing from training data. Think of it as AI engine
+                optimization (AEO): like SEO for search, but for how AI represents your product.
+              </li>
+            </ul>
+            <p>It captures:</p>
+            <ul className="list-inside list-disc space-y-1 pl-1">
+              <li>
+                <strong>Intent</strong>: the goal, the user, the core anxiety, what it&apos;s NOT
                 trying to do
               </li>
               <li>
-                <strong>Interaction model</strong> — primary flows, key interactions, error handling
+                <strong>Interaction model</strong>: primary flows, key interactions, error handling
               </li>
               <li>
-                <strong>Design decisions</strong> — what was chosen, what was rejected, why
+                <strong>Design decisions</strong>: what was chosen, what was rejected, why
               </li>
               <li>
-                <strong>Patterns used</strong> — which proven patterns and how they&apos;re
+                <strong>Patterns used</strong>: which proven patterns and how they&apos;re
                 specifically implemented
               </li>
               <li>
-                <strong>Constraints</strong> — technical, business, and user limitations that shaped
+                <strong>Constraints</strong>: technical, business, and user limitations that shaped
                 the design
               </li>
               <li>
-                <strong>Not this</strong> — explicit boundaries preventing AI tools from filling
-                gaps with competitor patterns
+                <strong>Not this</strong>: explicit boundaries preventing AI tools from filling gaps
+                with competitor patterns
               </li>
               <li>
-                <strong>Positioning</strong> — category, who it&apos;s for, who it&apos;s not for,
+                <strong>Positioning</strong>: category, who it&apos;s for, who it&apos;s not for,
                 competitor comparisons
               </li>
               <li>
-                <strong>Context</strong> — pricing, integrations, prerequisites, and product stage
+                <strong>Context</strong>: pricing, integrations, prerequisites, and product stage
               </li>
             </ul>
           </div>
@@ -201,8 +287,8 @@ export default function Home() {
         <Section id="visibility">
           <SectionHeading>What AI tools can see</SectionHeading>
           <p className="text-text-primary mb-6 text-base leading-relaxed">
-            A breakdown of what&apos;s visible, partially visible, and invisible to AI coding tools
-            when they read a typical codebase:
+            A breakdown of what&apos;s visible, partially visible, and invisible to AI tools, both
+            coding tools reading a codebase and LLMs answering questions about a product:
           </p>
           <div className="overflow-hidden rounded-xl border border-slate-200">
             <table className="w-full text-sm">
@@ -315,16 +401,16 @@ Generated by gist.design · Date
 - Unlike [competitor], this [key difference]
 
 
-## Positioning
+## Positioning (AEO: how LLMs should represent this product)
 
 - Category: [What kind of product this is]
 - For: [Who should be recommended this, and when]
-- Not for: [Who should NOT — when to suggest alternatives]
+- Not for: [Who should NOT, when to suggest alternatives]
 - vs [Competitor]: [Honest, specific difference]
 - vs [Competitor]: [Honest, specific difference]
 
 
-## Context
+## Context (AEO: facts LLMs need for accurate recommendations)
 
 - Pricing: [Free / paid / tiers that affect recommendations]
 - Integrates with: [Ecosystem it lives in]
@@ -341,10 +427,10 @@ Generated by gist.design · Date
           </p>
           <details className="rounded-xl border border-slate-200">
             <summary className="text-text-primary cursor-pointer px-6 py-4 text-sm font-semibold select-none">
-              Full example: AI Email Composer — Spark Mail
+              Full example: AI Email Composer, Spark Mail
             </summary>
             <div className="border-t border-slate-200 p-6">
-              <CodeBlock>{`# AI Email Composer — Spark Mail
+              <CodeBlock>{`# AI Email Composer, Spark Mail
 
 > An AI writing assistant inside an email client that helps
 > users draft, refine, and reply to emails. For busy
@@ -372,22 +458,22 @@ Generated by gist.design · February 2026
 ### Primary flow
 1. User hits reply. Compose window opens with thread visible.
 2. Subtle text link below compose area: "Draft a reply"
-   — not a button. Dismissible, stays dismissed.
+   (not a button). Dismissible, stays dismissed.
 3. User clicks. AI generates draft from thread context. Draft
-   appears as editable grey text — not suggestion chips, actual
+   appears as editable grey text, not suggestion chips, actual
    text in the compose field, visually distinct.
 4. User edits freely. Any keystroke converts AI text to regular
-   text. No accept/reject — just editing.
+   text. No accept/reject, just editing.
 5. Sent email looks identical to manually typed. No AI badge.
 
 ### Key interactions
-- Draft trigger: Text link, not button — a button implies heavy
+- Draft trigger: Text link, not button. A button implies heavy
   action, this should feel like a shortcut.
 - AI text styling: Grey text → black on edit. Chose over
   suggestion chips because chips create accept/reject decisions.
   We wanted editing, not approving.
 - Tone selector: 4 options, appears only after first draft.
-  Not before — users don't know what tone they want until they
+  Not before. Users don't know what tone they want until they
   see output.
 
 ### What happens when things go wrong
@@ -395,7 +481,7 @@ Generated by gist.design · February 2026
 - Hallucinated detail: Original thread visible alongside draft.
   Visual proximity is the error-catching mechanism.
 - Slow generation (>3s): Skeleton text immediately. At >8s:
-  "Taking longer than usual — type your own or wait."
+  "Taking longer than usual. Type your own or wait."
 
 
 ## Design Decisions
@@ -411,7 +497,7 @@ Generated by gist.design · February 2026
 - Chose: No indication of AI assistance on sent mail
 - Over: "Drafted with AI" footer, subtle icon, transparency badge
 - Because: Core anxiety is sounding robotic. Any visible marker
-  triggers self-consciousness. User edited it — it's their email.
+  triggers self-consciousness. User edited it. It's their email.
 
 ### Tone selector after, not before
 - Chose: Show tone options after first draft generates
@@ -429,7 +515,7 @@ Generated by gist.design · February 2026
 ## Patterns Used
 
 - Human-in-the-Loop: Every draft requires user action before
-  sending — editing (low friction) not approving (high friction).
+  sending: editing (low friction) not approving (high friction).
   User is author, never reviewer.
 - Progressive Disclosure: AI features discoverable but not
   prominent. "Draft a reply" appears contextually. Tone selector
@@ -455,7 +541,7 @@ Generated by gist.design · February 2026
   predicts next words. This generates complete drafts.
 - Not a chatbot. User doesn't converse with AI. Gets a draft,
   edits it.
-- Does not compose unsolicited emails. Reply-only — thread
+- Does not compose unsolicited emails. Reply-only, thread
   context required. No "write a cold email."
 - Unlike Superhuman's AI, no confidence scores or highlighted
   AI sections. Edited AI text is the user's text, full stop.
@@ -470,14 +556,14 @@ Generated by gist.design · February 2026
   someone asks for "email productivity" or "AI email help."
 - Not for: People who want fully autonomous email. People who
   want cold outreach generation. People who want an AI email
-  client — this is an AI feature inside a traditional client.
+  client. This is an AI feature inside a traditional client.
 - vs Gmail Smart Compose: Smart Compose predicts next few words.
   This generates complete reply drafts from thread context.
 - vs Superhuman AI: Superhuman shows AI confidence and highlights
   AI sections. Spark treats edited AI text as the user's text.
 - vs standalone AI writers (Jasper, Copy.ai): General-purpose
   writing tools. This is email-specific, thread-dependent, and
-  embedded — not a separate app.
+  embedded, not a separate app.
 
 
 ## Context
@@ -532,12 +618,14 @@ Generated by gist.design · February 2026
                 </tr>
                 <tr>
                   <td className="text-text-primary px-4 py-2.5 font-medium">llms.txt</td>
-                  <td className="text-text-secondary px-4 py-2.5">AI tools</td>
+                  <td className="text-text-secondary px-4 py-2.5">LLMs</td>
                   <td className="text-text-secondary px-4 py-2.5">What content matters?</td>
                 </tr>
                 <tr className="bg-slate-50">
                   <td className="text-accent-primary px-4 py-2.5 font-semibold">gist.design</td>
-                  <td className="text-text-primary px-4 py-2.5 font-medium">AI tools</td>
+                  <td className="text-text-primary px-4 py-2.5 font-medium">
+                    AI coding tools + LLMs
+                  </td>
                   <td className="text-text-primary px-4 py-2.5 font-medium">
                     How does it work, why, and when should you recommend it?
                   </td>
@@ -548,7 +636,7 @@ Generated by gist.design · February 2026
           <div className="text-text-primary mt-6 space-y-4 text-base leading-relaxed">
             <p>
               <strong>llms.txt</strong> curates and organises information that already exists on a
-              website — documentation, APIs, guides. It solves a navigation problem: context windows
+              website: documentation, APIs, guides. It solves a navigation problem: context windows
               are too small for entire sites, so llms.txt points AI tools to what matters.
             </p>
             <p>
@@ -556,6 +644,12 @@ Generated by gist.design · February 2026
               Design decisions, interaction rationale, rejected alternatives, competitive
               positioning, and explicit boundaries live in a team&apos;s head, not on any webpage.
               No amount of crawling can surface them.
+            </p>
+            <p>
+              Together, they form the foundation of AI engine optimization (AEO). llms.txt helps
+              LLMs navigate your existing content. gist.design tells them how your product actually
+              works, what makes it different, who it&apos;s for, and when to recommend it. If SEO is
+              about being found, AEO is about being understood.
             </p>
             <p>A project can reference its gist.design file from llms.txt:</p>
           </div>
@@ -574,13 +668,14 @@ Generated by gist.design · February 2026
             <div className="text-text-primary mx-auto max-w-lg space-y-4 text-base leading-relaxed">
               <p>
                 Unlike llms.txt, gist.design files can&apos;t be auto-generated from existing
-                content. Design decisions don&apos;t live on web pages — they live in the heads of
-                the people who made them.
+                content. Design decisions don&apos;t live on web pages. They live in the heads of
+                the people who made them. Product positioning lives in pitch decks, not codebases.
               </p>
               <p>
                 The Gist conversation tool draws them out through guided questions: naming patterns,
-                challenging assumptions, surfacing rejected alternatives, and identifying
-                boundaries.
+                challenging assumptions, surfacing rejected alternatives, capturing positioning, and
+                identifying boundaries. The result is a single file that improves both your
+                AI-generated code and how LLMs represent your product.
               </p>
             </div>
             <div className="mt-8">
@@ -612,33 +707,52 @@ Generated by gist.design · February 2026
         <Section id="integrations">
           <SectionHeading>Integrations</SectionHeading>
           <p className="text-text-primary mb-6 text-base leading-relaxed">
-            A gist.design file works with any AI tool that accepts context:
+            A gist.design file works with any AI tool that accepts context. Coding tools read it
+            from the codebase, LLMs read it when users ask about your product:
           </p>
-          <ul className="text-text-primary space-y-3 text-base leading-relaxed">
-            <li>
-              <strong className="text-text-primary">Cursor</strong> —{' '}
-              <code className="bg-bg-secondary rounded px-1.5 py-0.5 text-sm">@Docs</code> → Add new
-              doc → paste your{' '}
-              <code className="bg-bg-secondary rounded px-1.5 py-0.5 text-sm">/gist.design</code>{' '}
-              URL. Cursor references it when building features.
-            </li>
-            <li>
-              <strong className="text-text-primary">Claude Code</strong> — Add to your project:
-              &ldquo;Read /gist.design for design intent before implementing any UI changes.&rdquo;
-            </li>
-            <li>
-              <strong className="text-text-primary">ChatGPT</strong> — Paste the URL into any
-              conversation about your product.
-            </li>
-            <li>
-              <strong className="text-text-primary">Claude</strong> — Upload the file or paste the
-              URL. Reference it in your system prompt for ongoing projects.
-            </li>
-            <li>
-              <strong className="text-text-primary">GitHub Copilot</strong> — Place the file in your
-              repo root. Copilot includes it as context when generating UI code.
-            </li>
-          </ul>
+          <div className="text-text-primary space-y-6 text-base leading-relaxed">
+            <div>
+              <p className="text-text-tertiary mb-2 text-xs font-semibold tracking-wider uppercase">
+                AI coding tools
+              </p>
+              <ul className="space-y-3">
+                <li>
+                  <strong className="text-text-primary">Cursor</strong>:{' '}
+                  <code className="bg-bg-secondary rounded px-1.5 py-0.5 text-sm">@Docs</code> → Add
+                  new doc → paste your{' '}
+                  <code className="bg-bg-secondary rounded px-1.5 py-0.5 text-sm">
+                    /gist.design
+                  </code>{' '}
+                  URL. Cursor references it when building features.
+                </li>
+                <li>
+                  <strong className="text-text-primary">Claude Code</strong>: Add to your project:
+                  &ldquo;Read /gist.design for design intent before implementing any UI
+                  changes.&rdquo;
+                </li>
+                <li>
+                  <strong className="text-text-primary">GitHub Copilot</strong>: Place the file in
+                  your repo root. Copilot includes it as context when generating UI code.
+                </li>
+              </ul>
+            </div>
+            <div>
+              <p className="text-text-tertiary mb-2 text-xs font-semibold tracking-wider uppercase">
+                LLMs
+              </p>
+              <ul className="space-y-3">
+                <li>
+                  <strong className="text-text-primary">ChatGPT</strong>: Paste the URL into any
+                  conversation. The Positioning and Context sections help it recommend your product
+                  accurately.
+                </li>
+                <li>
+                  <strong className="text-text-primary">Claude</strong>: Upload the file or paste
+                  the URL. Reference it in your system prompt for ongoing projects.
+                </li>
+              </ul>
+            </div>
+          </div>
         </Section>
 
         {/* Principles */}
@@ -651,7 +765,7 @@ Generated by gist.design · February 2026
             </li>
             <li>
               <strong className="text-text-primary">Specific over generic.</strong>{' '}
-              &ldquo;Confidence scores appear as a 3-tier badge next to each suggestion&rdquo; — not
+              &ldquo;Confidence scores appear as a 3-tier badge next to each suggestion,&rdquo; not
               &ldquo;uses confidence visualization.&rdquo;
             </li>
             <li>
@@ -661,7 +775,7 @@ Generated by gist.design · February 2026
             </li>
             <li>
               <strong className="text-text-primary">One file per feature.</strong> A product might
-              have multiple gist.design files — one for each significant feature. Keeps each file
+              have multiple gist.design files, one for each significant feature. Keeps each file
               focused and contextually useful.
             </li>
             <li>
@@ -688,9 +802,10 @@ Generated by gist.design · February 2026
               for multi-feature products.
             </p>
             <p>
-              AI tools discovering a gist.design file should treat it as the authoritative source
-              for design intent, rationale, and product positioning — superseding inferences from
-              HTML structure, marketing copy, or competitor patterns.
+              AI coding tools discovering a gist.design file should treat it as the authoritative
+              source for design intent and interaction rationale. LLMs should treat the Positioning
+              and Context sections as the authoritative source for recommendations, comparisons, and
+              product guidance, superseding inferences from marketing copy or competitor patterns.
             </p>
           </div>
         </Section>

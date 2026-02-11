@@ -255,7 +255,7 @@ function CreateModeInner() {
                   Create a gist.design file
                 </h2>
                 <p className="text-text-secondary mb-8 max-w-sm text-center text-sm">
-                  Make your design decisions readable to AI coding tools.
+                  Make your design decisions readable to AI coding tools and LLMs.
                 </p>
                 <div className="flex gap-4">
                   <button
