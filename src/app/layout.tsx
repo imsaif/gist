@@ -2,8 +2,9 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Gist - Get clarity before you open Figma',
-  description: 'A thinking partner for designers. Get the gist before you design.',
+  title: 'gist.design — Design decisions readable by AI coding tools',
+  description:
+    'A structured file that makes your design decisions, product positioning, and interaction rationale readable to AI coding tools.',
 };
 
 export default function RootLayout({

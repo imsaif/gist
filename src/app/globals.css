@@ -8,8 +8,8 @@
 
   /* Text */
   --text-primary: #111827;
-  --text-secondary: #6b7280;
-  --text-tertiary: #71717a;
+  --text-secondary: #4b5563;
+  --text-tertiary: #52525b;
 
   /* Accent */
   --accent-primary: #1e293b;
@@ -108,4 +108,15 @@ body {
     transparent calc(8% + 0.5px)
   );
   filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.9));
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }

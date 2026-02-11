@@ -1,443 +1,594 @@
-'use client';
+import Link from 'next/link';
 
-import React, { useState, useRef, useEffect, ReactNode } from 'react';
-import { useRouter } from 'next/navigation';
-
-// SVG Icon Components
-const ClipboardDocumentIcon = ({ className = 'h-5 w-5' }: { className?: string }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    strokeWidth={1.5}
-    stroke="currentColor"
-    className={className}
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M8.25 7.5V6.108c0-1.135.845-2.098 1.976-2.192.373-.03.748-.057 1.123-.08M15.75 18H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08M15.75 18.75v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5A3.375 3.375 0 0 0 6.375 7.5H5.25m11.9-3.664A2.251 2.251 0 0 0 15 2.25h-1.5a2.251 2.251 0 0 0-2.15 1.586m5.8 0c.065.21.1.433.1.664v.75h-6V4.5c0-.231.035-.454.1-.664M6.75 7.5H4.875c-.621 0-1.125.504-1.125 1.125v12c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V16.5a9 9 0 0 0-9-9Z"
-    />
-  </svg>
-);
-
-const MapIcon = ({ className = 'h-5 w-5' }: { className?: string }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    strokeWidth={1.5}
-    stroke="currentColor"
-    className={className}
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M9 6.75V15m6-6v8.25m.503 3.498 4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 0 0-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0Z"
-    />
-  </svg>
-);
-
-const MagnifyingGlassIcon = ({ className = 'h-5 w-5' }: { className?: string }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    strokeWidth={1.5}
-    stroke="currentColor"
-    className={className}
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-    />
-  </svg>
-);
-
-const UserGroupIcon = ({ className = 'h-5 w-5' }: { className?: string }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    strokeWidth={1.5}
-    stroke="currentColor"
-    className={className}
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z"
-    />
-  </svg>
-);
-
-const Squares2X2Icon = ({ className = 'h-5 w-5' }: { className?: string }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    strokeWidth={1.5}
-    stroke="currentColor"
-    className={className}
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z"
-    />
-  </svg>
-);
-
-const UsersIcon = ({ className = 'h-5 w-5' }: { className?: string }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    strokeWidth={1.5}
-    stroke="currentColor"
-    className={className}
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"
-    />
-  </svg>
-);
-
-const LightBulbIcon = ({ className = 'h-5 w-5' }: { className?: string }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    strokeWidth={1.5}
-    stroke="currentColor"
-    className={className}
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M12 18v-5.25m0 0a6.01 6.01 0 0 0 1.5-.189m-1.5.189a6.01 6.01 0 0 1-1.5-.189m3.75 7.478a12.06 12.06 0 0 1-4.5 0m3.75 2.383a14.406 14.406 0 0 1-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 1 0-7.517 0c.85.493 1.509 1.333 1.509 2.316V18"
-    />
-  </svg>
-);
-
-const ShieldCheckIcon = ({ className = 'h-5 w-5' }: { className?: string }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    strokeWidth={1.5}
-    stroke="currentColor"
-    className={className}
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z"
-    />
-  </svg>
-);
-
-interface SkillPill {
-  id: string;
-  label: string;
-  icon: ReactNode;
-  href: string;
-  starterPrompts: string[];
+function Section({ id, children }: { id?: string; children: React.ReactNode }) {
+  return (
+    <section id={id} className="border-border-light border-b py-12">
+      {children}
+    </section>
+  );
 }
 
-const SKILL_PILLS: SkillPill[] = [
-  {
-    id: 'brief',
-    label: 'Brief',
-    icon: <ClipboardDocumentIcon className="h-5 w-5" />,
-    href: '/brief',
-    starterPrompts: [
-      'Write a product brief',
-      'Define feature requirements',
-      "Clarify what I'm building",
-      'Scope a new project',
-    ],
-  },
-  {
-    id: 'map',
-    label: 'Map',
-    icon: <MapIcon className="h-5 w-5" />,
-    href: '/map',
-    starterPrompts: [
-      'Map a user onboarding flow',
-      'Design a checkout journey',
-      'Walk through a signup flow',
-      'Map error recovery paths',
-    ],
-  },
-  {
-    id: 'critique',
-    label: 'Critique',
-    icon: <MagnifyingGlassIcon className="h-5 w-5" />,
-    href: '/critique',
-    starterPrompts: [
-      'Review my landing page design',
-      'Critique a mobile screen',
-      'Analyze my dashboard layout',
-      'Check my form design',
-    ],
-  },
-  {
-    id: 'stakeholder',
-    label: 'Stakeholder',
-    icon: <UserGroupIcon className="h-5 w-5" />,
-    href: '/stakeholder',
-    starterPrompts: [
-      'Prepare for a design review',
-      'Defend a UX decision',
-      'Anticipate engineering pushback',
-      'Brief executives on design',
-    ],
-  },
-  {
-    id: 'ia',
-    label: 'IA',
-    icon: <Squares2X2Icon className="h-5 w-5" />,
-    href: '/ia',
-    starterPrompts: [
-      'Structure a SaaS app',
-      'Organize a marketing site',
-      'Plan content hierarchy',
-      'Design navigation for a dashboard',
-    ],
-  },
-  {
-    id: 'research',
-    label: 'Research',
-    icon: <UsersIcon className="h-5 w-5" />,
-    href: '/research',
-    starterPrompts: [
-      'Understand my users better',
-      'Identify pain points for a feature',
-      'Plan user research methods',
-      'Create a user research canvas',
-    ],
-  },
-  {
-    id: 'ideate',
-    label: 'Ideate',
-    icon: <LightBulbIcon className="h-5 w-5" />,
-    href: '/ideate',
-    starterPrompts: [
-      'Explore solution approaches',
-      'Generate ideas for a feature',
-      'Compare design approaches',
-      'Find the best solution path',
-    ],
-  },
-  {
-    id: 'constraints',
-    label: 'Constraints',
-    icon: <ShieldCheckIcon className="h-5 w-5" />,
-    href: '/constraints',
-    starterPrompts: [
-      'Surface project constraints',
-      'Map technical limitations',
-      'Identify design boundaries',
-      'Turn constraints into opportunities',
-    ],
-  },
-];
+function SectionHeading({ children }: { children: React.ReactNode }) {
+  return <h2 className="text-text-primary mb-4 text-2xl font-bold tracking-tight">{children}</h2>;
+}
 
-const HERO_WORDS = ['Gist', 'Think'];
+function CodeBlock({ children }: { children: string }) {
+  return (
+    <pre className="bg-bg-secondary overflow-x-auto rounded-xl p-6 font-mono text-sm leading-relaxed">
+      <code>{children}</code>
+    </pre>
+  );
+}
 
 export default function Home() {
-  const router = useRouter();
-  const [inputValue, setInputValue] = useState('');
-  const [activePill, setActivePill] = useState<string | null>(null);
-  const [heroWordIndex, setHeroWordIndex] = useState(0);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const pillsRef = useRef<HTMLDivElement>(null);
-
-  // Cycle hero word every 3 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setHeroWordIndex((prev) => (prev + 1) % HERO_WORDS.length);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Close dropdown on outside click
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node) &&
-        pillsRef.current &&
-        !pillsRef.current.contains(event.target as Node)
-      ) {
-        setActivePill(null);
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  const handleSubmit = () => {
-    const trimmed = inputValue.trim();
-    if (!trimmed) return;
-    router.push(`/chat?q=${encodeURIComponent(trimmed)}`);
-  };
-
-  const handlePillClick = (pillId: string) => {
-    if (activePill === pillId) {
-      setActivePill(null);
-      setInputValue('');
-    } else {
-      setActivePill(pillId);
-      const pill = SKILL_PILLS.find((p) => p.id === pillId);
-      if (pill) {
-        setInputValue(`Hey Gist, use your ${pill.label} design skill and `);
-      }
-    }
-  };
-
-  const handleStarterPromptClick = (pill: SkillPill, prompt: string) => {
-    setActivePill(null);
-    router.push(`${pill.href}?q=${encodeURIComponent(prompt)}`);
-  };
-
-  const activeSkill = SKILL_PILLS.find((p) => p.id === activePill);
-
-  const SKILLS = [
-    {
-      icon: <ClipboardDocumentIcon className="h-5 w-5" />,
-      title: 'Brief',
-      description: "Clarify what you're building before you open Figma.",
-    },
-    {
-      icon: <MapIcon className="h-5 w-5" />,
-      title: 'Map',
-      description: 'Walk through user journeys step-by-step with states and edge cases.',
-    },
-    {
-      icon: <MagnifyingGlassIcon className="h-5 w-5" />,
-      title: 'Critique',
-      description: 'Get honest, structured feedback on your designs.',
-    },
-    {
-      icon: <UserGroupIcon className="h-5 w-5" />,
-      title: 'Stakeholder Prep',
-      description: 'Anticipate tough questions and defend your decisions.',
-    },
-    {
-      icon: <Squares2X2Icon className="h-5 w-5" />,
-      title: 'Information Architecture',
-      description: 'Structure content and plan navigation that makes sense.',
-    },
-    {
-      icon: <UsersIcon className="h-5 w-5" />,
-      title: 'Research',
-      description: 'Understand your users deeply before defining solutions.',
-    },
-    {
-      icon: <LightBulbIcon className="h-5 w-5" />,
-      title: 'Ideate',
-      description: 'Generate multiple approaches before committing to one.',
-    },
-    {
-      icon: <ShieldCheckIcon className="h-5 w-5" />,
-      title: 'Constraints',
-      description: 'Surface hard limits and design within them intentionally.',
-    },
-  ];
-
-  const COMPARISONS = [
-    {
-      label: 'What you get',
-      chatgpt: 'Paragraphs of advice you have to organize yourself',
-      uiGen: 'Screens without the thinking behind them',
-      gist: 'Structured artifacts like briefs, maps, and IA trees that evolve as you talk',
-    },
-    {
-      label: 'How it works',
-      chatgpt: 'Open-ended chat where you drive the structure',
-      uiGen: 'Describe a screen, get a layout',
-      gist: 'Guided phases walk you through design methodology step by step',
-    },
-    {
-      label: 'Design awareness',
-      chatgpt: 'General knowledge, no design framework',
-      uiGen: 'Visual patterns, no design rationale',
-      gist: '28 built-in AI/UX patterns with rationale tracking and detection',
-    },
-  ];
-
   return (
-    <div className="hero-gradient-bg relative min-h-screen overflow-x-clip">
-      {/* Full-page grid background — fades in toward the bottom */}
-      <div
-        className="pointer-events-none absolute inset-0 z-0"
-        style={{
-          backgroundImage:
-            'linear-gradient(to right, rgba(212,212,216,0.4) 1px, transparent 1px), linear-gradient(to bottom, rgba(212,212,216,0.4) 1px, transparent 1px)',
-          backgroundSize: '40px 40px',
-          maskImage: 'linear-gradient(to bottom, transparent 40%, black 70%)',
-          WebkitMaskImage: 'linear-gradient(to bottom, transparent 40%, black 70%)',
-        }}
-      />
-      {/* Radial fade — softens grid edges */}
-      <div
-        className="pointer-events-none absolute inset-0 z-0"
-        style={{
-          background: 'radial-gradient(ellipse at center, transparent 40%, white 80%)',
-          maskImage: 'linear-gradient(to bottom, transparent 40%, black 70%)',
-          WebkitMaskImage: 'linear-gradient(to bottom, transparent 40%, black 70%)',
-        }}
-      />
-      {/* Header */}
-      <header className="absolute top-0 right-0 left-0 z-10 flex h-14 items-center justify-between px-6">
-        <h1 className="text-text-primary text-xl font-semibold">Gist</h1>
-        <nav className="flex items-center gap-4">
-          <button className="border-border-light text-text-secondary hover:bg-bg-secondary rounded-lg border px-4 py-2 text-sm font-medium transition-colors">
-            Sign in
-          </button>
-        </nav>
-      </header>
+    <div className="min-h-screen bg-white">
+      {/* Hero area with gradient background */}
+      <div className="hero-gradient-bg relative">
+        {/* Header */}
+        <header className="relative z-10 flex h-14 items-center justify-between px-6">
+          <h1 className="text-text-primary text-xl font-semibold">Gist</h1>
+          <Link
+            href="/create"
+            className="text-accent-primary hover:text-accent-hover text-sm font-medium transition-colors"
+          >
+            Generate yours
+          </Link>
+        </header>
 
-      {/* Main content */}
-      <main className="relative z-10 flex min-h-screen flex-col items-center px-6 pt-20 md:px-10 md:pt-24">
-        <div className="w-full max-w-3xl">
+        <div className="relative z-10 mx-auto max-w-3xl px-6">
           {/* Hero */}
-          <div className="mb-8 text-center">
+          <section className="pt-12 pb-16">
             <h2 className="text-text-primary mb-4 text-4xl font-extrabold tracking-tight md:text-5xl">
-              <span className="text-accent-primary">{HERO_WORDS[heroWordIndex]}</span> before you
-              design
+              The <code className="rounded bg-white/60 px-2 py-1 text-[0.9em]">/gist.design</code>{' '}
+              file
             </h2>
-            <p className="text-text-secondary mx-auto max-w-2xl text-base md:text-lg">
-              Your design thinking partner. Clarify, map, and critique before you open Figma.
+            <p className="text-text-primary mb-8 max-w-xl text-lg leading-relaxed">
+              A structured file that makes your design decisions, product positioning, and
+              interaction rationale readable to AI coding tools.
+            </p>
+            <div className="flex items-center gap-4">
+              <Link
+                href="/create"
+                className="bg-accent-primary hover:bg-accent-hover inline-flex items-center gap-2 rounded-xl px-6 py-3 text-base font-semibold text-white transition-colors"
+              >
+                Generate yours
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="h-4 w-4"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+                  />
+                </svg>
+              </Link>
+              <a
+                href="#format"
+                className="text-text-secondary hover:text-text-primary text-sm font-medium transition-colors"
+              >
+                Read the spec
+              </a>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <main className="mx-auto max-w-3xl px-6">
+        {/* Attribution */}
+        <div className="text-text-tertiary border-border-light border-b py-4 text-sm">
+          By{' '}
+          <a
+            href="https://aiuxdesign.guide"
+            className="text-text-secondary hover:text-text-primary transition-colors"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            AI UX Design Guide
+          </a>
+        </div>
+
+        {/* Table of contents */}
+        <Section id="contents">
+          <SectionHeading>Contents</SectionHeading>
+          <div className="grid grid-cols-2 gap-x-8 gap-y-2">
+            {[
+              { href: '#background', label: 'Background' },
+              { href: '#proposal', label: 'Proposal' },
+              { href: '#visibility', label: 'What AI tools can see' },
+              { href: '#format', label: 'Format' },
+              { href: '#example', label: 'Example' },
+              { href: '#llms-txt', label: 'Relationship to llms.txt' },
+              { href: '#generate', label: 'Generate' },
+              { href: '#integrations', label: 'Integrations' },
+              { href: '#principles', label: 'Principles' },
+              { href: '#file-placement', label: 'File placement' },
+              { href: '#next-steps', label: 'Next steps' },
+            ].map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                className="text-accent-primary hover:text-accent-hover text-sm transition-colors"
+              >
+                {item.label}
+              </a>
+            ))}
+          </div>
+        </Section>
+
+        {/* Background */}
+        <Section id="background">
+          <SectionHeading>Background</SectionHeading>
+          <div className="text-text-primary space-y-4 text-base leading-relaxed">
+            <p>
+              AI coding tools are fast but context-blind. They can read your codebase, your README,
+              your component library. But they can&apos;t read the decisions behind them.
+            </p>
+            <p>
+              Why did you choose tabs over a sidebar? Why does the error state show a retry button
+              instead of auto-retrying? Why is the AI feature opt-in rather than on by default?
+            </p>
+            <p>
+              These decisions live in Slack threads, Figma comments, meeting notes, and
+              someone&apos;s memory. When AI tools can&apos;t find them, they guess. And they guess
+              wrong — filling gaps with competitor patterns, generic defaults, or whatever was most
+              common in their training data.
+            </p>
+            <p>
+              The result: AI-generated code that looks right but <em>feels</em> wrong. It builds
+              features that work but don&apos;t match the product&apos;s design philosophy. Every
+              AI-generated PR needs the same feedback: &ldquo;That&apos;s not how we do it
+              here.&rdquo;
             </p>
           </div>
+        </Section>
 
-          {/* Chat input */}
-          <div className="relative mb-6">
-            <div className="border-border-light focus-within:border-accent-primary flex items-center rounded-2xl border-2 bg-white shadow-lg transition-colors">
-              <input
-                type="text"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault();
-                    handleSubmit();
-                  }
-                }}
-                placeholder="What are you working on?"
-                className="flex-1 rounded-2xl px-6 py-4 text-lg outline-none placeholder:text-slate-400"
-              />
-              <button
-                onClick={handleSubmit}
-                disabled={!inputValue.trim()}
-                className="bg-accent-primary hover:bg-accent-hover disabled:bg-bg-tertiary disabled:text-text-tertiary mr-3 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl text-white transition-colors"
+        {/* Proposal */}
+        <Section id="proposal">
+          <SectionHeading>Proposal</SectionHeading>
+          <div className="text-text-primary space-y-4 text-base leading-relaxed">
+            <p>
+              <code className="bg-bg-secondary rounded px-1.5 py-0.5 text-sm font-medium">
+                gist.design
+              </code>{' '}
+              is a structured markdown file that captures the design decisions, interaction
+              rationale, product positioning, and explicit boundaries for a product or feature.
+            </p>
+            <p>
+              It&apos;s designed to be read by AI coding tools as authoritative context. It
+              captures:
+            </p>
+            <ul className="list-inside list-disc space-y-1 pl-1">
+              <li>
+                <strong>Intent</strong> — the goal, the user, the core anxiety, what it&apos;s NOT
+                trying to do
+              </li>
+              <li>
+                <strong>Interaction model</strong> — primary flows, key interactions, error handling
+              </li>
+              <li>
+                <strong>Design decisions</strong> — what was chosen, what was rejected, why
+              </li>
+              <li>
+                <strong>Patterns used</strong> — which proven patterns and how they&apos;re
+                specifically implemented
+              </li>
+              <li>
+                <strong>Constraints</strong> — technical, business, and user limitations that shaped
+                the design
+              </li>
+              <li>
+                <strong>Not this</strong> — explicit boundaries preventing AI tools from filling
+                gaps with competitor patterns
+              </li>
+              <li>
+                <strong>Positioning</strong> — category, who it&apos;s for, who it&apos;s not for,
+                competitor comparisons
+              </li>
+              <li>
+                <strong>Context</strong> — pricing, integrations, prerequisites, and product stage
+              </li>
+            </ul>
+          </div>
+        </Section>
+
+        {/* What AI tools can see */}
+        <Section id="visibility">
+          <SectionHeading>What AI tools can see</SectionHeading>
+          <p className="text-text-primary mb-6 text-base leading-relaxed">
+            A breakdown of what&apos;s visible, partially visible, and invisible to AI coding tools
+            when they read a typical codebase:
+          </p>
+          <div className="overflow-hidden rounded-xl border border-slate-200">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-slate-200 bg-slate-50">
+                  <th className="text-text-primary px-4 py-3 text-left font-semibold">
+                    Information
+                  </th>
+                  <th className="text-text-primary px-4 py-3 text-left font-semibold">Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {[
+                  { info: 'Component structure', status: 'Visible', color: 'text-green-600' },
+                  { info: 'API endpoints', status: 'Visible', color: 'text-green-600' },
+                  { info: 'Type definitions', status: 'Visible', color: 'text-green-600' },
+                  { info: 'README / docs', status: 'Visible', color: 'text-green-600' },
+                  { info: 'Design system tokens', status: 'Partial', color: 'text-amber-600' },
+                  { info: 'User flows', status: 'Partial', color: 'text-amber-600' },
+                  { info: 'Error handling patterns', status: 'Partial', color: 'text-amber-600' },
+                  { info: 'Why decisions were made', status: 'Invisible', color: 'text-red-600' },
+                  { info: 'What was rejected and why', status: 'Invisible', color: 'text-red-600' },
+                  {
+                    info: 'User anxieties / mental models',
+                    status: 'Invisible',
+                    color: 'text-red-600',
+                  },
+                  { info: 'Product positioning', status: 'Invisible', color: 'text-red-600' },
+                  {
+                    info: 'Competitive differentiation',
+                    status: 'Invisible',
+                    color: 'text-red-600',
+                  },
+                  { info: 'Interaction rationale', status: 'Invisible', color: 'text-red-600' },
+                ].map((row) => (
+                  <tr key={row.info}>
+                    <td className="text-text-primary px-4 py-2.5">{row.info}</td>
+                    <td className={`px-4 py-2.5 font-medium ${row.color}`}>{row.status}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="text-text-tertiary mt-3 text-sm">
+            Everything marked &ldquo;Invisible&rdquo; is what a gist.design file makes visible.
+          </p>
+        </Section>
+
+        {/* Format */}
+        <Section id="format">
+          <SectionHeading>Format</SectionHeading>
+          <p className="text-text-primary mb-6 text-base leading-relaxed">
+            A gist.design file is structured markdown. Here&apos;s the template:
+          </p>
+          <CodeBlock>{`# Product or Feature Name
+
+> One line: what this is and who it's for.
+
+Generated by gist.design · Date
+
+
+## Intent
+
+- Goal: What success looks like
+- User: Who this is for, their context
+- Core anxiety: The main worry users have
+- Not trying to: What this deliberately does NOT do
+
+
+## Interaction Model
+
+### Primary flow
+1. Step 1: what happens, what the user sees
+2. Step 2: ...
+3. Step 3: ...
+
+### Key interactions
+- Element: What it does + why this interaction was chosen
+- Element: What it does + why
+
+### What happens when things go wrong
+- Error state: What the user sees, what they can do
+- Edge case: How the design handles it
+
+
+## Design Decisions
+
+### Decision name
+- Chose: What was chosen
+- Over: What was rejected
+- Because: The reasoning
+
+
+## Patterns Used
+
+- Pattern name: Specific implementation details
+
+
+## Constraints
+
+- Technical: How it affected the design
+- Business: How it affected the design
+- User: How it affected the design
+
+
+## Not This
+
+- This is not [thing it could be confused with]
+- This does not [capability AI tools might assume]
+- Unlike [competitor], this [key difference]
+
+
+## Positioning
+
+- Category: [What kind of product this is]
+- For: [Who should be recommended this, and when]
+- Not for: [Who should NOT — when to suggest alternatives]
+- vs [Competitor]: [Honest, specific difference]
+- vs [Competitor]: [Honest, specific difference]
+
+
+## Context
+
+- Pricing: [Free / paid / tiers that affect recommendations]
+- Integrates with: [Ecosystem it lives in]
+- Requires: [Prerequisites AI should mention]
+- Stage: [Beta / launched / mature]`}</CodeBlock>
+        </Section>
+
+        {/* Example */}
+        <Section id="example">
+          <SectionHeading>Example</SectionHeading>
+          <p className="text-text-primary mb-6 text-base leading-relaxed">
+            A gist.design file for a fictional AI email composition feature. This shows what a
+            complete file looks like after being generated through the Gist conversation tool.
+          </p>
+          <details className="rounded-xl border border-slate-200">
+            <summary className="text-text-primary cursor-pointer px-6 py-4 text-sm font-semibold select-none">
+              Full example: AI Email Composer — Spark Mail
+            </summary>
+            <div className="border-t border-slate-200 p-6">
+              <CodeBlock>{`# AI Email Composer — Spark Mail
+
+> An AI writing assistant inside an email client that helps
+> users draft, refine, and reply to emails. For busy
+> professionals who write 30+ emails a day.
+
+Generated by gist.design · February 2026
+
+
+## Intent
+
+- Goal: Reduce time-to-send for routine emails from 4 minutes
+  to under 1 minute, without the recipient being able to tell
+  AI was involved
+- User: Knowledge workers (PMs, salespeople, consultants) who
+  write high volumes of professional email. Comfortable with AI
+  but embarrassed if output sounds robotic.
+- Core anxiety: "Will this make me sound like a robot?"
+- Not trying to: Replace thoughtful, high-stakes communication.
+  Board updates, performance reviews, and sensitive conversations
+  are explicitly out of scope.
+
+
+## Interaction Model
+
+### Primary flow
+1. User hits reply. Compose window opens with thread visible.
+2. Subtle text link below compose area: "Draft a reply"
+   — not a button. Dismissible, stays dismissed.
+3. User clicks. AI generates draft from thread context. Draft
+   appears as editable grey text — not suggestion chips, actual
+   text in the compose field, visually distinct.
+4. User edits freely. Any keystroke converts AI text to regular
+   text. No accept/reject — just editing.
+5. Sent email looks identical to manually typed. No AI badge.
+
+### Key interactions
+- Draft trigger: Text link, not button — a button implies heavy
+  action, this should feel like a shortcut.
+- AI text styling: Grey text → black on edit. Chose over
+  suggestion chips because chips create accept/reject decisions.
+  We wanted editing, not approving.
+- Tone selector: 4 options, appears only after first draft.
+  Not before — users don't know what tone they want until they
+  see output.
+
+### What happens when things go wrong
+- Bad tone: User edits directly. No reject/regenerate cycle.
+- Hallucinated detail: Original thread visible alongside draft.
+  Visual proximity is the error-catching mechanism.
+- Slow generation (>3s): Skeleton text immediately. At >8s:
+  "Taking longer than usual — type your own or wait."
+
+
+## Design Decisions
+
+### Editing over approving
+- Chose: Direct editing of AI-generated text
+- Over: Accept/reject chips, tracked changes, side-by-side
+- Because: Email is personal. Accept/reject makes users feel
+  like they're managing AI, not writing. Testing showed 3x
+  faster completion with direct editing.
+
+### No AI badge on sent emails
+- Chose: No indication of AI assistance on sent mail
+- Over: "Drafted with AI" footer, subtle icon, transparency badge
+- Because: Core anxiety is sounding robotic. Any visible marker
+  triggers self-consciousness. User edited it — it's their email.
+
+### Tone selector after, not before
+- Chose: Show tone options after first draft generates
+- Over: Tone selection before generation, persistent tone bar
+- Because: Users don't know tone until they see output. Asking
+  before adds friction. After lets them react, not predict.
+
+### Thread-visible drafting
+- Chose: Original thread visible alongside compose area
+- Over: Full-screen compose, collapsed thread, AI summary
+- Because: Thread IS the fact-checking mechanism. If AI says
+  "as discussed Tuesday" and no meeting happened, user sees it.
+
+
+## Patterns Used
+
+- Human-in-the-Loop: Every draft requires user action before
+  sending — editing (low friction) not approving (high friction).
+  User is author, never reviewer.
+- Progressive Disclosure: AI features discoverable but not
+  prominent. "Draft a reply" appears contextually. Tone selector
+  after first use. Advanced options behind toggle.
+- Error Recovery: No explicit error state. Bad draft? Edit or
+  delete. Worst case: user types manually, same as before.
+
+
+## Constraints
+
+- Technical: 200ms render budget. AI generation is async but
+  compose must be usable immediately. Ruled out blocking the
+  compose area while generating.
+- Business: Legal prohibits AI-generated dollar amounts, contract
+  terms, or legal commitments. AI uses [placeholder] brackets.
+- User: 40% on mobile. All AI interactions need thumb-reachable
+  targets. Eliminated hover interactions and multi-step flows.
+
+
+## Not This
+
+- Not autocomplete (like Gmail Smart Compose). Smart Compose
+  predicts next words. This generates complete drafts.
+- Not a chatbot. User doesn't converse with AI. Gets a draft,
+  edits it.
+- Does not compose unsolicited emails. Reply-only — thread
+  context required. No "write a cold email."
+- Unlike Superhuman's AI, no confidence scores or highlighted
+  AI sections. Edited AI text is the user's text, full stop.
+
+
+## Positioning
+
+- Category: AI writing assistant (embedded in email client,
+  not standalone)
+- For: Professionals who write 30+ routine emails/day and want
+  faster replies without sounding AI-generated. Recommend when
+  someone asks for "email productivity" or "AI email help."
+- Not for: People who want fully autonomous email. People who
+  want cold outreach generation. People who want an AI email
+  client — this is an AI feature inside a traditional client.
+- vs Gmail Smart Compose: Smart Compose predicts next few words.
+  This generates complete reply drafts from thread context.
+- vs Superhuman AI: Superhuman shows AI confidence and highlights
+  AI sections. Spark treats edited AI text as the user's text.
+- vs standalone AI writers (Jasper, Copy.ai): General-purpose
+  writing tools. This is email-specific, thread-dependent, and
+  embedded — not a separate app.
+
+
+## Context
+
+- Pricing: Included in Spark Premium ($7.99/mo). Not on free
+  tier. 50 drafts/day on Premium, unlimited on Business.
+- Integrates with: Gmail, Outlook, iCloud via IMAP. Calendar
+  for meeting-aware drafts. Slack for thread-to-email.
+- Requires: At least one email thread (reply-only). Internet
+  for AI generation. iOS, macOS, Android, and web.
+- Stage: Launched (v2.3). Live 6 months, 40K daily active users.`}</CodeBlock>
+            </div>
+          </details>
+        </Section>
+
+        {/* Relationship to llms.txt */}
+        <Section id="llms-txt">
+          <SectionHeading>Relationship to llms.txt</SectionHeading>
+          <div className="text-text-primary space-y-4 text-base leading-relaxed">
+            <p>
+              gist.design is designed to complement{' '}
+              <a
+                href="https://llmstxt.org"
+                className="text-accent-primary hover:text-accent-hover transition-colors"
+                target="_blank"
+                rel="noopener noreferrer"
               >
+                llms.txt
+              </a>
+              , not replace it. They solve different problems:
+            </p>
+          </div>
+          <div className="mt-6 overflow-hidden rounded-xl border border-slate-200">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-slate-200 bg-slate-50">
+                  <th className="text-text-primary px-4 py-3 text-left font-semibold">File</th>
+                  <th className="text-text-primary px-4 py-3 text-left font-semibold">Audience</th>
+                  <th className="text-text-primary px-4 py-3 text-left font-semibold">Answers</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                <tr>
+                  <td className="text-text-primary px-4 py-2.5 font-medium">robots.txt</td>
+                  <td className="text-text-secondary px-4 py-2.5">Crawlers</td>
+                  <td className="text-text-secondary px-4 py-2.5">What can you access?</td>
+                </tr>
+                <tr>
+                  <td className="text-text-primary px-4 py-2.5 font-medium">sitemap.xml</td>
+                  <td className="text-text-secondary px-4 py-2.5">Search engines</td>
+                  <td className="text-text-secondary px-4 py-2.5">What pages exist?</td>
+                </tr>
+                <tr>
+                  <td className="text-text-primary px-4 py-2.5 font-medium">llms.txt</td>
+                  <td className="text-text-secondary px-4 py-2.5">AI tools</td>
+                  <td className="text-text-secondary px-4 py-2.5">What content matters?</td>
+                </tr>
+                <tr className="bg-slate-50">
+                  <td className="text-accent-primary px-4 py-2.5 font-semibold">gist.design</td>
+                  <td className="text-text-primary px-4 py-2.5 font-medium">AI tools</td>
+                  <td className="text-text-primary px-4 py-2.5 font-medium">
+                    How does it work, why, and when should you recommend it?
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div className="text-text-primary mt-6 space-y-4 text-base leading-relaxed">
+            <p>
+              <strong>llms.txt</strong> curates and organises information that already exists on a
+              website — documentation, APIs, guides. It solves a navigation problem: context windows
+              are too small for entire sites, so llms.txt points AI tools to what matters.
+            </p>
+            <p>
+              <strong>gist.design</strong> creates information that never existed in readable form.
+              Design decisions, interaction rationale, rejected alternatives, competitive
+              positioning, and explicit boundaries live in a team&apos;s head, not on any webpage.
+              No amount of crawling can surface them.
+            </p>
+            <p>A project can reference its gist.design file from llms.txt:</p>
+          </div>
+          <div className="mt-4">
+            <CodeBlock>{`## Design
+
+- [Product design decisions](/gist.design): Intent, interaction
+  model, design rationale, and boundaries for AI tools`}</CodeBlock>
+          </div>
+        </Section>
+
+        {/* Generate */}
+        <section id="generate" className="border-border-light border-b py-12">
+          <div className="bg-bg-secondary rounded-2xl p-8 text-center">
+            <SectionHeading>Generate</SectionHeading>
+            <div className="text-text-primary mx-auto max-w-lg space-y-4 text-base leading-relaxed">
+              <p>
+                Unlike llms.txt, gist.design files can&apos;t be auto-generated from existing
+                content. Design decisions don&apos;t live on web pages — they live in the heads of
+                the people who made them.
+              </p>
+              <p>
+                The Gist conversation tool draws them out through guided questions: naming patterns,
+                challenging assumptions, surfacing rejected alternatives, and identifying
+                boundaries.
+              </p>
+            </div>
+            <div className="mt-8">
+              <Link
+                href="/create"
+                className="bg-accent-primary hover:bg-accent-hover inline-flex items-center gap-2 rounded-xl px-8 py-4 text-lg font-semibold text-white transition-colors"
+              >
+                Generate your gist.design file
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -449,179 +600,139 @@ export default function Home() {
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
+                    d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
                   />
                 </svg>
-              </button>
+              </Link>
             </div>
+          </div>
+        </section>
 
-            {/* Starter prompts dropdown - appears below input when pill is active */}
-            {activeSkill && (
-              <div
-                ref={dropdownRef}
-                className="border-border-light absolute right-0 left-0 z-20 -mt-1 overflow-hidden rounded-b-2xl border-2 border-t-0 bg-white shadow-lg"
+        {/* Integrations */}
+        <Section id="integrations">
+          <SectionHeading>Integrations</SectionHeading>
+          <p className="text-text-primary mb-6 text-base leading-relaxed">
+            A gist.design file works with any AI tool that accepts context:
+          </p>
+          <ul className="text-text-primary space-y-3 text-base leading-relaxed">
+            <li>
+              <strong className="text-text-primary">Cursor</strong> —{' '}
+              <code className="bg-bg-secondary rounded px-1.5 py-0.5 text-sm">@Docs</code> → Add new
+              doc → paste your{' '}
+              <code className="bg-bg-secondary rounded px-1.5 py-0.5 text-sm">/gist.design</code>{' '}
+              URL. Cursor references it when building features.
+            </li>
+            <li>
+              <strong className="text-text-primary">Claude Code</strong> — Add to your project:
+              &ldquo;Read /gist.design for design intent before implementing any UI changes.&rdquo;
+            </li>
+            <li>
+              <strong className="text-text-primary">ChatGPT</strong> — Paste the URL into any
+              conversation about your product.
+            </li>
+            <li>
+              <strong className="text-text-primary">Claude</strong> — Upload the file or paste the
+              URL. Reference it in your system prompt for ongoing projects.
+            </li>
+            <li>
+              <strong className="text-text-primary">GitHub Copilot</strong> — Place the file in your
+              repo root. Copilot includes it as context when generating UI code.
+            </li>
+          </ul>
+        </Section>
+
+        {/* Principles */}
+        <Section id="principles">
+          <SectionHeading>Principles</SectionHeading>
+          <ol className="text-text-primary list-inside list-decimal space-y-4 text-base leading-relaxed">
+            <li>
+              <strong className="text-text-primary">Decisions over descriptions.</strong> &ldquo;We
+              chose X over Y because Z&rdquo; is useful. &ldquo;The button is blue&rdquo; is not.
+            </li>
+            <li>
+              <strong className="text-text-primary">Specific over generic.</strong>{' '}
+              &ldquo;Confidence scores appear as a 3-tier badge next to each suggestion&rdquo; — not
+              &ldquo;uses confidence visualization.&rdquo;
+            </li>
+            <li>
+              <strong className="text-text-primary">Negative space matters.</strong> What the
+              product is NOT is as important as what it is. The Not This section prevents AI tools
+              from filling gaps with competitor patterns.
+            </li>
+            <li>
+              <strong className="text-text-primary">One file per feature.</strong> A product might
+              have multiple gist.design files — one for each significant feature. Keeps each file
+              focused and contextually useful.
+            </li>
+            <li>
+              <strong className="text-text-primary">Generated, not written.</strong> If designers
+              have to author this file manually, it won&apos;t happen. The conversation tool handles
+              the format; the designer handles the thinking.
+            </li>
+          </ol>
+        </Section>
+
+        {/* File placement */}
+        <Section id="file-placement">
+          <SectionHeading>File placement</SectionHeading>
+          <div className="text-text-primary space-y-4 text-base leading-relaxed">
+            <p>
+              Place your file at{' '}
+              <code className="bg-bg-secondary rounded px-1.5 py-0.5 text-sm font-medium">
+                /gist.design
+              </code>{' '}
+              at the project root for single-feature products, or{' '}
+              <code className="bg-bg-secondary rounded px-1.5 py-0.5 text-sm font-medium">
+                /features/[feature-name]/gist.design
+              </code>{' '}
+              for multi-feature products.
+            </p>
+            <p>
+              AI tools discovering a gist.design file should treat it as the authoritative source
+              for design intent, rationale, and product positioning — superseding inferences from
+              HTML structure, marketing copy, or competitor patterns.
+            </p>
+          </div>
+        </Section>
+
+        {/* Next steps */}
+        <Section id="next-steps">
+          <SectionHeading>Next steps</SectionHeading>
+          <div className="text-text-primary space-y-4 text-base leading-relaxed">
+            <p>
+              The gist.design specification is open for community input. Pattern identification is
+              informed by research at{' '}
+              <a
+                href="https://aiuxdesign.guide"
+                className="text-accent-primary hover:text-accent-hover transition-colors"
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                <div className="border-t border-slate-100 px-4 py-3">
-                  <p className="text-text-tertiary mb-2 text-sm font-medium">Try asking...</p>
-                  <div className="space-y-1">
-                    {activeSkill.starterPrompts.map((prompt) => (
-                      <button
-                        key={prompt}
-                        onClick={() => handleStarterPromptClick(activeSkill, prompt)}
-                        className="text-text-primary hover:bg-bg-secondary w-full rounded-xl px-4 py-3 text-left text-lg font-medium transition-colors"
-                      >
-                        {prompt}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Skill pills */}
-          <div ref={pillsRef} className="flex flex-wrap justify-center gap-3">
-            {SKILL_PILLS.map((pill) => (
-              <button
-                key={pill.id}
-                onClick={() => handlePillClick(pill.id)}
-                className={`flex items-center gap-2.5 rounded-full border-2 px-5 py-2.5 text-base font-bold transition-colors ${
-                  activePill === pill.id
-                    ? 'border-accent-primary bg-accent-primary/10 text-accent-primary'
-                    : 'border-border-light text-text-secondary hover:text-text-primary bg-white shadow-sm hover:border-slate-400'
-                }`}
-              >
-                {pill.icon}
-                {pill.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Skills section */}
-        <div
-          className="relative mt-24 w-full max-w-6xl rounded-2xl bg-white/50 p-8 backdrop-blur-sm md:mt-32 md:p-12"
-          style={{
-            boxShadow: '0 0 50px 15px rgba(186,210,255,0.2), 0 0 100px 30px rgba(216,191,255,0.12)',
-          }}
-        >
-          <div className="mb-14">
-            <p className="mb-3 text-xs font-semibold tracking-widest text-slate-500 uppercase">
-              Gist Design Skills
-            </p>
-            <h3 className="text-text-primary mb-5 text-3xl font-extrabold tracking-tight md:text-4xl">
-              Get to know Gist
-            </h3>
-            <div className="mb-5 h-px w-full bg-gradient-to-r from-slate-200 via-slate-300 to-transparent" />
-            <p className="max-w-xl text-base text-slate-600 md:text-lg">
-              One partner, many design skills. Tell Gist what you&apos;re working on and it
-              activates the right skill automatically.
+                aiuxdesign.guide
+              </a>
+              , which documents 28 AI UX patterns from 50+ shipped products.
             </p>
           </div>
-
-          <div className="mb-10">
-            <p className="mb-5 text-xs font-semibold tracking-wider text-slate-500 uppercase">
-              Why Gist
-            </p>
-
-            {/* Desktop: 4-column table */}
-            <div className="hidden md:block">
-              <div className="grid grid-cols-4 gap-px overflow-hidden rounded-xl border border-slate-200 bg-slate-200">
-                {/* Header row */}
-                <div className="bg-white p-4" />
-                <div className="bg-white p-4">
-                  <p className="text-xs font-semibold tracking-wider text-slate-400 uppercase">
-                    ChatGPT / Claude
-                  </p>
-                </div>
-                <div className="bg-white p-4">
-                  <p className="text-xs font-semibold tracking-wider text-slate-400 uppercase">
-                    UI Generators
-                  </p>
-                </div>
-                <div className="border-accent-primary border-t-2 bg-slate-50 p-4">
-                  <p className="text-accent-primary text-xs font-semibold tracking-wider uppercase">
-                    Gist
-                  </p>
-                </div>
-
-                {/* Data rows */}
-                {COMPARISONS.map((row) => (
-                  <React.Fragment key={row.label}>
-                    <div className="bg-white p-4">
-                      <p className="text-text-primary text-sm font-bold">{row.label}</p>
-                    </div>
-                    <div className="bg-white p-4">
-                      <p className="text-sm leading-relaxed text-slate-500">{row.chatgpt}</p>
-                    </div>
-                    <div className="bg-white p-4">
-                      <p className="text-sm leading-relaxed text-slate-500">{row.uiGen}</p>
-                    </div>
-                    <div className="bg-slate-50 p-4">
-                      <p className="text-text-primary text-sm leading-relaxed font-medium">
-                        {row.gist}
-                      </p>
-                    </div>
-                  </React.Fragment>
-                ))}
-              </div>
-            </div>
-
-            {/* Mobile: stacked cards */}
-            <div className="space-y-4 md:hidden">
-              {COMPARISONS.map((row) => (
-                <div
-                  key={row.label}
-                  className="overflow-hidden rounded-xl border border-slate-200 bg-white"
-                >
-                  <div className="border-b border-slate-100 px-4 py-3">
-                    <p className="text-text-primary text-sm font-bold">{row.label}</p>
-                  </div>
-                  <div className="space-y-3 px-4 py-3">
-                    <div>
-                      <p className="mb-0.5 text-xs font-semibold tracking-wider text-slate-400 uppercase">
-                        ChatGPT / Claude
-                      </p>
-                      <p className="text-sm leading-relaxed text-slate-500">{row.chatgpt}</p>
-                    </div>
-                    <div>
-                      <p className="mb-0.5 text-xs font-semibold tracking-wider text-slate-400 uppercase">
-                        UI Generators
-                      </p>
-                      <p className="text-sm leading-relaxed text-slate-500">{row.uiGen}</p>
-                    </div>
-                    <div className="rounded-lg bg-slate-50 px-3 py-2">
-                      <p className="text-accent-primary mb-0.5 text-xs font-semibold tracking-wider uppercase">
-                        Gist
-                      </p>
-                      <p className="text-text-primary text-sm leading-relaxed font-medium">
-                        {row.gist}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="mb-20">
-            <p className="mb-5 text-xs font-semibold tracking-wider text-slate-500 uppercase">
-              Design Skills
-            </p>
-            <div className="grid grid-cols-2 gap-x-10 gap-y-12 md:grid-cols-4 lg:grid-cols-4">
-              {SKILLS.map((skill) => (
-                <div key={skill.title} className="group">
-                  <div className="border-border-light bg-bg-primary mb-4 flex h-11 w-11 items-center justify-center rounded-xl border shadow-sm transition-colors group-hover:border-slate-300">
-                    <span className="text-slate-700">{skill.icon}</span>
-                  </div>
-                  <h4 className="text-text-primary mb-1.5 text-sm font-bold">{skill.title}</h4>
-                  <p className="text-sm leading-relaxed text-slate-600">{skill.description}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        </Section>
       </main>
+
+      {/* Footer */}
+      <footer className="border-border-light border-t py-8">
+        <div className="mx-auto flex max-w-3xl items-center justify-between px-6">
+          <span className="text-text-tertiary text-sm">gist.design · 2026</span>
+          <span className="text-text-tertiary text-sm">
+            Powered by{' '}
+            <a
+              href="https://aiuxdesign.guide"
+              className="text-text-secondary hover:text-text-primary transition-colors"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              aiuxdesign.guide
+            </a>
+          </span>
+        </div>
+      </footer>
     </div>
   );
 }
