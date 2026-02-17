@@ -221,7 +221,7 @@ Want to add another feature, or are you ready to export what we have? You can al
 
 export async function POST(request: Request) {
   try {
-    const { messages, fileState, currentFeatureId } = await request.json();
+    const { messages, fileState, currentFeatureId, auditContext } = await request.json();
 
     // Use mock mode if enabled
     if (process.env.MOCK_MODE === 'true') {
@@ -238,7 +238,7 @@ export async function POST(request: Request) {
       content: msg.content,
     }));
 
-    let systemPrompt = getCreateSystemPrompt();
+    let systemPrompt = getCreateSystemPrompt(auditContext || undefined);
 
     // Inject file state context
     if (fileState) {

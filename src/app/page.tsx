@@ -1,15 +1,31 @@
 import Link from 'next/link';
+import {
+  MagnifyingGlassIcon,
+  PencilSquareIcon,
+  ShieldCheckIcon,
+  UserGroupIcon,
+  RocketLaunchIcon,
+  SwatchIcon,
+  ExclamationTriangleIcon,
+  CommandLineIcon,
+  ChatBubbleLeftRightIcon,
+  ScaleIcon,
+  ViewfinderCircleIcon,
+  NoSymbolIcon,
+  DocumentIcon,
+  SparklesIcon,
+} from '@heroicons/react/24/outline';
 
 function Section({ id, children }: { id?: string; children: React.ReactNode }) {
   return (
-    <section id={id} className="border-border-light border-b py-12">
+    <section id={id} className="py-16 md:py-20">
       {children}
     </section>
   );
 }
 
 function SectionHeading({ children }: { children: React.ReactNode }) {
-  return <h2 className="text-text-primary mb-4 text-2xl font-bold tracking-tight">{children}</h2>;
+  return <h2 className="text-text-primary mb-4 text-3xl font-bold tracking-tight">{children}</h2>;
 }
 
 function CodeBlock({ children }: { children: string }) {
@@ -22,37 +38,48 @@ function CodeBlock({ children }: { children: string }) {
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="bg-bg-primary min-h-screen">
       {/* Hero area with gradient background */}
       <div className="hero-gradient-bg relative">
         {/* Header */}
         <header className="relative z-10 flex h-14 items-center justify-between px-6">
           <h1 className="text-text-primary text-xl font-semibold">Gist</h1>
-          <Link
-            href="/create"
-            className="text-accent-primary hover:text-accent-hover text-sm font-medium transition-colors"
-          >
-            Generate yours
-          </Link>
+          <nav className="flex items-center gap-6">
+            <Link
+              href="/audit"
+              className="text-text-secondary hover:text-text-primary text-sm font-medium transition-colors"
+            >
+              Audit
+            </Link>
+            <Link
+              href="/create"
+              className="text-accent-primary hover:text-accent-hover text-sm font-medium transition-colors"
+            >
+              Create
+            </Link>
+          </nav>
         </header>
 
         <div className="relative z-10 mx-auto max-w-3xl px-6">
           {/* Hero */}
           <section className="pt-12 pb-16">
             <h2 className="text-text-primary mb-4 text-4xl font-extrabold tracking-tight md:text-5xl">
-              The <code className="rounded bg-white/60 px-2 py-1 text-[0.9em]">/gist.design</code>{' '}
-              file
+              AI tools are describing your product right now. Are they getting it right?
             </h2>
             <p className="text-text-primary mb-8 max-w-xl text-lg leading-relaxed">
-              A structured file that makes your design decisions, product positioning, and
-              interaction rationale readable to AI coding tools and LLMs.
+              Run a free audit to see how ChatGPT, Claude, and Perplexity describe your product.
+              Then fix the gaps with a{' '}
+              <code className="bg-bg-secondary rounded px-1.5 py-0.5 text-[0.9em]">
+                gist.design
+              </code>{' '}
+              file.
             </p>
-            <div className="flex items-center gap-4">
+            <div className="flex flex-wrap items-center gap-4">
               <Link
-                href="/create"
-                className="bg-accent-primary hover:bg-accent-hover inline-flex items-center gap-2 rounded-xl px-6 py-3 text-base font-semibold text-white transition-colors"
+                href="/audit"
+                className="bg-accent-primary hover:bg-accent-hover inline-flex items-center gap-2 rounded-2xl px-6 py-3 text-base font-semibold text-white transition-colors"
               >
-                Generate yours
+                Run free audit
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -68,6 +95,12 @@ export default function Home() {
                   />
                 </svg>
               </Link>
+              <Link
+                href="/create"
+                className="text-text-secondary hover:text-text-primary text-sm font-medium transition-colors"
+              >
+                Skip to create
+              </Link>
               <a
                 href="#format"
                 className="text-text-secondary hover:text-text-primary text-sm font-medium transition-colors"
@@ -79,105 +112,148 @@ export default function Home() {
         </div>
       </div>
 
-      <main className="mx-auto max-w-3xl px-6">
-        {/* Attribution */}
-        <div className="text-text-tertiary border-border-light border-b py-4 text-sm">
-          By{' '}
-          <a
-            href="https://aiuxdesign.guide"
-            className="text-text-secondary hover:text-text-primary transition-colors"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            AI UX Design Guide
-          </a>
-        </div>
-
-        {/* Table of contents */}
-        <Section id="contents">
-          <SectionHeading>Contents</SectionHeading>
-          <div className="grid grid-cols-2 gap-x-8 gap-y-2">
-            {[
-              { href: '#background', label: 'Background' },
-              { href: '#failure-modes', label: 'What this file solves' },
-              { href: '#proposal', label: 'Proposal' },
-              { href: '#visibility', label: 'What AI tools can see' },
-              { href: '#format', label: 'Format' },
-              { href: '#example', label: 'Example' },
-              { href: '#llms-txt', label: 'Relationship to llms.txt' },
-              { href: '#generate', label: 'Generate' },
-              { href: '#integrations', label: 'Integrations' },
-              { href: '#principles', label: 'Principles' },
-              { href: '#file-placement', label: 'File placement' },
-              { href: '#next-steps', label: 'Next steps' },
-            ].map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                className="text-accent-primary hover:text-accent-hover text-sm transition-colors"
+      {/* How it works */}
+      <div className="bg-bg-primary">
+        <div className="mx-auto max-w-4xl px-6 py-16 md:py-20">
+          <h2 className="text-text-primary mb-8 text-center text-3xl font-bold tracking-tight">
+            How it works
+          </h2>
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+            <div className="border-border-light bg-bg-primary overflow-hidden rounded-2xl border">
+              <div
+                className="bg-bg-secondary flex h-48 items-center justify-center"
+                style={{
+                  background:
+                    'var(--bg-secondary) radial-gradient(circle, rgba(129,140,248,0.15) 0%, transparent 70%)',
+                }}
               >
-                {item.label}
-              </a>
+                <MagnifyingGlassIcon className="text-accent-primary h-10 w-10" />
+              </div>
+              <div className="p-5 text-center">
+                <h3 className="text-text-primary mb-1 text-lg font-semibold">Audit</h3>
+                <p className="text-text-secondary text-sm leading-relaxed">
+                  See how 3 LLMs describe your product from your website alone. Find the gaps.
+                </p>
+              </div>
+            </div>
+            <div className="border-border-light bg-bg-primary overflow-hidden rounded-2xl border">
+              <div
+                className="bg-bg-secondary flex h-48 items-center justify-center"
+                style={{
+                  background:
+                    'var(--bg-secondary) radial-gradient(circle, rgba(129,140,248,0.15) 0%, transparent 70%)',
+                }}
+              >
+                <PencilSquareIcon className="text-accent-primary h-10 w-10" />
+              </div>
+              <div className="p-5 text-center">
+                <h3 className="text-text-primary mb-1 text-lg font-semibold">Fill gaps</h3>
+                <p className="text-text-secondary text-sm leading-relaxed">
+                  Generate a gist.design file through guided conversation. Capture what AI tools
+                  miss.
+                </p>
+              </div>
+            </div>
+            <div className="border-border-light bg-bg-primary overflow-hidden rounded-2xl border">
+              <div
+                className="bg-bg-secondary flex h-48 items-center justify-center"
+                style={{
+                  background:
+                    'var(--bg-secondary) radial-gradient(circle, rgba(129,140,248,0.15) 0%, transparent 70%)',
+                }}
+              >
+                <ShieldCheckIcon className="text-accent-primary h-10 w-10" />
+              </div>
+              <div className="p-5 text-center">
+                <h3 className="text-text-primary mb-1 text-lg font-semibold">Verify and deploy</h3>
+                <p className="text-text-secondary text-sm leading-relaxed">
+                  Re-run the audit with your gist.design file. See the before/after improvement.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Who this is for */}
+      <div className="bg-bg-primary">
+        <div className="mx-auto max-w-4xl px-6 py-16 md:py-20">
+          <h2 className="text-text-primary mb-8 text-center text-3xl font-bold tracking-tight">
+            Who this is for
+          </h2>
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+            {[
+              {
+                role: 'Product teams',
+                pain: "AI coding tools keep building features wrong because they can't read your design decisions.",
+                icon: UserGroupIcon,
+              },
+              {
+                role: 'Founders',
+                pain: 'LLMs describe your product as a clone of your competitor because your positioning is invisible.',
+                icon: RocketLaunchIcon,
+              },
+              {
+                role: 'Designers',
+                pain: 'Your "chose X over Y because Z" rationale lives in Figma comments and Slack threads, not where AI tools can find it.',
+                icon: SwatchIcon,
+              },
+            ].map((item) => (
+              <div
+                key={item.role}
+                className="border-border-light bg-bg-primary overflow-hidden rounded-2xl border"
+              >
+                <div
+                  className="bg-bg-secondary flex h-48 items-center justify-center"
+                  style={{
+                    background:
+                      'var(--bg-secondary) radial-gradient(circle, rgba(129,140,248,0.15) 0%, transparent 70%)',
+                  }}
+                >
+                  <item.icon className="text-accent-primary h-10 w-10" />
+                </div>
+                <div className="p-5 text-center">
+                  <h3 className="text-text-primary mb-1 text-lg font-semibold">{item.role}</h3>
+                  <p className="text-text-secondary text-sm leading-relaxed">{item.pain}</p>
+                </div>
+              </div>
             ))}
           </div>
-        </Section>
+        </div>
+      </div>
 
+      <div className="mx-auto max-w-3xl px-6">
         {/* Background */}
         <Section id="background">
           <SectionHeading>Background</SectionHeading>
-          <div className="text-text-primary space-y-4 text-base leading-relaxed">
-            <p>
-              AI tools are fast but context-blind. AI coding tools can read your codebase, your
-              README, your component library, but they can&apos;t read the decisions behind them.
-              LLMs can answer questions about your product, but they&apos;ll fill gaps with
-              competitor patterns, generic defaults, or whatever was most common in their training
-              data.
-            </p>
-            <p>
-              Why did you choose tabs over a sidebar? Why does the error state show a retry button
-              instead of auto-retrying? Why is the AI feature opt-in rather than on by default? Who
-              is this product for, and who is it deliberately <em>not</em> for?
-            </p>
-            <p>
-              These decisions live in Slack threads, Figma comments, meeting notes, and
-              someone&apos;s memory. When AI tools can&apos;t find them, they guess. A coding tool
-              builds features that don&apos;t match the product&apos;s design philosophy. An LLM
-              recommends your product to the wrong audience, or describes it as a competitor clone.
-            </p>
-            <p>
-              The result: every AI-generated PR needs the same feedback: &ldquo;That&apos;s not how
-              we do it here.&rdquo; Every LLM-generated comparison gets your positioning wrong.
-            </p>
-            <p>
-              SEO solved this problem for search engines. Structured data, meta tags, and sitemaps
-              gave teams control over how search engines understood their content. But there&apos;s
-              no equivalent for AI. When someone asks an LLM &ldquo;what&apos;s the best tool for
-              X?&rdquo;, there&apos;s no structured way to ensure your product is represented
-              accurately. That&apos;s the gap gist.design fills.
-            </p>
-          </div>
+          <p className="text-text-primary text-base leading-relaxed">
+            AI tools can read your code but not the decisions behind it. They fill gaps with
+            competitor patterns, generic defaults, and wrong positioning.
+          </p>
         </Section>
 
         {/* What this file solves */}
         <Section id="failure-modes">
           <SectionHeading>What this file solves</SectionHeading>
-          <p className="text-text-primary mb-6 text-base leading-relaxed">
-            Specific failure modes that happen without a gist.design file, and which section
-            prevents each one:
-          </p>
-          <div className="overflow-hidden rounded-xl border border-slate-200">
+          <div className="border-border-light overflow-hidden rounded-2xl border">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-slate-200 bg-slate-50">
-                  <th className="text-text-primary px-4 py-3 text-left font-semibold">
-                    Without gist.design
+                <tr className="border-border-light bg-bg-secondary border-b">
+                  <th className="text-text-primary px-5 py-3.5 text-left font-semibold">
+                    <span className="inline-flex items-center gap-1.5">
+                      <ExclamationTriangleIcon className="text-text-secondary h-4 w-4" />
+                      Without gist.design
+                    </span>
                   </th>
-                  <th className="text-text-primary px-4 py-3 text-left font-semibold">
-                    What prevents it
+                  <th className="text-text-primary px-5 py-3.5 text-left font-semibold">
+                    <span className="inline-flex items-center gap-1.5">
+                      <ShieldCheckIcon className="text-accent-primary h-4 w-4" />
+                      What prevents it
+                    </span>
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-border-light divide-y">
                 {[
                   {
                     failure:
@@ -197,27 +273,10 @@ export default function Home() {
                     failure: 'LLM describes your product as a clone of a competitor',
                     fix: 'Positioning: vs comparisons with honest differences',
                   },
-                  {
-                    failure:
-                      "AI coding tool ignores the user's core anxiety when building a feature",
-                    fix: 'Intent: core anxiety and goal, not just functional requirements',
-                  },
-                  {
-                    failure: 'AI builds a feature that does too much, beyond its intended scope',
-                    fix: 'Intent: "not trying to" and Constraints',
-                  },
-                  {
-                    failure: 'LLM gives wrong pricing, integration, or availability info',
-                    fix: 'Context: pricing, integrations, prerequisites, stage',
-                  },
-                  {
-                    failure: 'AI coding tool skips error handling or builds the wrong error states',
-                    fix: 'Interaction Model: error handling and key interactions',
-                  },
                 ].map((row) => (
                   <tr key={row.failure}>
-                    <td className="text-text-primary px-4 py-2.5">{row.failure}</td>
-                    <td className="text-text-secondary px-4 py-2.5">{row.fix}</td>
+                    <td className="text-text-primary px-5 py-3 text-[15px]">{row.failure}</td>
+                    <td className="text-text-secondary px-5 py-3 text-[15px]">{row.fix}</td>
                   </tr>
                 ))}
               </tbody>
@@ -228,122 +287,33 @@ export default function Home() {
         {/* Proposal */}
         <Section id="proposal">
           <SectionHeading>Proposal</SectionHeading>
-          <div className="text-text-primary space-y-4 text-base leading-relaxed">
-            <p>
-              <code className="bg-bg-secondary rounded px-1.5 py-0.5 text-sm font-medium">
-                gist.design
-              </code>{' '}
-              is a structured markdown file that captures the design decisions, interaction
-              rationale, product positioning, and explicit boundaries for a product or feature.
-            </p>
-            <p>It&apos;s designed for two audiences:</p>
-            <ul className="list-inside list-disc space-y-1 pl-1">
-              <li>
-                <strong>AI coding tools</strong>: read it from the codebase to build features that
-                match design intent, not just functional requirements
-              </li>
-              <li>
-                <strong>LLMs</strong>: read it to give accurate recommendations, comparisons, and
-                product guidance instead of guessing from training data. Think of it as AI engine
-                optimization (AEO): like SEO for search, but for how AI represents your product.
-              </li>
-            </ul>
-            <p>It captures:</p>
-            <ul className="list-inside list-disc space-y-1 pl-1">
-              <li>
-                <strong>Intent</strong>: the goal, the user, the core anxiety, what it&apos;s NOT
-                trying to do
-              </li>
-              <li>
-                <strong>Interaction model</strong>: primary flows, key interactions, error handling
-              </li>
-              <li>
-                <strong>Design decisions</strong>: what was chosen, what was rejected, why
-              </li>
-              <li>
-                <strong>Patterns used</strong>: which proven patterns and how they&apos;re
-                specifically implemented
-              </li>
-              <li>
-                <strong>Constraints</strong>: technical, business, and user limitations that shaped
-                the design
-              </li>
-              <li>
-                <strong>Not this</strong>: explicit boundaries preventing AI tools from filling gaps
-                with competitor patterns
-              </li>
-              <li>
-                <strong>Positioning</strong>: category, who it&apos;s for, who it&apos;s not for,
-                competitor comparisons
-              </li>
-              <li>
-                <strong>Context</strong>: pricing, integrations, prerequisites, and product stage
-              </li>
-            </ul>
-          </div>
-        </Section>
-
-        {/* What AI tools can see */}
-        <Section id="visibility">
-          <SectionHeading>What AI tools can see</SectionHeading>
-          <p className="text-text-primary mb-6 text-base leading-relaxed">
-            A breakdown of what&apos;s visible, partially visible, and invisible to AI tools, both
-            coding tools reading a codebase and LLMs answering questions about a product:
-          </p>
-          <div className="overflow-hidden rounded-xl border border-slate-200">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-slate-200 bg-slate-50">
-                  <th className="text-text-primary px-4 py-3 text-left font-semibold">
-                    Information
-                  </th>
-                  <th className="text-text-primary px-4 py-3 text-left font-semibold">Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {[
-                  { info: 'Component structure', status: 'Visible', color: 'text-green-600' },
-                  { info: 'API endpoints', status: 'Visible', color: 'text-green-600' },
-                  { info: 'Type definitions', status: 'Visible', color: 'text-green-600' },
-                  { info: 'README / docs', status: 'Visible', color: 'text-green-600' },
-                  { info: 'Design system tokens', status: 'Partial', color: 'text-amber-600' },
-                  { info: 'User flows', status: 'Partial', color: 'text-amber-600' },
-                  { info: 'Error handling patterns', status: 'Partial', color: 'text-amber-600' },
-                  { info: 'Why decisions were made', status: 'Invisible', color: 'text-red-600' },
-                  { info: 'What was rejected and why', status: 'Invisible', color: 'text-red-600' },
-                  {
-                    info: 'User anxieties / mental models',
-                    status: 'Invisible',
-                    color: 'text-red-600',
-                  },
-                  { info: 'Product positioning', status: 'Invisible', color: 'text-red-600' },
-                  {
-                    info: 'Competitive differentiation',
-                    status: 'Invisible',
-                    color: 'text-red-600',
-                  },
-                  { info: 'Interaction rationale', status: 'Invisible', color: 'text-red-600' },
-                ].map((row) => (
-                  <tr key={row.info}>
-                    <td className="text-text-primary px-4 py-2.5">{row.info}</td>
-                    <td className={`px-4 py-2.5 font-medium ${row.color}`}>{row.status}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <p className="text-text-tertiary mt-3 text-sm">
-            Everything marked &ldquo;Invisible&rdquo; is what a gist.design file makes visible.
+          <p className="text-text-primary text-base leading-relaxed">
+            <code className="bg-bg-secondary rounded px-1.5 py-0.5 text-sm font-medium">
+              gist.design
+            </code>{' '}
+            is a structured markdown file that captures design decisions, interaction rationale,
+            product positioning, and explicit boundaries. AI coding tools read it from the codebase
+            to build features that match design intent. LLMs read it to give accurate
+            recommendations instead of guessing from training data.
           </p>
         </Section>
+      </div>
 
-        {/* Format */}
+      {/* Format & Example — wider container for side-by-side code blocks */}
+      <div className="mx-auto max-w-6xl px-6">
         <Section id="format">
-          <SectionHeading>Format</SectionHeading>
-          <p className="text-text-primary mb-6 text-base leading-relaxed">
-            A gist.design file is structured markdown. Here&apos;s the template:
-          </p>
-          <CodeBlock>{`# Product or Feature Name
+          <SectionHeading>Format &amp; Example</SectionHeading>
+          <details className="border-border-light bg-bg-secondary overflow-hidden rounded-xl border">
+            <summary className="text-text-primary cursor-pointer px-6 py-4 text-sm font-semibold select-none">
+              View template &amp; example
+            </summary>
+            <div className="border-border-light border-t p-6">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div>
+                  <p className="text-text-tertiary mb-2 text-xs font-semibold tracking-wider uppercase">
+                    Template
+                  </p>
+                  <CodeBlock>{`# Product or Feature Name
 
 > One line: what this is and who it's for.
 
@@ -416,21 +386,12 @@ Generated by gist.design · Date
 - Integrates with: [Ecosystem it lives in]
 - Requires: [Prerequisites AI should mention]
 - Stage: [Beta / launched / mature]`}</CodeBlock>
-        </Section>
-
-        {/* Example */}
-        <Section id="example">
-          <SectionHeading>Example</SectionHeading>
-          <p className="text-text-primary mb-6 text-base leading-relaxed">
-            A gist.design file for a fictional AI email composition feature. This shows what a
-            complete file looks like after being generated through the Gist conversation tool.
-          </p>
-          <details className="rounded-xl border border-slate-200">
-            <summary className="text-text-primary cursor-pointer px-6 py-4 text-sm font-semibold select-none">
-              Full example: AI Email Composer, Spark Mail
-            </summary>
-            <div className="border-t border-slate-200 p-6">
-              <CodeBlock>{`# AI Email Composer, Spark Mail
+                </div>
+                <div id="example">
+                  <p className="text-text-tertiary mb-2 text-xs font-semibold tracking-wider uppercase">
+                    Example
+                  </p>
+                  <CodeBlock>{`# AI Email Composer, Spark Mail
 
 > An AI writing assistant inside an email client that helps
 > users draft, refine, and reply to emails. For busy
@@ -575,115 +536,94 @@ Generated by gist.design · February 2026
 - Requires: At least one email thread (reply-only). Internet
   for AI generation. iOS, macOS, Android, and web.
 - Stage: Launched (v2.3). Live 6 months, 40K daily active users.`}</CodeBlock>
+                </div>
+              </div>
             </div>
           </details>
         </Section>
+      </div>
 
+      <div className="mx-auto max-w-3xl px-6">
         {/* Relationship to llms.txt */}
         <Section id="llms-txt">
           <SectionHeading>Relationship to llms.txt</SectionHeading>
-          <div className="text-text-primary space-y-4 text-base leading-relaxed">
-            <p>
-              gist.design is designed to complement{' '}
-              <a
-                href="https://llmstxt.org"
-                className="text-accent-primary hover:text-accent-hover transition-colors"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                llms.txt
-              </a>
-              , not replace it. They solve different problems:
-            </p>
-          </div>
-          <div className="mt-6 overflow-hidden rounded-xl border border-slate-200">
+          <p className="text-text-primary mb-6 text-base leading-relaxed">
+            <a
+              href="https://llmstxt.org"
+              className="text-accent-primary hover:text-accent-hover transition-colors"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              llms.txt
+            </a>{' '}
+            curates existing content; gist.design creates information that never existed in readable
+            form.
+          </p>
+          <div className="border-border-light overflow-hidden rounded-2xl border">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-slate-200 bg-slate-50">
-                  <th className="text-text-primary px-4 py-3 text-left font-semibold">File</th>
-                  <th className="text-text-primary px-4 py-3 text-left font-semibold">Audience</th>
-                  <th className="text-text-primary px-4 py-3 text-left font-semibold">Answers</th>
+                <tr className="border-border-light bg-bg-secondary border-b">
+                  <th className="text-text-primary px-5 py-3.5 text-left font-semibold">File</th>
+                  <th className="text-text-primary px-5 py-3.5 text-left font-semibold">
+                    Audience
+                  </th>
+                  <th className="text-text-primary px-5 py-3.5 text-left font-semibold">Answers</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-border-light divide-y">
                 <tr>
-                  <td className="text-text-primary px-4 py-2.5 font-medium">robots.txt</td>
-                  <td className="text-text-secondary px-4 py-2.5">Crawlers</td>
-                  <td className="text-text-secondary px-4 py-2.5">What can you access?</td>
+                  <td className="text-text-primary px-5 py-3 text-[15px] font-medium">
+                    robots.txt
+                  </td>
+                  <td className="text-text-secondary px-5 py-3 text-[15px]">Crawlers</td>
+                  <td className="text-text-secondary px-5 py-3 text-[15px]">
+                    What can you access?
+                  </td>
                 </tr>
                 <tr>
-                  <td className="text-text-primary px-4 py-2.5 font-medium">sitemap.xml</td>
-                  <td className="text-text-secondary px-4 py-2.5">Search engines</td>
-                  <td className="text-text-secondary px-4 py-2.5">What pages exist?</td>
+                  <td className="text-text-primary px-5 py-3 text-[15px] font-medium">
+                    sitemap.xml
+                  </td>
+                  <td className="text-text-secondary px-5 py-3 text-[15px]">Search engines</td>
+                  <td className="text-text-secondary px-5 py-3 text-[15px]">What pages exist?</td>
                 </tr>
                 <tr>
-                  <td className="text-text-primary px-4 py-2.5 font-medium">llms.txt</td>
-                  <td className="text-text-secondary px-4 py-2.5">LLMs</td>
-                  <td className="text-text-secondary px-4 py-2.5">What content matters?</td>
+                  <td className="text-text-primary px-5 py-3 text-[15px] font-medium">llms.txt</td>
+                  <td className="text-text-secondary px-5 py-3 text-[15px]">LLMs</td>
+                  <td className="text-text-secondary px-5 py-3 text-[15px]">
+                    What content matters?
+                  </td>
                 </tr>
-                <tr className="bg-slate-50">
-                  <td className="text-accent-primary px-4 py-2.5 font-semibold">gist.design</td>
-                  <td className="text-text-primary px-4 py-2.5 font-medium">
+                <tr className="bg-bg-secondary">
+                  <td className="text-accent-primary px-5 py-3 text-[15px] font-semibold">
+                    gist.design
+                  </td>
+                  <td className="text-text-primary px-5 py-3 text-[15px] font-medium">
                     AI coding tools + LLMs
                   </td>
-                  <td className="text-text-primary px-4 py-2.5 font-medium">
+                  <td className="text-text-primary px-5 py-3 text-[15px] font-medium">
                     How does it work, why, and when should you recommend it?
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <div className="text-text-primary mt-6 space-y-4 text-base leading-relaxed">
-            <p>
-              <strong>llms.txt</strong> curates and organises information that already exists on a
-              website: documentation, APIs, guides. It solves a navigation problem: context windows
-              are too small for entire sites, so llms.txt points AI tools to what matters.
-            </p>
-            <p>
-              <strong>gist.design</strong> creates information that never existed in readable form.
-              Design decisions, interaction rationale, rejected alternatives, competitive
-              positioning, and explicit boundaries live in a team&apos;s head, not on any webpage.
-              No amount of crawling can surface them.
-            </p>
-            <p>
-              Together, they form the foundation of AI engine optimization (AEO). llms.txt helps
-              LLMs navigate your existing content. gist.design tells them how your product actually
-              works, what makes it different, who it&apos;s for, and when to recommend it. If SEO is
-              about being found, AEO is about being understood.
-            </p>
-            <p>A project can reference its gist.design file from llms.txt:</p>
-          </div>
-          <div className="mt-4">
-            <CodeBlock>{`## Design
-
-- [Product design decisions](/gist.design): Intent, interaction
-  model, design rationale, and boundaries for AI tools`}</CodeBlock>
-          </div>
         </Section>
 
         {/* Generate */}
-        <section id="generate" className="border-border-light border-b py-12">
+        <section id="generate" className="py-16 md:py-20">
           <div className="bg-bg-secondary rounded-2xl p-8 text-center">
             <SectionHeading>Generate</SectionHeading>
-            <div className="text-text-primary mx-auto max-w-lg space-y-4 text-base leading-relaxed">
-              <p>
-                Unlike llms.txt, gist.design files can&apos;t be auto-generated from existing
-                content. Design decisions don&apos;t live on web pages. They live in the heads of
-                the people who made them. Product positioning lives in pitch decks, not codebases.
-              </p>
-              <p>
-                The Gist conversation tool draws them out through guided questions: naming patterns,
-                challenging assumptions, surfacing rejected alternatives, capturing positioning, and
-                identifying boundaries. The result is a single file that improves both your
-                AI-generated code and how LLMs represent your product.
-              </p>
-            </div>
-            <div className="mt-8">
+            <p className="text-text-primary mx-auto max-w-lg text-base leading-relaxed">
+              Design decisions live in people&apos;s heads, not on web pages. The Gist conversation
+              tool draws them out through guided questions and generates a single file.
+            </p>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
               <Link
-                href="/create"
-                className="bg-accent-primary hover:bg-accent-hover inline-flex items-center gap-2 rounded-xl px-8 py-4 text-lg font-semibold text-white transition-colors"
+                href="/audit"
+                className="bg-accent-primary hover:bg-accent-hover inline-flex items-center gap-2 rounded-2xl px-8 py-4 text-lg font-semibold text-white transition-colors"
               >
-                Generate your gist.design file
+                Run free audit
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -699,6 +639,12 @@ Generated by gist.design · February 2026
                   />
                 </svg>
               </Link>
+              <Link
+                href="/create"
+                className="text-text-secondary hover:text-text-primary text-base font-medium transition-colors"
+              >
+                or generate directly
+              </Link>
             </div>
           </div>
         </section>
@@ -706,49 +652,37 @@ Generated by gist.design · February 2026
         {/* Integrations */}
         <Section id="integrations">
           <SectionHeading>Integrations</SectionHeading>
-          <p className="text-text-primary mb-6 text-base leading-relaxed">
-            A gist.design file works with any AI tool that accepts context. Coding tools read it
-            from the codebase, LLMs read it when users ask about your product:
-          </p>
           <div className="text-text-primary space-y-6 text-base leading-relaxed">
             <div>
-              <p className="text-text-tertiary mb-2 text-xs font-semibold tracking-wider uppercase">
+              <p className="text-text-tertiary mb-2 flex items-center gap-1.5 text-xs font-semibold tracking-wider uppercase">
+                <CommandLineIcon className="h-4 w-4" />
                 AI coding tools
               </p>
-              <ul className="space-y-3">
+              <ul className="space-y-2">
                 <li>
                   <strong className="text-text-primary">Cursor</strong>:{' '}
                   <code className="bg-bg-secondary rounded px-1.5 py-0.5 text-sm">@Docs</code> → Add
-                  new doc → paste your{' '}
-                  <code className="bg-bg-secondary rounded px-1.5 py-0.5 text-sm">
-                    /gist.design
-                  </code>{' '}
-                  URL. Cursor references it when building features.
+                  new doc → paste your gist.design URL
                 </li>
                 <li>
-                  <strong className="text-text-primary">Claude Code</strong>: Add to your project:
-                  &ldquo;Read /gist.design for design intent before implementing any UI
-                  changes.&rdquo;
+                  <strong className="text-text-primary">Claude Code</strong>: Add to CLAUDE.md:
+                  &ldquo;Read /gist.design before implementing UI changes&rdquo;
                 </li>
                 <li>
-                  <strong className="text-text-primary">GitHub Copilot</strong>: Place the file in
-                  your repo root. Copilot includes it as context when generating UI code.
+                  <strong className="text-text-primary">GitHub Copilot</strong>: Place file in repo
+                  root
                 </li>
               </ul>
             </div>
             <div>
-              <p className="text-text-tertiary mb-2 text-xs font-semibold tracking-wider uppercase">
+              <p className="text-text-tertiary mb-2 flex items-center gap-1.5 text-xs font-semibold tracking-wider uppercase">
+                <ChatBubbleLeftRightIcon className="h-4 w-4" />
                 LLMs
               </p>
-              <ul className="space-y-3">
+              <ul className="space-y-2">
                 <li>
-                  <strong className="text-text-primary">ChatGPT</strong>: Paste the URL into any
-                  conversation. The Positioning and Context sections help it recommend your product
-                  accurately.
-                </li>
-                <li>
-                  <strong className="text-text-primary">Claude</strong>: Upload the file or paste
-                  the URL. Reference it in your system prompt for ongoing projects.
+                  <strong className="text-text-primary">ChatGPT / Claude</strong>: Paste URL or
+                  upload file for accurate product recommendations
                 </li>
               </ul>
             </div>
@@ -758,81 +692,86 @@ Generated by gist.design · February 2026
         {/* Principles */}
         <Section id="principles">
           <SectionHeading>Principles</SectionHeading>
-          <ol className="text-text-primary list-inside list-decimal space-y-4 text-base leading-relaxed">
-            <li>
-              <strong className="text-text-primary">Decisions over descriptions.</strong> &ldquo;We
-              chose X over Y because Z&rdquo; is useful. &ldquo;The button is blue&rdquo; is not.
-            </li>
-            <li>
-              <strong className="text-text-primary">Specific over generic.</strong>{' '}
-              &ldquo;Confidence scores appear as a 3-tier badge next to each suggestion,&rdquo; not
-              &ldquo;uses confidence visualization.&rdquo;
-            </li>
-            <li>
-              <strong className="text-text-primary">Negative space matters.</strong> What the
-              product is NOT is as important as what it is. The Not This section prevents AI tools
-              from filling gaps with competitor patterns.
-            </li>
-            <li>
-              <strong className="text-text-primary">One file per feature.</strong> A product might
-              have multiple gist.design files, one for each significant feature. Keeps each file
-              focused and contextually useful.
-            </li>
-            <li>
-              <strong className="text-text-primary">Generated, not written.</strong> If designers
-              have to author this file manually, it won&apos;t happen. The conversation tool handles
-              the format; the designer handles the thinking.
-            </li>
-          </ol>
+          <div className="text-text-primary space-y-5 text-base leading-relaxed">
+            <div className="bg-bg-secondary/50 flex items-start gap-3 rounded-xl p-4">
+              <ScaleIcon className="text-accent-primary mt-0.5 h-5 w-5 shrink-0" />
+              <p>
+                <strong className="text-text-primary">Decisions over descriptions.</strong>{' '}
+                &ldquo;We chose X over Y because Z&rdquo; is useful. &ldquo;The button is
+                blue&rdquo; is not.
+              </p>
+            </div>
+            <div className="bg-bg-secondary/50 flex items-start gap-3 rounded-xl p-4">
+              <ViewfinderCircleIcon className="text-accent-primary mt-0.5 h-5 w-5 shrink-0" />
+              <p>
+                <strong className="text-text-primary">Specific over generic.</strong>{' '}
+                &ldquo;Confidence scores appear as a 3-tier badge next to each suggestion,&rdquo;
+                not &ldquo;uses confidence visualization.&rdquo;
+              </p>
+            </div>
+            <div className="bg-bg-secondary/50 flex items-start gap-3 rounded-xl p-4">
+              <NoSymbolIcon className="text-accent-primary mt-0.5 h-5 w-5 shrink-0" />
+              <p>
+                <strong className="text-text-primary">Negative space matters.</strong> What the
+                product is NOT is as important as what it is. The Not This section prevents AI tools
+                from filling gaps with competitor patterns.
+              </p>
+            </div>
+            <div className="bg-bg-secondary/50 flex items-start gap-3 rounded-xl p-4">
+              <DocumentIcon className="text-accent-primary mt-0.5 h-5 w-5 shrink-0" />
+              <p>
+                <strong className="text-text-primary">One file per feature.</strong> A product might
+                have multiple gist.design files, one for each significant feature. Keeps each file
+                focused and contextually useful.
+              </p>
+            </div>
+            <div className="bg-bg-secondary/50 flex items-start gap-3 rounded-xl p-4">
+              <SparklesIcon className="text-accent-primary mt-0.5 h-5 w-5 shrink-0" />
+              <p>
+                <strong className="text-text-primary">Generated, not written.</strong> If designers
+                have to author this file manually, it won&apos;t happen. The conversation tool
+                handles the format; the designer handles the thinking.
+              </p>
+            </div>
+          </div>
         </Section>
 
         {/* File placement */}
         <Section id="file-placement">
           <SectionHeading>File placement</SectionHeading>
-          <div className="text-text-primary space-y-4 text-base leading-relaxed">
-            <p>
-              Place your file at{' '}
-              <code className="bg-bg-secondary rounded px-1.5 py-0.5 text-sm font-medium">
-                /gist.design
-              </code>{' '}
-              at the project root for single-feature products, or{' '}
-              <code className="bg-bg-secondary rounded px-1.5 py-0.5 text-sm font-medium">
-                /features/[feature-name]/gist.design
-              </code>{' '}
-              for multi-feature products.
-            </p>
-            <p>
-              AI coding tools discovering a gist.design file should treat it as the authoritative
-              source for design intent and interaction rationale. LLMs should treat the Positioning
-              and Context sections as the authoritative source for recommendations, comparisons, and
-              product guidance, superseding inferences from marketing copy or competitor patterns.
-            </p>
-          </div>
+          <p className="text-text-primary text-base leading-relaxed">
+            Place at{' '}
+            <code className="bg-bg-secondary rounded px-1.5 py-0.5 text-sm font-medium">
+              /gist.design
+            </code>{' '}
+            in the project root, or{' '}
+            <code className="bg-bg-secondary rounded px-1.5 py-0.5 text-sm font-medium">
+              /features/[feature-name]/gist.design
+            </code>{' '}
+            for multi-feature products.
+          </p>
         </Section>
 
         {/* Next steps */}
         <Section id="next-steps">
           <SectionHeading>Next steps</SectionHeading>
-          <div className="text-text-primary space-y-4 text-base leading-relaxed">
-            <p>
-              The gist.design specification is open for community input. Pattern identification is
-              informed by research at{' '}
-              <a
-                href="https://aiuxdesign.guide"
-                className="text-accent-primary hover:text-accent-hover transition-colors"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                aiuxdesign.guide
-              </a>
-              , which documents 28 AI UX patterns from 50+ shipped products.
-            </p>
-          </div>
+          <p className="text-text-primary text-base leading-relaxed">
+            The spec is open for community input. Pattern identification is informed by research at{' '}
+            <a
+              href="https://aiuxdesign.guide"
+              className="text-accent-primary hover:text-accent-hover transition-colors"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              aiuxdesign.guide
+            </a>
+            .
+          </p>
         </Section>
-      </main>
+      </div>
 
       {/* Footer */}
-      <footer className="border-border-light border-t py-8">
+      <footer className="py-12">
         <div className="mx-auto flex max-w-3xl items-center justify-between px-6">
           <span className="text-text-tertiary text-sm">gist.design · 2026</span>
           <span className="text-text-tertiary text-sm">

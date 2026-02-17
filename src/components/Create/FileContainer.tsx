@@ -17,6 +17,8 @@ interface FileContainerProps {
   onDownload: () => void;
   onCopyMarkdown: () => void;
   onCopyBrief: () => void;
+  auditUrl?: string;
+  originalResponse?: string;
 }
 
 type Tab = 'preview' | 'export';
@@ -29,6 +31,8 @@ export function FileContainer({
   onDownload,
   onCopyMarkdown,
   onCopyBrief,
+  auditUrl,
+  originalResponse,
 }: FileContainerProps) {
   const [activeTab, setActiveTab] = useState<Tab>('preview');
 
@@ -126,6 +130,8 @@ export function FileContainer({
               onDownload={onDownload}
               onCopyMarkdown={onCopyMarkdown}
               onCopyBrief={onCopyBrief}
+              auditUrl={auditUrl}
+              originalResponse={originalResponse}
             />
             <BeforeAfterPreview items={beforeAfter} file={file} />
           </>

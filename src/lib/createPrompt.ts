@@ -1,5 +1,6 @@
 import { GistDesignFile, Feature } from '@/types/file';
 import { Message } from '@/types';
+import { GapAnalysis } from '@/types/audit';
 import { getPatternsForAIContext } from '@/lib/patterns/patterns';
 
 // ============================================
@@ -47,6 +48,78 @@ export const CREATE_INITIAL_MESSAGES_EXISTING: Message[] = [
     timestamp: new Date(),
   },
 ];
+
+// ============================================
+// Audit-Aware Initial Messages
+// ============================================
+
+export function getAuditInitialMessages(gapCount: number): Message[] {
+  return [
+    {
+      id: '1',
+      role: 'assistant',
+      content: `I've reviewed your AI readability audit. ${gapCount} gap${gapCount !== 1 ? 's were' : ' was'} found in how LLMs describe your product. Let's build a gist.design file that fixes ${gapCount === 1 ? 'this' : 'these'}.
+
+I'll focus on the critical gaps first. To start: tell me what your product actually does, in your own words. I want to compare your description with what the LLMs said.`,
+      timestamp: new Date(),
+    },
+  ];
+}
+
+// ============================================
+// Audit Context Builder
+// ============================================
+
+const categoryLabels: Record<string, string> = {
+  competitor_blending: 'Competitor Blending',
+  invisible_mechanics: 'Invisible Mechanics',
+  missing_decisions: 'Missing Decisions',
+  fabrication: 'Fabrication',
+  missing_boundaries: 'Missing Boundaries',
+  positioning_drift: 'Positioning Drift',
+};
+
+export function buildAuditContextBlock(analysis: GapAnalysis): string {
+  let ctx = '=== AUDIT FINDINGS ===\n';
+  ctx += `AI Readability Score: ${analysis.summary.readabilityScore}\n`;
+  ctx += `Total Gaps: ${analysis.summary.totalGaps} (${analysis.summary.criticalGaps} critical)\n`;
+  ctx += `Worst Model: ${analysis.summary.worstModel}\n`;
+  ctx += `Best Model: ${analysis.summary.bestModel}\n\n`;
+
+  ctx += 'Gaps to address:\n';
+  for (const gap of analysis.gaps) {
+    ctx += `\n  [${gap.severity.toUpperCase()}] ${categoryLabels[gap.category] || gap.category}\n`;
+    ctx += `  ${gap.description}\n`;
+    ctx += `  Affected: ${gap.modelsAffected.join(', ')}\n`;
+    ctx += `  File needs: ${gap.whatFileNeeds}\n`;
+  }
+
+  ctx += '\n=== END AUDIT FINDINGS ===';
+  return ctx;
+}
+
+const AUDIT_CONTEXT_PROMPT = `
+## Audit Context
+
+This conversation started from an AI readability audit. The user's product was described by 3 LLMs (ChatGPT, Claude, Perplexity) and gaps were identified. Your job is to help create a gist.design file that fixes these gaps.
+
+### How to use the audit findings:
+
+1. **Reference specific gaps**: When asking questions, tie them to audit findings. "The audit found that all 3 models described your product as a project management tool. Is that accurate, or are they getting your category wrong?"
+2. **Quote model responses**: When relevant, reference what specific models said vs. reality.
+3. **Focus on gaps**: Prioritize gathering information that addresses the identified gaps, starting with critical severity.
+4. **Don't repeat the audit**: The user already saw the results. Build on them, don't recite them.
+5. **Prioritize by severity**: Address critical gaps first, then high, then medium.
+
+### Role-adaptive behavior:
+
+Detect the user's role from language cues and adapt:
+- **Designer/PM**: Ask about interaction models, design decisions, user flows
+- **Founder/CEO**: Focus on positioning, category, competitive differentiation
+- **Marketer**: Emphasize messaging, audience, value proposition
+- **Developer/DevRel**: Focus on technical mechanics, API patterns, integration details
+- **SEO/Growth**: Focus on how LLMs recommend the product, search intent alignment
+`;
 
 // ============================================
 // Context Builder
@@ -146,8 +219,9 @@ export function buildContextBlock(file: GistDesignFile, currentFeatureId: string
 // System Prompt
 // ============================================
 
-export function getCreateSystemPrompt(): string {
+export function getCreateSystemPrompt(auditContext?: string): string {
   const patternList = getPatternsForAIContext();
+  const auditSection = auditContext ? `\n${AUDIT_CONTEXT_PROMPT}\n\n${auditContext}\n` : '';
 
   return `You are Gist, a design consultant who helps product teams create gist.design files — structured documents that make design decisions readable to AI coding tools and LLMs.
 
@@ -340,5 +414,5 @@ Rules:
 - Be sycophantic
 - Force patterns into every response
 - Skip the hard questions about what NOT to do
-`;
+${auditSection}`;
 }

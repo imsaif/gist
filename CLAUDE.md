@@ -45,6 +45,8 @@ npm run build    # Build for production
 
 ## Recent Sessions
 
+- **2026-02-17 18:00** | MacBook | Files: 30 | Tests: 0
+  - **Notes:** Redesigned landing page with Landio-style tall cards for "How it works" and "Who this is for" sections. Added audit feature with LLM verification flow, export panel updates, and prompt enhancements.
 - **2026-02-11 22:38** | MacBook | Files: 4 | Tests: 0
   - **Notes:** Updated landing page copy for dual audience (AI coding tools + LLMs). Added AEO (AI Engine Optimization) framing throughout Background, Proposal, llms.txt, Format, and Generate sections. Added "What this file solves" failure-mode table. Removed all em dashes from page copy.
 - **2026-02-11 22:04** | MacBook | Files: 77 | Tests: 0

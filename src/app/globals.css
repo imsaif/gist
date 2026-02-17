@@ -2,26 +2,26 @@
 
 :root {
   /* Background */
-  --bg-primary: #ffffff;
-  --bg-secondary: #f9fafb;
-  --bg-tertiary: #f3f4f6;
+  --bg-primary: #0f1117;
+  --bg-secondary: #1a1d27;
+  --bg-tertiary: #232733;
 
   /* Text */
-  --text-primary: #111827;
-  --text-secondary: #4b5563;
-  --text-tertiary: #52525b;
+  --text-primary: #f1f3f5;
+  --text-secondary: #9ca3af;
+  --text-tertiary: #6b7280;
 
   /* Accent */
-  --accent-primary: #1e293b;
-  --accent-hover: #0f172a;
+  --accent-primary: #818cf8;
+  --accent-hover: #a5b4fc;
 
   /* Borders */
-  --border-light: #e5e7eb;
-  --border-medium: #d1d5db;
+  --border-light: #2a2e3a;
+  --border-medium: #3a3f4d;
 
   /* Messages */
-  --msg-ai-bg: #f3f4f6;
-  --msg-user-bg: #1e293b;
+  --msg-ai-bg: #1a1d27;
+  --msg-user-bg: #818cf8;
   --msg-user-text: #ffffff;
 }
 
@@ -50,11 +50,11 @@ body {
 .hero-gradient-bg {
   position: relative;
   background:
-    radial-gradient(ellipse 80% 60% at 10% 10%, rgba(186, 210, 255, 0.4) 0%, transparent 60%),
-    radial-gradient(ellipse 70% 50% at 90% 15%, rgba(216, 191, 255, 0.3) 0%, transparent 55%),
-    radial-gradient(ellipse 60% 50% at 80% 80%, rgba(199, 210, 254, 0.2) 0%, transparent 50%),
-    radial-gradient(ellipse 50% 40% at 20% 90%, rgba(253, 230, 225, 0.15) 0%, transparent 50%),
-    #f8f9fc;
+    radial-gradient(ellipse 80% 60% at 10% 10%, rgba(99, 102, 241, 0.15) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 50% at 90% 15%, rgba(139, 92, 246, 0.12) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 50% at 80% 80%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 40% at 20% 90%, rgba(139, 92, 246, 0.06) 0%, transparent 50%),
+    #0f1117;
 }
 
 /* Soft vertical glow streaks — the wide halo behind each line */
@@ -64,36 +64,31 @@ body {
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(180deg, rgba(200, 218, 255, 0.18) 0%, transparent 70%) 5% 0 / 12px 100%
+    linear-gradient(180deg, rgba(99, 102, 241, 0.1) 0%, transparent 70%) 5% 0 / 12px 100% no-repeat,
+    linear-gradient(180deg, rgba(139, 92, 246, 0.08) 0%, transparent 78%) 12% 0 / 10px 100%
       no-repeat,
-    linear-gradient(180deg, rgba(210, 200, 255, 0.14) 0%, transparent 78%) 12% 0 / 10px 100%
+    linear-gradient(180deg, rgba(99, 102, 241, 0.12) 0%, transparent 55%) 20% 0 / 14px 100%
       no-repeat,
-    linear-gradient(180deg, rgba(190, 215, 255, 0.22) 0%, transparent 55%) 20% 0 / 14px 100%
+    linear-gradient(180deg, rgba(139, 92, 246, 0.07) 0%, transparent 72%) 27% 0 / 10px 100%
       no-repeat,
-    linear-gradient(180deg, rgba(215, 205, 255, 0.12) 0%, transparent 72%) 27% 0 / 10px 100%
+    linear-gradient(180deg, rgba(99, 102, 241, 0.1) 0%, transparent 60%) 35% 0 / 12px 100% no-repeat,
+    linear-gradient(180deg, rgba(139, 92, 246, 0.06) 0%, transparent 80%) 42% 0 / 10px 100%
       no-repeat,
-    linear-gradient(180deg, rgba(200, 220, 255, 0.2) 0%, transparent 60%) 35% 0 / 12px 100%
+    linear-gradient(180deg, rgba(99, 102, 241, 0.1) 0%, transparent 52%) 50% 0 / 14px 100% no-repeat,
+    linear-gradient(180deg, rgba(139, 92, 246, 0.09) 0%, transparent 74%) 57% 0 / 10px 100%
       no-repeat,
-    linear-gradient(180deg, rgba(220, 210, 255, 0.1) 0%, transparent 80%) 42% 0 / 10px 100%
+    linear-gradient(180deg, rgba(99, 102, 241, 0.07) 0%, transparent 68%) 64% 0 / 12px 100%
       no-repeat,
-    linear-gradient(180deg, rgba(190, 215, 255, 0.2) 0%, transparent 52%) 50% 0 / 14px 100%
+    linear-gradient(180deg, rgba(139, 92, 246, 0.1) 0%, transparent 58%) 72% 0 / 10px 100% no-repeat,
+    linear-gradient(180deg, rgba(99, 102, 241, 0.08) 0%, transparent 76%) 79% 0 / 12px 100%
       no-repeat,
-    linear-gradient(180deg, rgba(210, 200, 255, 0.16) 0%, transparent 74%) 57% 0 / 10px 100%
-      no-repeat,
-    linear-gradient(180deg, rgba(200, 225, 255, 0.12) 0%, transparent 68%) 64% 0 / 12px 100%
-      no-repeat,
-    linear-gradient(180deg, rgba(215, 200, 255, 0.18) 0%, transparent 58%) 72% 0 / 10px 100%
-      no-repeat,
-    linear-gradient(180deg, rgba(190, 210, 255, 0.14) 0%, transparent 76%) 79% 0 / 12px 100%
-      no-repeat,
-    linear-gradient(180deg, rgba(205, 215, 255, 0.2) 0%, transparent 62%) 87% 0 / 14px 100%
-      no-repeat,
-    linear-gradient(180deg, rgba(220, 205, 255, 0.1) 0%, transparent 70%) 94% 0 / 10px 100%
+    linear-gradient(180deg, rgba(99, 102, 241, 0.1) 0%, transparent 62%) 87% 0 / 14px 100% no-repeat,
+    linear-gradient(180deg, rgba(139, 92, 246, 0.06) 0%, transparent 70%) 94% 0 / 10px 100%
       no-repeat;
   filter: blur(4px);
 }
 
-/* Solid white vertical lines with glow cast from the line */
+/* Subtle vertical lines */
 .hero-gradient-bg::after {
   content: '';
   position: absolute;
@@ -103,11 +98,11 @@ body {
     to right,
     transparent,
     transparent calc(8% - 0.5px),
-    rgba(255, 255, 255, 0.45) calc(8% - 0.5px),
-    rgba(255, 255, 255, 0.45) calc(8% + 0.5px),
+    rgba(255, 255, 255, 0.06) calc(8% - 0.5px),
+    rgba(255, 255, 255, 0.06) calc(8% + 0.5px),
     transparent calc(8% + 0.5px)
   );
-  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.9));
+  filter: drop-shadow(0 0 10px rgba(129, 140, 248, 0.3));
 }
 
 @keyframes slideIn {

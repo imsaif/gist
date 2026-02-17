@@ -8,7 +8,11 @@ import {
   INITIAL_GIST_FILE,
   CREATE_INITIAL_MESSAGES_NEW,
   CREATE_INITIAL_MESSAGES_EXISTING,
+  getAuditInitialMessages,
+  buildAuditContextBlock,
 } from '@/lib/createPrompt';
+import { useSearchParams } from 'next/navigation';
+import { AuditResult } from '@/types/audit';
 import { parseFileResponse, mergeFileUpdate, calculateFeatureProgress } from '@/lib/fileParser';
 import { generateGistDesignMarkdown } from '@/lib/export/markdown';
 import { generateDeveloperBrief } from '@/lib/export/developerBrief';
@@ -26,7 +30,9 @@ function generateId(): string {
 }
 
 function CreateModeContent() {
-  return <CreateModeInner />;
+  const searchParams = useSearchParams();
+  const fromAudit = searchParams.get('from') === 'audit';
+  return <CreateModeInner fromAudit={fromAudit} />;
 }
 
 export default function CreateMode() {
@@ -45,7 +51,7 @@ function CreateModeLoading() {
   );
 }
 
-function CreateModeInner() {
+function CreateModeInner({ fromAudit = false }: { fromAudit?: boolean }) {
   // Session state
   const [entryState, setEntryState] = useState<EntryState | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -53,6 +59,9 @@ function CreateModeInner() {
   const [currentFeatureId, setCurrentFeatureId] = useState<string | null>(null);
   const [featureProgress, setFeatureProgress] = useState<FeatureProgress[]>([]);
   const [beforeAfter, setBeforeAfter] = useState<BeforeAfterItem[]>([]);
+  const [auditContextString, setAuditContextString] = useState<string | null>(null);
+  const [auditUrl, setAuditUrl] = useState<string | undefined>(undefined);
+  const [originalResponse, setOriginalResponse] = useState<string | undefined>(undefined);
 
   // UI state
   const [isLoading, setIsLoading] = useState(false);
@@ -60,6 +69,35 @@ function CreateModeInner() {
   const [inputValue, setInputValue] = useState('');
   const [toast, setToast] = useState({ isVisible: false, message: '' });
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Load audit context from sessionStorage on mount
+  useEffect(() => {
+    if (fromAudit) {
+      try {
+        const stored = sessionStorage.getItem('audit_context');
+        if (stored) {
+          const auditResult: AuditResult = JSON.parse(stored);
+          if (auditResult.analysis) {
+            const contextBlock = buildAuditContextBlock(auditResult.analysis);
+            setAuditContextString(contextBlock);
+            setAuditUrl(auditResult.url);
+            // Store first available LLM response for verification later
+            const firstResponse =
+              auditResult.responses.chatgpt?.content ||
+              auditResult.responses.claude?.content ||
+              auditResult.responses.perplexity?.content ||
+              '';
+            setOriginalResponse(firstResponse);
+            setEntryState('existing-product');
+            setMessages(getAuditInitialMessages(auditResult.analysis.summary.totalGaps));
+            sessionStorage.removeItem('audit_context');
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load audit context:', err);
+      }
+    }
+  }, [fromAudit]);
 
   // Auto-scroll to bottom on new messages
   useEffect(() => {
@@ -105,6 +143,7 @@ function CreateModeInner() {
             skill: 'create',
             fileState: file,
             currentFeatureId,
+            auditContext: auditContextString,
           }),
         });
 
@@ -154,7 +193,7 @@ function CreateModeInner() {
         setIsLoading(false);
       }
     },
-    [messages, isLoading, entryState, file, currentFeatureId]
+    [messages, isLoading, entryState, file, currentFeatureId, auditContextString]
   );
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -395,6 +434,8 @@ function CreateModeInner() {
             onDownload={handleDownload}
             onCopyMarkdown={handleCopyMarkdown}
             onCopyBrief={handleCopyBrief}
+            auditUrl={auditUrl}
+            originalResponse={originalResponse}
           />
         </div>
       </div>

@@ -1,18 +1,64 @@
 'use client';
 
+import { useState } from 'react';
 import { GistDesignFile } from '@/types/file';
+import { VerificationResult } from '@/types/audit';
+import { generateGistDesignMarkdown } from '@/lib/export/markdown';
+import { BeforeAfter } from '@/components/Verification/BeforeAfter';
+import { FixedGaps } from '@/components/Verification/FixedGaps';
 
 interface ExportPanelProps {
   file: GistDesignFile;
   onDownload: () => void;
   onCopyMarkdown: () => void;
   onCopyBrief: () => void;
+  auditUrl?: string;
+  originalResponse?: string;
 }
 
-export function ExportPanel({ file, onDownload, onCopyMarkdown, onCopyBrief }: ExportPanelProps) {
+export function ExportPanel({
+  file,
+  onDownload,
+  onCopyMarkdown,
+  onCopyBrief,
+  auditUrl,
+  originalResponse,
+}: ExportPanelProps) {
   const featureCount = file.features.length;
   const decisionCount = file.features.reduce((sum, f) => sum + f.designDecisions.length, 0);
   const patternCount = file.features.reduce((sum, f) => sum + f.patternsUsed.length, 0);
+
+  const [verificationResult, setVerificationResult] = useState<VerificationResult | null>(null);
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [verifyError, setVerifyError] = useState<string | null>(null);
+
+  const handleVerify = async () => {
+    if (!auditUrl || !originalResponse) return;
+    setIsVerifying(true);
+    setVerifyError(null);
+
+    try {
+      const markdown = generateGistDesignMarkdown(file);
+      const response = await fetch('/api/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          url: auditUrl,
+          gistDesignMarkdown: markdown,
+          originalResponse,
+        }),
+      });
+
+      if (!response.ok) throw new Error('Verification failed');
+
+      const result: VerificationResult = await response.json();
+      setVerificationResult(result);
+    } catch (err) {
+      setVerifyError(err instanceof Error ? err.message : 'Verification failed');
+    } finally {
+      setIsVerifying(false);
+    }
+  };
 
   return (
     <div className="mb-6">
@@ -105,7 +151,54 @@ export function ExportPanel({ file, onDownload, onCopyMarkdown, onCopyBrief }: E
             Copy Dev Brief
           </button>
         </div>
+
+        {/* Verify improvement button (only shown when coming from audit) */}
+        {auditUrl && originalResponse && featureCount > 0 && (
+          <button
+            onClick={handleVerify}
+            disabled={isVerifying}
+            className="border-border-light text-text-secondary hover:bg-bg-secondary disabled:text-text-tertiary flex w-full items-center justify-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium transition-colors"
+          >
+            {isVerifying ? (
+              <>
+                <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-slate-300 border-t-slate-600" />
+                Verifying...
+              </>
+            ) : (
+              <>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M9 12l2 2 4-4" />
+                  <circle cx="12" cy="12" r="10" />
+                </svg>
+                Verify improvement
+              </>
+            )}
+          </button>
+        )}
       </div>
+
+      {verifyError && <p className="mt-2 text-sm text-red-500">{verifyError}</p>}
+
+      {verificationResult && (
+        <div className="mt-6 space-y-4">
+          <h3 className="text-text-primary text-sm font-semibold">Verification</h3>
+          <BeforeAfter before={verificationResult.before} after={verificationResult.after} />
+          <FixedGaps
+            fixedGaps={verificationResult.fixedGaps}
+            remainingGaps={verificationResult.remainingGaps}
+          />
+        </div>
+      )}
     </div>
   );
 }
