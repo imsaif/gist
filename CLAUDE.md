@@ -45,6 +45,8 @@ npm run build    # Build for production
 
 ## Recent Sessions
 
+- **2026-02-17 19:20** | MacBook | Files: 3 | Tests: 0
+  - **Notes:** Added full glassmorphism treatment to landing page. Created glass CSS variables and utility classes (.glass, .glass-strong, .glass-subtle, .glass-nav, .ambient-orb). Applied frosted glass surfaces with luminous borders to all cards, tables, nav, bento grid, CTA, and HowItWorks illustrations. Added ambient glow orbs behind each section. Increased hero section height for breathing room.
 - **2026-02-17 18:00** | MacBook | Files: 30 | Tests: 0
   - **Notes:** Redesigned landing page with Landio-style tall cards for "How it works" and "Who this is for" sections. Added audit feature with LLM verification flow, export panel updates, and prompt enhancements.
 - **2026-02-11 22:38** | MacBook | Files: 4 | Tests: 0
