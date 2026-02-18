@@ -87,6 +87,18 @@ export default function Home() {
                   />
                 </svg>
               </Link>
+              <a
+                href="https://github.com/imsaif/gist-design-skill"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-text-secondary hover:text-text-primary inline-flex items-center gap-2 rounded-2xl border border-white/[0.08] px-4 py-3 text-sm font-medium transition-colors hover:border-white/[0.15]"
+                title="Install Claude Code skill"
+              >
+                <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
+                  <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+                </svg>
+                Claude Code skill
+              </a>
             </div>
           </section>
         </div>
@@ -162,6 +174,78 @@ export default function Home() {
         </div>
       </div>
 
+      {/* Generate — two creation channels */}
+      <div className="relative overflow-hidden">
+        <div className="ambient-orb top-1/3 -right-24 h-80 w-80 bg-indigo-500/[0.05]" />
+        <div className="mx-auto max-w-6xl px-6 py-16 md:py-20">
+          <h2 className="text-text-primary mb-4 text-3xl font-bold tracking-tight">
+            Generate your gist.design file
+          </h2>
+          <p className="text-text-secondary mb-8 text-lg leading-relaxed">
+            Two ways to create the same file. Both run the same guided conversation and produce
+            identical output.
+          </p>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <a
+              href="https://github.com/imsaif/gist-design-skill"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="glass group rounded-2xl p-6 transition-colors hover:border-white/[0.12] hover:bg-[rgba(26,29,39,0.6)]"
+            >
+              <div className="text-text-secondary mb-3">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={1.5}
+                  className="h-8 w-8"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6.75 7.5l3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0021 18V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v12a2.25 2.25 0 002.25 2.25z"
+                  />
+                </svg>
+              </div>
+              <h3 className="text-text-primary mb-2 text-xl font-semibold">In your editor</h3>
+              <p className="text-text-secondary text-base leading-relaxed">
+                Install the Claude Code skill. The guided conversation runs inside your terminal and
+                the file drops directly into your project root.
+              </p>
+              <p className="text-text-tertiary mt-3 text-sm">
+                Best when you are already in a coding environment
+              </p>
+            </a>
+            <Link
+              href="/create"
+              className="glass group rounded-2xl p-6 transition-colors hover:border-white/[0.12] hover:bg-[rgba(26,29,39,0.6)]"
+            >
+              <div className="text-text-secondary mb-3">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={1.5}
+                  className="h-8 w-8"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 003 12c0-1.605.42-3.113 1.157-4.418"
+                  />
+                </svg>
+              </div>
+              <h3 className="text-text-primary mb-2 text-xl font-semibold">In your browser</h3>
+              <p className="text-text-secondary text-base leading-relaxed">
+                Same guided conversation, same output format. Works for anyone on the team — PMs,
+                designers, founders, engineers.
+              </p>
+              <p className="text-text-tertiary mt-3 text-sm">No setup required</p>
+            </Link>
+          </div>
+        </div>
+      </div>
+
       {/* How it works — step process */}
       <HowItWorks />
 
@@ -196,7 +280,17 @@ export default function Home() {
                 ),
                 instruction: (
                   <>
-                    Add to CLAUDE.md: &ldquo;Read /gist.design before implementing UI changes&rdquo;
+                    Install the{' '}
+                    <a
+                      href="https://github.com/imsaif/gist-design-skill"
+                      className="text-accent-primary hover:text-accent-hover transition-colors"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      gist-design skill
+                    </a>{' '}
+                    to generate and use files natively. Or if you already have a file, Claude Code
+                    reads it automatically.
                   </>
                 ),
               },
@@ -228,6 +322,76 @@ export default function Home() {
                 <p className="text-text-secondary text-base leading-relaxed">{tool.instruction}</p>
               </div>
             ))}
+          </div>
+        </Section>
+
+        {/* Figma MCP callout */}
+        <Section id="figma-mcp">
+          <div className="glass rounded-2xl p-6 md:p-8">
+            <div className="flex flex-col gap-6 md:flex-row md:items-center md:gap-8">
+              <div className="flex-1">
+                <h3 className="text-text-primary mb-3 text-xl font-semibold">
+                  Works with Figma MCP
+                </h3>
+                <p className="text-text-secondary text-base leading-relaxed">
+                  Figma MCP gives coding assistants visual structure — layouts, components, spacing.
+                  gist.design gives them the why — patterns, rationale, boundaries. Structure +
+                  intent = accurate implementation.
+                </p>
+              </div>
+              <div className="flex shrink-0 items-center gap-4">
+                <div className="flex flex-col items-center gap-1">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.05]">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="text-text-secondary h-6 w-6"
+                    >
+                      <path d="M15.852 8.981h-4.588V0h4.588c2.476 0 4.49 2.014 4.49 4.49s-2.014 4.491-4.49 4.491zM12.735 7.51h3.117c1.665 0 3.019-1.355 3.019-3.019s-1.355-3.019-3.019-3.019h-3.117V7.51zm0 8.137h-4.49c-2.476 0-4.49-2.014-4.49-4.49s2.014-4.49 4.49-4.49h4.49v8.98zm-4.49-7.51c-1.665 0-3.019 1.355-3.019 3.019s1.354 3.02 3.019 3.02h3.019V8.137h-3.019zm4.49 7.51h-4.49c-2.476 0-4.49 2.014-4.49 4.49s2.014 4.49 4.49 4.49h4.49v-8.98zm-4.49 7.51c-1.665 0-3.019-1.355-3.019-3.019s1.355-3.019 3.019-3.019h3.019v6.038h-3.019zm4.49-7.51c2.476 0 4.49 2.014 4.49 4.49s-2.014 4.49-4.49 4.49-4.49-2.014-4.49-4.49 2.014-4.49 4.49-4.49zm0 7.51c1.665 0 3.019-1.355 3.019-3.019s-1.354-3.02-3.019-3.02-3.019 1.355-3.019 3.019 1.355 3.02 3.019 3.02z" />
+                    </svg>
+                  </div>
+                  <span className="text-text-tertiary text-[10px]">Structure</span>
+                </div>
+                <span className="text-text-tertiary text-lg">+</span>
+                <div className="flex flex-col items-center gap-1">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.05]">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={1.5}
+                      className="text-text-secondary h-6 w-6"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
+                      />
+                    </svg>
+                  </div>
+                  <span className="text-text-tertiary text-[10px]">Intent</span>
+                </div>
+                <span className="text-text-tertiary text-lg">=</span>
+                <div className="flex flex-col items-center gap-1">
+                  <div className="bg-accent-primary/10 flex h-12 w-12 items-center justify-center rounded-xl border border-white/[0.08]">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={1.5}
+                      className="text-accent-primary h-6 w-6"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                  </div>
+                  <span className="text-text-tertiary text-[10px]">Accurate</span>
+                </div>
+              </div>
+            </div>
           </div>
         </Section>
 

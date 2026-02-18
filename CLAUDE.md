@@ -1,16 +1,19 @@
 # Gist - Project Memory
 
-> Generate .gist.design files that make your design decisions readable to AI coding tools.
+> A web standard and toolset for making product design decisions readable to AI tools.
 
 ## Project Overview
 
 - **Domain:** gist.design
 - **Stack:** Next.js 14+, TypeScript, Tailwind CSS, Claude API
 - **Purpose:** Generate structured `.gist.design` files from conversational design decisions
+- **Distribution:** Two channels — Claude Code skill (primary for developers) + web app at /create (for non-developers)
+- **Claude Code skill repo:** github.com/imsaif/gist-design-skill
 
 ## Key Files
 
-- `src/app/page.tsx` - Landing page with hero animation and CTA
+- `src/app/page.tsx` - Landing page (dual-channel hero, generate section, integrations, principles)
+- `src/app/about/page.tsx` - About page
 - `src/app/create/page.tsx` - Main app: chat + file preview (two-panel layout)
 - `src/app/api/chat/route.ts` - API route (create-only)
 - `src/types/index.ts` - Message, IdentifiedPatternInMessage
@@ -45,6 +48,8 @@ npm run build    # Build for production
 
 ## Recent Sessions
 
+- **2026-02-18 11:36** | MacBook | Files: 3 | Tests: 0
+  - **Notes:** Added dual-channel distribution to landing page: "Generate your gist.design file" section with Claude Code skill (editor) and web app (browser) cards, "Works with Figma MCP" callout, updated Integrations Claude Code entry with skill link, added GitHub icon CTA in hero alongside audit. Created /about page.
 - **2026-02-17 19:20** | MacBook | Files: 3 | Tests: 0
   - **Notes:** Added full glassmorphism treatment to landing page. Created glass CSS variables and utility classes (.glass, .glass-strong, .glass-subtle, .glass-nav, .ambient-orb). Applied frosted glass surfaces with luminous borders to all cards, tables, nav, bento grid, CTA, and HowItWorks illustrations. Added ambient glow orbs behind each section. Increased hero section height for breathing room.
 - **2026-02-17 18:00** | MacBook | Files: 30 | Tests: 0
