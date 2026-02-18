@@ -8,7 +8,7 @@
 - **Stack:** Next.js 14+, TypeScript, Tailwind CSS, Claude API
 - **Purpose:** Generate structured `.gist.design` files from conversational design decisions
 - **Distribution:** Two channels — Claude Code skill (primary for developers) + web app at /create (for non-developers)
-- **Claude Code skill repo:** github.com/imsaif/gist-design-skill
+- **Claude Code skill:** SKILL.md + references/ at repo root (same repo as web app)
 
 ## Key Files
 
@@ -48,6 +48,8 @@ npm run build    # Build for production
 
 ## Recent Sessions
 
+- **2026-02-18 12:01** | MacBook | Files: 6 | Tests: 0
+  - **Notes:** Added Claude Code skill to repo (SKILL.md + references/). Three entry states: create, fix, and audit (reads project files, describes product as AI would, scores readability, highlights gaps). Includes verify flow for before/after comparison and role-adaptive conversation. Updated all GitHub skill links from gist-design-skill to imsaif/gist. Added MIT LICENSE.
 - **2026-02-18 11:36** | MacBook | Files: 3 | Tests: 0
   - **Notes:** Added dual-channel distribution to landing page: "Generate your gist.design file" section with Claude Code skill (editor) and web app (browser) cards, "Works with Figma MCP" callout, updated Integrations Claude Code entry with skill link, added GitHub icon CTA in hero alongside audit. Created /about page.
 - **2026-02-17 19:20** | MacBook | Files: 3 | Tests: 0

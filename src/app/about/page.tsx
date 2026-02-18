@@ -141,7 +141,7 @@ export default function AboutPage() {
 
           <div className="flex flex-wrap items-center gap-4">
             <a
-              href="https://github.com/imsaif/gist-design-skill"
+              href="https://github.com/imsaif/gist"
               target="_blank"
               rel="noopener noreferrer"
               className="bg-accent-primary hover:bg-accent-hover inline-flex items-center gap-2 rounded-2xl px-6 py-3 text-base font-semibold text-white transition-colors"

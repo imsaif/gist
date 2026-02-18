@@ -88,7 +88,7 @@ export default function Home() {
                 </svg>
               </Link>
               <a
-                href="https://github.com/imsaif/gist-design-skill"
+                href="https://github.com/imsaif/gist"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-text-secondary hover:text-text-primary inline-flex items-center gap-2 rounded-2xl border border-white/[0.08] px-4 py-3 text-sm font-medium transition-colors hover:border-white/[0.15]"
@@ -187,7 +187,7 @@ export default function Home() {
           </p>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <a
-              href="https://github.com/imsaif/gist-design-skill"
+              href="https://github.com/imsaif/gist"
               target="_blank"
               rel="noopener noreferrer"
               className="glass group rounded-2xl p-6 transition-colors hover:border-white/[0.12] hover:bg-[rgba(26,29,39,0.6)]"
@@ -282,7 +282,7 @@ export default function Home() {
                   <>
                     Install the{' '}
                     <a
-                      href="https://github.com/imsaif/gist-design-skill"
+                      href="https://github.com/imsaif/gist"
                       className="text-accent-primary hover:text-accent-hover transition-colors"
                       target="_blank"
                       rel="noopener noreferrer"
