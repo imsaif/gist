@@ -1,139 +1,111 @@
-# Gist
+# gist.design
 
-> A thinking partner for designers. Think before you design.
+> One file that makes your product readable to every AI tool.
 
-Gist helps designers clarify what they're building, map user journeys, and capture design decisions — before opening Figma.
+AI tools — coding assistants like Cursor and Claude Code, agents like ChatGPT and Perplexity — can read your product's HTML and docs. They can't read your design decisions, interaction rationale, rejected alternatives, or what your product is NOT. So they guess.
 
-## What is Gist?
+gist.design fixes that. A single structured file at your project root that captures how your product actually works and why — readable by any AI tool.
 
-Gist is a conversational design tool that acts as a thinking partner. Instead of jumping straight into visual design, Gist helps you work through the thinking that should happen first:
+```
+robots.txt    → for crawlers      → "What can you access?"
+sitemap.xml   → for search engines → "What pages exist?"
+llms.txt      → for AI tools       → "What content matters?"
+gist.design   → for AI tools       → "How does it actually work, and why?"
+```
 
-- **Clarify your goals** — What are you actually trying to solve?
-- **Map user journeys** — What does the user experience look like step by step?
-- **Capture decisions** — Why did you make the choices you made?
+## Two ways to generate
 
-## Three Modes
+### Claude Code skill (for developers)
 
-### Brief Mode
+Use the skill directly in Claude Code. It reads your project, audits how AI tools would describe it, and generates a gist.design file through guided conversation.
 
-Quick clarification before you design. Answer a few questions and walk away with a clear design brief — goal, context, decisions, and a ready-to-design prompt.
+```bash
+# Install the skill
+git clone https://github.com/imsaif/gist.git ~/.claude/skills/gist-design
+```
 
-### Map Mode
+Then in Claude Code:
 
-Walk through user journeys step by step. Build a flow map with states (happy path, empty, error, loading) and surface relevant UX patterns for each step.
+```
+/gist-design
+```
 
-### Rationale Mode
+Three workflows:
 
-Capture and defend your design decisions. Document what you decided, why, and what alternatives you rejected. Perfect for stakeholder presentations.
+- **Create** — building something new, want AI tools to understand it
+- **Fix** — AI tools already get your product wrong
+- **Audit** — see how AI tools currently describe your project, then fix the gaps
 
-## Features
+### Web app (for everyone)
 
-- **AI-Powered Conversations** — Powered by Claude to ask the right questions and challenge assumptions
-- **Pattern Library** — 28 proven AI/UX patterns surfaced contextually during conversation
-- **Export Ready** — Download your brief, map, or rationale as markdown
-- **Mock Mode** — Test locally without an API key
+Visit [gist.design/create](https://gist.design/create) for a guided conversation in the browser. No installation needed.
 
-## Getting Started
+## What the file captures
+
+- **Product Overview** — what it is, who it's for, how AI fits
+- **Per feature:**
+  - **Intent** — goal, user, core anxiety, scope boundaries
+  - **Interaction Model** — primary flow, key interactions, error handling
+  - **Design Decisions** — chose X over Y because Z
+  - **Patterns Used** — specific implementations with links to [aiuxdesign.guide](https://aiuxdesign.guide)
+  - **Constraints** — technical, business, and user limitations
+  - **Not This** — what it's NOT (prevents competitor blending)
+  - **Open Questions** — what's still unresolved
+
+See [references/file-format.md](references/file-format.md) for the full spec and [references/example-spark-mail.gist.design](references/example-spark-mail.gist.design) for an example.
+
+## Using the file with your tools
+
+| Tool                 | How to use                                   |
+| -------------------- | -------------------------------------------- |
+| **Cursor**           | `@Docs > Add new doc` → point to the file    |
+| **Claude Code**      | Already at project root — read automatically |
+| **ChatGPT / Claude** | Paste contents or upload the file            |
+| **Copilot**          | Add to `.github/copilot-instructions.md`     |
+| **llms.txt**         | Add a reference in your `llms.txt`           |
+
+## Development (web app)
 
 ### Prerequisites
 
 - Node.js 18+
-- npm or yarn
-- Anthropic API key (optional for mock mode)
+- Anthropic API key (optional — set `MOCK_MODE=true` for testing)
 
-### Installation
+### Setup
 
 ```bash
-# Clone the repository
 git clone https://github.com/imsaif/gist.git
 cd gist
-
-# Install dependencies
 npm install
-
-# Set up environment variables
 cp .env.example .env.local
 ```
 
 ### Environment Variables
 
 ```env
-# Required for AI features (optional if using mock mode)
 ANTHROPIC_API_KEY=your_api_key_here
-
-# Set to 'true' to use mock responses (no API key needed)
-MOCK_MODE=true
+MOCK_MODE=true  # Set to use mock responses without API key
 ```
 
-### Development
+### Commands
 
 ```bash
-# Start the development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Start production server
-npm start
+npm run dev      # Start dev server
+npm run build    # Build for production
+npm start        # Start production server
 ```
-
-Open [http://localhost:3000](http://localhost:3000) to see Gist.
-
-## Usage
-
-1. **Choose a mode** from the landing page:
-   - Brief — for quick clarification
-   - Map — for user journey mapping
-   - Rationale — for decision documentation
-
-2. **Have a conversation** with the AI. It will ask questions to help you think through your design.
-
-3. **Watch the artifact build** in the right panel as you talk. The brief, map, or rationale updates in real-time.
-
-4. **Export when ready** — copy to clipboard or download as markdown.
 
 ## Tech Stack
 
-- **Framework:** Next.js 16 (App Router)
+- **Framework:** Next.js 14+ (App Router)
 - **Language:** TypeScript
 - **Styling:** Tailwind CSS
 - **AI:** Claude API (Anthropic)
-- **Icons:** Heroicons
 
-## Project Structure
+## Pattern Library
 
-```
-src/
-├── app/
-│   ├── page.tsx           # Landing page
-│   ├── brief/page.tsx     # Brief mode
-│   ├── map/page.tsx       # Map mode
-│   ├── rationale/page.tsx # Rationale mode
-│   └── api/chat/route.ts  # Chat API endpoint
-├── components/
-│   ├── Brief/             # Brief mode components
-│   ├── DesignMap/         # Map mode components
-│   ├── Rationale/         # Rationale mode components
-│   └── Chat/              # Shared chat components
-├── lib/
-│   ├── constants.ts       # System prompts & initial states
-│   ├── briefParser.ts     # Brief response parser
-│   ├── designMapParser.ts # Map response parser
-│   ├── rationaleParser.ts # Rationale response parser
-│   └── patterns/          # UX pattern library
-└── types/
-    └── index.ts           # TypeScript definitions
-```
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
+Powered by [aiuxdesign.guide](https://aiuxdesign.guide) — 36 AI UX design patterns (including agentic patterns) from ChatGPT, Claude, GitHub Copilot, Midjourney, Devin, and 50+ shipped products.
 
 ## License
 
 MIT
-
----
-
-Built with care for designers who think before they design.

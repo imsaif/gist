@@ -48,6 +48,8 @@ npm run build    # Build for production
 
 ## Recent Sessions
 
+- **2026-02-18 12:09** | MacBook | Files: 1 | Tests: 0
+  - **Notes:** Rewrote README.md from scratch. Old version referenced removed Brief/Map/Rationale modes. New version reflects gist.design positioning, dual distribution (Claude Code skill + web app), file format overview, tool integration table, and 36 AI UX patterns.
 - **2026-02-18 12:01** | MacBook | Files: 6 | Tests: 0
   - **Notes:** Added Claude Code skill to repo (SKILL.md + references/). Three entry states: create, fix, and audit (reads project files, describes product as AI would, scores readability, highlights gaps). Includes verify flow for before/after comparison and role-adaptive conversation. Updated all GitHub skill links from gist-design-skill to imsaif/gist. Added MIT LICENSE.
 - **2026-02-18 11:36** | MacBook | Files: 3 | Tests: 0
