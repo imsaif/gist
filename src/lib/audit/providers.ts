@@ -32,7 +32,7 @@ export async function queryOpenAI(prompt: string): Promise<LLMResponse> {
     const response = await client.chat.completions.create({
       model: 'gpt-4o',
       messages: [{ role: 'user', content: prompt }],
-      max_tokens: 2048,
+      max_tokens: 1024,
     });
     return {
       model: 'chatgpt',
@@ -55,7 +55,7 @@ export async function queryClaude(prompt: string): Promise<LLMResponse> {
     const client = getAnthropicClient();
     const response = await client.messages.create({
       model: 'claude-sonnet-4-5-20250929',
-      max_tokens: 2048,
+      max_tokens: 1024,
       messages: [{ role: 'user', content: prompt }],
     });
     const text = response.content[0].type === 'text' ? response.content[0].text : '';
@@ -81,7 +81,7 @@ export async function queryPerplexity(prompt: string): Promise<LLMResponse> {
     const response = await client.chat.completions.create({
       model: 'sonar',
       messages: [{ role: 'user', content: prompt }],
-      max_tokens: 2048,
+      max_tokens: 1024,
     });
     return {
       model: 'perplexity',

@@ -48,6 +48,8 @@ npm run build    # Build for production
 
 ## Recent Sessions
 
+- **2026-02-23 11:04** | MacBook | Files: 4 | Tests: 0
+  - **Notes:** Deployed gist to Vercel at www.gist.design. Set Anthropic and OpenAI API keys. Optimized audit API to avoid 60s timeout: switched analysis model from Sonnet to Haiku, truncated inputs to analysis prompt, reduced max_tokens, made Perplexity gracefully optional.
 - **2026-02-18 12:09** | MacBook | Files: 1 | Tests: 0
   - **Notes:** Rewrote README.md from scratch. Old version referenced removed Brief/Map/Rationale modes. New version reflects gist.design positioning, dual distribution (Claude Code skill + web app), file format overview, tool integration table, and 36 AI UX patterns.
 - **2026-02-18 12:01** | MacBook | Files: 6 | Tests: 0

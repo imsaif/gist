@@ -25,29 +25,34 @@ ${siteContent}`;
 // Analysis Prompt (Claude analysis layer)
 // ============================================
 
+function truncate(text: string, maxLength: number): string {
+  if (text.length <= maxLength) return text;
+  return text.slice(0, maxLength) + '\n[truncated]';
+}
+
 export function buildAnalysisPrompt(
   siteContent: string,
   chatgptResponse: string,
   claudeResponse: string,
   perplexityResponse: string
 ): string {
-  return `You are an AI readability analyst. Three LLMs were given the same website content and asked to describe the product. Your job is to identify gaps: places where the LLMs got it wrong, made things up, blended the product with competitors, or missed key information.
+  return `You are an AI readability analyst. LLMs were given website content and asked to describe the product. Identify gaps: where they got it wrong, fabricated details, blended with competitors, or missed key info.
 
-## The website content that was provided to all models:
+## Website content (reference):
 
-${siteContent}
+${truncate(siteContent, 5000)}
 
 ## ChatGPT's response:
 
-${chatgptResponse}
+${truncate(chatgptResponse, 2000)}
 
 ## Claude's response:
 
-${claudeResponse}
+${truncate(claudeResponse, 2000)}
 
 ## Perplexity's response:
 
-${perplexityResponse}
+${truncate(perplexityResponse, 2000)}
 
 ## Your task
 

@@ -112,10 +112,14 @@ export async function POST(request: NextRequest) {
                 responses.claude = r;
                 send('llm_response', r);
               }),
-              queryPerplexity(prompt).then((r) => {
-                responses.perplexity = r;
-                send('llm_response', r);
-              }),
+              queryPerplexity(prompt)
+                .then((r) => {
+                  responses.perplexity = r;
+                  send('llm_response', r);
+                })
+                .catch(() => {
+                  // Perplexity is optional — audit continues with ChatGPT + Claude
+                }),
             ];
 
             await Promise.all(queries);
@@ -137,8 +141,8 @@ export async function POST(request: NextRequest) {
 
             const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
             const analysisResponse = await anthropic.messages.create({
-              model: 'claude-sonnet-4-5-20250929',
-              max_tokens: 4096,
+              model: 'claude-haiku-4-5-20251001',
+              max_tokens: 2048,
               messages: [{ role: 'user', content: analysisPrompt }],
             });
 
