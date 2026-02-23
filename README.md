@@ -38,7 +38,11 @@ Three workflows:
 
 ### Web app (for everyone)
 
-Visit [gist.design/create](https://gist.design/create) for a guided conversation in the browser. No installation needed.
+Live at [www.gist.design](https://www.gist.design). No installation needed.
+
+- [/audit](https://www.gist.design/audit) — enter a URL, see how ChatGPT, Claude, and Perplexity describe your product, get a gap analysis
+- [/create](https://www.gist.design/create) — guided conversation to generate your `.gist.design` file
+- [/spec](https://www.gist.design/spec) — the file format specification
 
 ## What the file captures
 
@@ -83,8 +87,10 @@ cp .env.example .env.local
 ### Environment Variables
 
 ```env
-ANTHROPIC_API_KEY=your_api_key_here
-MOCK_MODE=true  # Set to use mock responses without API key
+ANTHROPIC_API_KEY=your_api_key_here   # Required for /create and /audit
+OPENAI_API_KEY=your_api_key_here      # Required for /audit (ChatGPT queries)
+PERPLEXITY_API_KEY=your_api_key_here  # Optional for /audit (Perplexity queries)
+MOCK_MODE=true                        # Set to use mock responses without API keys
 ```
 
 ### Commands
@@ -100,7 +106,8 @@ npm start        # Start production server
 - **Framework:** Next.js 14+ (App Router)
 - **Language:** TypeScript
 - **Styling:** Tailwind CSS
-- **AI:** Claude API (Anthropic)
+- **AI:** Claude API (Anthropic), OpenAI API, Perplexity API
+- **Deployment:** Vercel
 
 ## Pattern Library
 
