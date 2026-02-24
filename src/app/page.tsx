@@ -68,10 +68,10 @@ export default function Home() {
             </p>
             <div className="flex flex-wrap items-center gap-4">
               <Link
-                href="/audit"
+                href="/create"
                 className="bg-accent-primary hover:bg-accent-hover inline-flex items-center gap-2 rounded-2xl px-6 py-3 text-base font-semibold text-white transition-colors"
               >
-                Run free audit
+                Create your gist.design
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"

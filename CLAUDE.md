@@ -48,6 +48,8 @@ npm run build    # Build for production
 
 ## Recent Sessions
 
+- **2026-02-25 01:14** | MacBook | Files: 1 | Tests: 0
+  - **Notes:** Changed hero CTA from "Run free audit" to "Create your gist.design" as the primary button. Verified Vercel production has ANTHROPIC_API_KEY set and MOCK_MODE off so live Claude API works for users.
 - **2026-02-23 11:04** | MacBook | Files: 4 | Tests: 0
   - **Notes:** Deployed gist to Vercel at www.gist.design. Set Anthropic and OpenAI API keys. Optimized audit API to avoid 60s timeout: switched analysis model from Sonnet to Haiku, truncated inputs to analysis prompt, reduced max_tokens, made Perplexity gracefully optional.
 - **2026-02-18 12:09** | MacBook | Files: 1 | Tests: 0
