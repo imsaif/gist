@@ -1,5 +1,6 @@
 'use client';
 
+import { CubeIcon } from '@heroicons/react/24/outline';
 import { ProductOverview } from '@/types/file';
 
 interface ProductOverviewSectionProps {
@@ -23,7 +24,8 @@ export function ProductOverviewSection({ product }: ProductOverviewSectionProps)
 
   return (
     <div className="mb-6">
-      <h2 className="text-text-secondary mb-3 text-sm font-semibold tracking-wide uppercase">
+      <h2 className="text-text-secondary mb-3 flex items-center gap-2 text-sm font-semibold tracking-wide uppercase">
+        <CubeIcon className="h-4 w-4" />
         Product Overview
       </h2>
       {hasAnyContent ? (

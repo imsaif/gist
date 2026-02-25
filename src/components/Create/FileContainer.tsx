@@ -1,7 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, type ComponentType, type SVGProps } from 'react';
 import { GistDesignFile, FeatureProgress, BeforeAfterItem } from '@/types/file';
+import {
+  ViewfinderCircleIcon,
+  ArrowsRightLeftIcon,
+  ScaleIcon,
+  PuzzlePieceIcon,
+  ShieldCheckIcon,
+  Square3Stack3DIcon,
+  RectangleStackIcon,
+} from '@heroicons/react/24/outline';
 import { ProductOverviewSection } from './ProductOverviewSection';
 import { PositioningSection } from './PositioningSection';
 import { ContextSection } from './ContextSection';
@@ -101,7 +110,8 @@ export function FileContainer({
             <ContextSection context={file.context} />
             {file.features.length > 0 ? (
               <div>
-                <h2 className="text-text-secondary mb-3 text-sm font-semibold tracking-wide uppercase">
+                <h2 className="text-text-secondary mb-3 flex items-center gap-2 text-sm font-semibold tracking-wide uppercase">
+                  <RectangleStackIcon className="h-4 w-4" />
                   Features
                 </h2>
                 <div className="space-y-4">
@@ -116,10 +126,43 @@ export function FileContainer({
                 </div>
               </div>
             ) : (
-              <div className="border-border-light rounded-xl border-2 border-dashed p-8 text-center">
-                <p className="text-text-tertiary text-sm">
-                  Features will appear here as the conversation progresses
-                </p>
+              <div className="border-border-light rounded-xl border-2 border-dashed p-6">
+                <h2 className="text-text-secondary mb-3 flex items-center gap-2 text-sm font-semibold tracking-wide uppercase">
+                  <RectangleStackIcon className="h-4 w-4" />
+                  What gets captured
+                </h2>
+                <div className="grid grid-cols-2 gap-x-6 gap-y-3">
+                  {(
+                    [
+                      [
+                        ViewfinderCircleIcon,
+                        'Intent',
+                        "Goal, core anxiety, what it's not trying to do",
+                      ],
+                      [
+                        ArrowsRightLeftIcon,
+                        'Interaction model',
+                        'Primary flow, key interactions, error handling',
+                      ],
+                      [ScaleIcon, 'Design decisions', 'What you chose, over what, and why'],
+                      [PuzzlePieceIcon, 'Patterns', 'AI UX patterns identified in your design'],
+                      [ShieldCheckIcon, 'Constraints', 'Technical limits and design responses'],
+                      [
+                        Square3Stack3DIcon,
+                        'States',
+                        'Empty, loading, populated, error, edge cases',
+                      ],
+                    ] as [ComponentType<SVGProps<SVGSVGElement>>, string, string][]
+                  ).map(([Icon, label, desc]) => (
+                    <div key={label} className="flex items-start gap-2.5 text-sm">
+                      <Icon className="text-text-tertiary mt-0.5 h-4 w-4 shrink-0" />
+                      <div>
+                        <span className="text-text-secondary font-medium">{label}</span>
+                        <span className="text-text-tertiary"> — {desc}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
           </>

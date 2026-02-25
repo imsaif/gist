@@ -1,5 +1,6 @@
 'use client';
 
+import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import { ProductContext } from '@/types/file';
 
 interface ContextSectionProps {
@@ -36,7 +37,8 @@ export function ContextSection({ context }: ContextSectionProps) {
 
   return (
     <div className="mb-6">
-      <h2 className="text-text-secondary mb-3 text-sm font-semibold tracking-wide uppercase">
+      <h2 className="text-text-secondary mb-3 flex items-center gap-2 text-sm font-semibold tracking-wide uppercase">
+        <InformationCircleIcon className="h-4 w-4" />
         Context
       </h2>
       {hasAnyContent ? (

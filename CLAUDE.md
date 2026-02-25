@@ -48,6 +48,8 @@ npm run build    # Build for production
 
 ## Recent Sessions
 
+- **2026-02-25 12:54** | MacBook | Files: 4 | Tests: 0
+  - **Notes:** Added Heroicons to file preview section headings (Product Overview, Positioning, Context, Features). Replaced empty features placeholder with "What gets captured" section showing the 6 feature dimensions (Intent, Interaction model, Design decisions, Patterns, Constraints, States) with icons and descriptions.
 - **2026-02-25 12:27** | MacBook | Files: 20 | Tests: 0
   - **Notes:** Added email-gated usage limit to prevent API abuse. Stateless HMAC approach (no database): 1 free gist file, then email verification via Resend 6-digit code to continue. Added PRD paste entry state, open questions, constraints, and design decisions to file format. EmailGate modal component, auth API routes, email validation with disposable domain blocking and honeypot. Set up HMAC_SECRET, RESEND_API_KEY, RESEND_FROM_EMAIL env vars locally and on Vercel.
 - **2026-02-25 01:14** | MacBook | Files: 1 | Tests: 0

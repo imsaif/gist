@@ -1,5 +1,6 @@
 'use client';
 
+import { MapIcon } from '@heroicons/react/24/outline';
 import { Positioning } from '@/types/file';
 
 interface PositioningSectionProps {
@@ -26,7 +27,8 @@ export function PositioningSection({ positioning }: PositioningSectionProps) {
 
   return (
     <div className="mb-6">
-      <h2 className="text-text-secondary mb-3 text-sm font-semibold tracking-wide uppercase">
+      <h2 className="text-text-secondary mb-3 flex items-center gap-2 text-sm font-semibold tracking-wide uppercase">
+        <MapIcon className="h-4 w-4" />
         Positioning
       </h2>
       {hasAnyContent ? (
