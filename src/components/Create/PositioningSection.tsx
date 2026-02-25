@@ -30,7 +30,7 @@ export function PositioningSection({ positioning }: PositioningSectionProps) {
         Positioning
       </h2>
       {hasAnyContent ? (
-        <div className="border-border-light space-y-3 rounded-xl border bg-white p-4 shadow-sm">
+        <div className="border-border-light bg-bg-tertiary space-y-3 rounded-xl border p-4 shadow-sm">
           <Field label="Category" value={positioning.category} />
           <Field label="For" value={positioning.forWho} />
           <Field label="Not for" value={positioning.notForWho} />

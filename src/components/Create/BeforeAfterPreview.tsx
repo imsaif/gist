@@ -42,7 +42,7 @@ export function BeforeAfterPreview({ items, file }: BeforeAfterPreviewProps) {
                 {featureItems.map((item) => (
                   <div
                     key={item.id}
-                    className="border-border-light grid grid-cols-2 gap-0 overflow-hidden rounded-xl border bg-white shadow-sm"
+                    className="border-border-light bg-bg-tertiary grid grid-cols-2 gap-0 overflow-hidden rounded-xl border shadow-sm"
                   >
                     {/* Without */}
                     <div className="border-border-light border-r p-3">

@@ -48,6 +48,8 @@ npm run build    # Build for production
 
 ## Recent Sessions
 
+- **2026-02-25 12:27** | MacBook | Files: 20 | Tests: 0
+  - **Notes:** Added email-gated usage limit to prevent API abuse. Stateless HMAC approach (no database): 1 free gist file, then email verification via Resend 6-digit code to continue. Added PRD paste entry state, open questions, constraints, and design decisions to file format. EmailGate modal component, auth API routes, email validation with disposable domain blocking and honeypot. Set up HMAC_SECRET, RESEND_API_KEY, RESEND_FROM_EMAIL env vars locally and on Vercel.
 - **2026-02-25 01:14** | MacBook | Files: 1 | Tests: 0
   - **Notes:** Changed hero CTA from "Run free audit" to "Create your gist.design" as the primary button. Verified Vercel production has ANTHROPIC_API_KEY set and MOCK_MODE off so live Claude API works for users.
 - **2026-02-23 11:04** | MacBook | Files: 4 | Tests: 0

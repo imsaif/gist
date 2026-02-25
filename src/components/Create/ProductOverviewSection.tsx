@@ -27,7 +27,7 @@ export function ProductOverviewSection({ product }: ProductOverviewSectionProps)
         Product Overview
       </h2>
       {hasAnyContent ? (
-        <div className="border-border-light space-y-3 rounded-xl border bg-white p-4 shadow-sm">
+        <div className="border-border-light bg-bg-tertiary space-y-3 rounded-xl border p-4 shadow-sm">
           <Field label="Product" value={product.name} />
           <Field label="Description" value={product.description} />
           <Field label="Audience" value={product.audience} />

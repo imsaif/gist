@@ -6,3 +6,4 @@ export { FeatureSection } from './FeatureSection';
 export { SectionProgress } from './SectionProgress';
 export { ExportPanel } from './ExportPanel';
 export { BeforeAfterPreview } from './BeforeAfterPreview';
+export { EmailGate } from './EmailGate';

@@ -32,7 +32,7 @@ function SectionBlock({
 export function FeatureSection({ feature, progress, isCurrent }: FeatureSectionProps) {
   return (
     <div
-      className={`border-border-light rounded-xl border bg-white p-4 shadow-sm transition-all ${
+      className={`border-border-light bg-bg-tertiary rounded-xl border p-4 shadow-sm transition-all ${
         isCurrent ? 'ring-accent-primary/30 ring-2' : ''
       }`}
     >
@@ -177,6 +177,121 @@ export function FeatureSection({ feature, progress, isCurrent }: FeatureSectionP
             <li key={i}>{q}</li>
           ))}
         </ul>
+      </SectionBlock>
+
+      {/* States */}
+      <SectionBlock
+        title="States"
+        isEmpty={
+          !feature.states ||
+          (!feature.states.empty &&
+            !feature.states.loading &&
+            !feature.states.populated &&
+            !feature.states.error &&
+            feature.states.edgeCases.length === 0)
+        }
+      >
+        {feature.states && (
+          <div className="space-y-1.5">
+            {feature.states.empty && (
+              <div className="text-sm">
+                <span className="text-text-tertiary font-medium">Empty:</span>{' '}
+                <span className="text-text-secondary">{feature.states.empty}</span>
+              </div>
+            )}
+            {feature.states.loading && (
+              <div className="text-sm">
+                <span className="text-text-tertiary font-medium">Loading:</span>{' '}
+                <span className="text-text-secondary">{feature.states.loading}</span>
+              </div>
+            )}
+            {feature.states.populated && (
+              <div className="text-sm">
+                <span className="text-text-tertiary font-medium">Populated:</span>{' '}
+                <span className="text-text-secondary">{feature.states.populated}</span>
+              </div>
+            )}
+            {feature.states.error && (
+              <div className="text-sm">
+                <span className="text-text-tertiary font-medium">Error:</span>{' '}
+                <span className="text-text-secondary">{feature.states.error}</span>
+              </div>
+            )}
+            {feature.states.edgeCases.length > 0 && (
+              <div>
+                <span className="text-text-tertiary text-xs">Edge cases:</span>
+                <ul className="text-text-secondary mt-0.5 list-inside list-disc text-sm">
+                  {feature.states.edgeCases.map((item, i) => (
+                    <li key={i}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
+      </SectionBlock>
+
+      {/* Execution */}
+      <SectionBlock
+        title="Execution"
+        isEmpty={
+          !feature.execution ||
+          (!feature.execution.stackAndComponents &&
+            !feature.execution.layout &&
+            feature.execution.keyCopy.length === 0 &&
+            !feature.execution.interactions &&
+            !feature.execution.responsiveBehavior &&
+            feature.execution.visualReferences.length === 0)
+        }
+      >
+        {feature.execution && (
+          <div className="space-y-1.5">
+            {feature.execution.stackAndComponents && (
+              <div className="text-sm">
+                <span className="text-text-tertiary font-medium">Stack & Components:</span>{' '}
+                <span className="text-text-secondary">{feature.execution.stackAndComponents}</span>
+              </div>
+            )}
+            {feature.execution.layout && (
+              <div className="text-sm">
+                <span className="text-text-tertiary font-medium">Layout:</span>{' '}
+                <span className="text-text-secondary">{feature.execution.layout}</span>
+              </div>
+            )}
+            {feature.execution.keyCopy.length > 0 && (
+              <div>
+                <span className="text-text-tertiary text-xs">Key copy:</span>
+                <ul className="text-text-secondary mt-0.5 list-inside list-disc text-sm">
+                  {feature.execution.keyCopy.map((item, i) => (
+                    <li key={i}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {feature.execution.interactions && (
+              <div className="text-sm">
+                <span className="text-text-tertiary font-medium">Interactions:</span>{' '}
+                <span className="text-text-secondary">{feature.execution.interactions}</span>
+              </div>
+            )}
+            {feature.execution.responsiveBehavior && (
+              <div className="text-sm">
+                <span className="text-text-tertiary font-medium">Responsive:</span>{' '}
+                <span className="text-text-secondary">{feature.execution.responsiveBehavior}</span>
+              </div>
+            )}
+            {feature.execution.visualReferences.length > 0 && (
+              <div>
+                <span className="text-text-tertiary text-xs">Visual references:</span>
+                <ul className="text-text-secondary mt-0.5 list-inside list-disc text-sm">
+                  {feature.execution.visualReferences.map((item, i) => (
+                    <li key={i}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
       </SectionBlock>
     </div>
   );

@@ -4,6 +4,8 @@ import {
   BeforeAfterUpdate,
   BeforeAfterItem,
   Feature,
+  FeatureStates,
+  FeatureExecution,
   FeatureProgress,
   SectionStatus,
 } from '@/types/file';
@@ -74,7 +76,7 @@ export function parseFileResponse(content: string): ParseResult {
 }
 
 export function createFeatureFromUpdate(update: FileUpdate): Feature {
-  return {
+  const feature: Feature = {
     id: update.featureId || `feature-${Date.now()}`,
     name: update.featureName || 'Untitled Feature',
     intent: {
@@ -93,6 +95,29 @@ export function createFeatureFromUpdate(update: FileUpdate): Feature {
     notThis: update.notThis || [],
     openQuestions: update.openQuestions || [],
   };
+
+  if (update.states) {
+    feature.states = {
+      empty: update.states.empty ?? null,
+      loading: update.states.loading ?? null,
+      populated: update.states.populated ?? null,
+      error: update.states.error ?? null,
+      edgeCases: update.states.edgeCases ?? [],
+    };
+  }
+
+  if (update.execution) {
+    feature.execution = {
+      stackAndComponents: update.execution.stackAndComponents ?? null,
+      layout: update.execution.layout ?? null,
+      keyCopy: update.execution.keyCopy ?? [],
+      interactions: update.execution.interactions ?? null,
+      responsiveBehavior: update.execution.responsiveBehavior ?? null,
+      visualReferences: update.execution.visualReferences ?? [],
+    };
+  }
+
+  return feature;
 }
 
 export function mergeFileUpdate(currentFile: GistDesignFile, update: FileUpdate): GistDesignFile {
@@ -180,6 +205,52 @@ export function mergeFileUpdate(currentFile: GistDesignFile, update: FileUpdate)
           : existing.openQuestions,
       };
 
+      // Merge states (scalars overwrite, edgeCases appends)
+      if (update.states) {
+        const existingStates: FeatureStates = existing.states ?? {
+          empty: null,
+          loading: null,
+          populated: null,
+          error: null,
+          edgeCases: [],
+        };
+        updatedFeature.states = {
+          empty: update.states.empty ?? existingStates.empty,
+          loading: update.states.loading ?? existingStates.loading,
+          populated: update.states.populated ?? existingStates.populated,
+          error: update.states.error ?? existingStates.error,
+          edgeCases: update.states.edgeCases
+            ? [...existingStates.edgeCases, ...update.states.edgeCases]
+            : existingStates.edgeCases,
+        };
+      }
+
+      // Merge execution (scalars overwrite, keyCopy/visualReferences append)
+      if (update.execution) {
+        const existingExec: FeatureExecution = existing.execution ?? {
+          stackAndComponents: null,
+          layout: null,
+          keyCopy: [],
+          interactions: null,
+          responsiveBehavior: null,
+          visualReferences: [],
+        };
+        updatedFeature.execution = {
+          stackAndComponents:
+            update.execution.stackAndComponents ?? existingExec.stackAndComponents,
+          layout: update.execution.layout ?? existingExec.layout,
+          keyCopy: update.execution.keyCopy
+            ? [...existingExec.keyCopy, ...update.execution.keyCopy]
+            : existingExec.keyCopy,
+          interactions: update.execution.interactions ?? existingExec.interactions,
+          responsiveBehavior:
+            update.execution.responsiveBehavior ?? existingExec.responsiveBehavior,
+          visualReferences: update.execution.visualReferences
+            ? [...existingExec.visualReferences, ...update.execution.visualReferences]
+            : existingExec.visualReferences,
+        };
+      }
+
       newFile.features = [
         ...currentFile.features.slice(0, existingIndex),
         updatedFeature,
@@ -219,6 +290,31 @@ export function calculateFeatureProgress(feature: Feature): FeatureProgress {
         ? 'partial'
         : 'empty';
 
+  // States progress: complete = has empty + error + at least 1 edge case; partial = has any
+  const s = feature.states;
+  const statesStatus: SectionStatus = !s
+    ? 'empty'
+    : s.empty && s.error && s.edgeCases.length > 0
+      ? 'complete'
+      : s.empty || s.loading || s.populated || s.error || s.edgeCases.length > 0
+        ? 'partial'
+        : 'empty';
+
+  // Execution progress: complete = has layout + keyCopy.length > 0; partial = has any
+  const e = feature.execution;
+  const executionStatus: SectionStatus = !e
+    ? 'empty'
+    : e.layout && e.keyCopy.length > 0
+      ? 'complete'
+      : e.stackAndComponents ||
+          e.layout ||
+          e.keyCopy.length > 0 ||
+          e.interactions ||
+          e.responsiveBehavior ||
+          e.visualReferences.length > 0
+        ? 'partial'
+        : 'empty';
+
   return {
     featureId: feature.id,
     sections: {
@@ -229,6 +325,8 @@ export function calculateFeatureProgress(feature: Feature): FeatureProgress {
       constraints: getSectionStatus(feature.constraints),
       notThis: getSectionStatus(feature.notThis),
       openQuestions: getSectionStatus(feature.openQuestions),
+      states: statesStatus,
+      execution: executionStatus,
     },
   };
 }

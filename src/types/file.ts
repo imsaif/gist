@@ -72,6 +72,25 @@ export interface FeatureConstraint {
   designResponse: string;
 }
 
+// Feature States (optional depth)
+export interface FeatureStates {
+  empty: string | null;
+  loading: string | null;
+  populated: string | null;
+  error: string | null;
+  edgeCases: string[];
+}
+
+// Feature Execution (optional depth)
+export interface FeatureExecution {
+  stackAndComponents: string | null;
+  layout: string | null;
+  keyCopy: string[];
+  interactions: string | null;
+  responsiveBehavior: string | null;
+  visualReferences: string[];
+}
+
 // A single Feature in the gist.design file
 export interface Feature {
   id: string;
@@ -83,6 +102,8 @@ export interface Feature {
   constraints: FeatureConstraint[];
   notThis: string[];
   openQuestions: string[];
+  states?: FeatureStates;
+  execution?: FeatureExecution;
 }
 
 // The full gist.design file
@@ -129,6 +150,21 @@ export interface FileUpdate {
   addConstraints?: FeatureConstraint[];
   notThis?: string[];
   openQuestions?: string[];
+  states?: {
+    empty?: string;
+    loading?: string;
+    populated?: string;
+    error?: string;
+    edgeCases?: string[];
+  };
+  execution?: {
+    stackAndComponents?: string;
+    layout?: string;
+    keyCopy?: string[];
+    interactions?: string;
+    responsiveBehavior?: string;
+    visualReferences?: string[];
+  };
 }
 
 // Before/After item for developer brief
@@ -159,10 +195,12 @@ export interface FeatureProgress {
     constraints: SectionStatus;
     notThis: SectionStatus;
     openQuestions: SectionStatus;
+    states: SectionStatus;
+    execution: SectionStatus;
   };
 }
 
-export type EntryState = 'building-new' | 'existing-product';
+export type EntryState = 'building-new' | 'existing-product' | 'have-prd';
 
 export interface Session {
   entryState: EntryState | null;

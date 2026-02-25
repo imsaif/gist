@@ -8,6 +8,7 @@ import {
   INITIAL_GIST_FILE,
   CREATE_INITIAL_MESSAGES_NEW,
   CREATE_INITIAL_MESSAGES_EXISTING,
+  CREATE_INITIAL_MESSAGES_PRD,
   getAuditInitialMessages,
   buildAuditContextBlock,
 } from '@/lib/createPrompt';
@@ -16,10 +17,28 @@ import { AuditResult } from '@/types/audit';
 import { parseFileResponse, mergeFileUpdate, calculateFeatureProgress } from '@/lib/fileParser';
 import { generateGistDesignMarkdown } from '@/lib/export/markdown';
 import { generateDeveloperBrief } from '@/lib/export/developerBrief';
-import { FileContainer } from '@/components/Create';
+import { FileContainer, EmailGate } from '@/components/Create';
 import { PatternCard } from '@/components/PatternCard';
 import { Toast } from '@/components/Toast';
 import { getPatternById } from '@/lib/patterns/patterns';
+
+// --- localStorage helpers ---
+function getHasUsedFreeFile(): boolean {
+  return localStorage.getItem('hasUsedFreeFile') === 'true';
+}
+
+function markFreeFileUsed(): void {
+  localStorage.setItem('hasUsedFreeFile', 'true');
+}
+
+function getEmailVerified(): boolean {
+  return localStorage.getItem('emailVerified') === 'true';
+}
+
+function markEmailVerified(verifiedToken: string): void {
+  localStorage.setItem('emailVerified', 'true');
+  localStorage.setItem('verifiedToken', verifiedToken);
+}
 
 // ============================================
 // Page Component
@@ -63,6 +82,16 @@ function CreateModeInner({ fromAudit = false }: { fromAudit?: boolean }) {
   const [auditUrl, setAuditUrl] = useState<string | undefined>(undefined);
   const [originalResponse, setOriginalResponse] = useState<string | undefined>(undefined);
 
+  // PRD paste state
+  const [showPrdInput, setShowPrdInput] = useState(false);
+  const [prdText, setPrdText] = useState('');
+  const pendingPrdRef = useRef<string | null>(null);
+
+  // Email gate state
+  const [hasUsedFreeFile, setHasUsedFreeFileState] = useState(false);
+  const [emailVerified, setEmailVerified] = useState(false);
+  const [showEmailGate, setShowEmailGate] = useState(false);
+
   // UI state
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -99,6 +128,12 @@ function CreateModeInner({ fromAudit = false }: { fromAudit?: boolean }) {
     }
   }, [fromAudit]);
 
+  // Initialize gate state from localStorage
+  useEffect(() => {
+    setHasUsedFreeFileState(getHasUsedFreeFile());
+    setEmailVerified(getEmailVerified());
+  }, []);
+
   // Auto-scroll to bottom on new messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -108,12 +143,42 @@ function CreateModeInner({ fromAudit = false }: { fromAudit?: boolean }) {
     setToast({ isVisible: true, message });
   };
 
+  // Pending entry state — set when user selects but gate intervenes
+  const pendingEntryStateRef = useRef<EntryState | null>(null);
+
   // Select entry state and initialize messages
   const handleSelectEntryState = (state: EntryState) => {
+    if (state === 'have-prd') {
+      // For PRD: check gate before showing input
+      if (hasUsedFreeFile && !emailVerified) {
+        pendingEntryStateRef.current = state;
+        setShowEmailGate(true);
+        return;
+      }
+      setShowPrdInput(true);
+      return;
+    }
+
+    // Check email gate for second+ conversations
+    if (hasUsedFreeFile && !emailVerified) {
+      pendingEntryStateRef.current = state;
+      setShowEmailGate(true);
+      return;
+    }
+
     setEntryState(state);
     const initialMessages =
       state === 'building-new' ? CREATE_INITIAL_MESSAGES_NEW : CREATE_INITIAL_MESSAGES_EXISTING;
     setMessages(initialMessages);
+  };
+
+  // Submit PRD text and start chat
+  const handleSubmitPrd = () => {
+    if (!prdText.trim()) return;
+    pendingPrdRef.current = prdText.trim();
+    setEntryState('have-prd');
+    setMessages(CREATE_INITIAL_MESSAGES_PRD);
+    setShowPrdInput(false);
   };
 
   // Send message
@@ -149,6 +214,12 @@ function CreateModeInner({ fromAudit = false }: { fromAudit?: boolean }) {
 
         if (!response.ok) {
           throw new Error('Failed to get response');
+        }
+
+        // Mark that the user has used their free file (after first successful response)
+        if (!hasUsedFreeFile) {
+          markFreeFileUsed();
+          setHasUsedFreeFileState(true);
         }
 
         const data = await response.json();
@@ -193,8 +264,17 @@ function CreateModeInner({ fromAudit = false }: { fromAudit?: boolean }) {
         setIsLoading(false);
       }
     },
-    [messages, isLoading, entryState, file, currentFeatureId, auditContextString]
+    [messages, isLoading, entryState, file, currentFeatureId, auditContextString, hasUsedFreeFile]
   );
+
+  // Auto-send PRD after state settles
+  useEffect(() => {
+    if (entryState === 'have-prd' && pendingPrdRef.current) {
+      const prd = pendingPrdRef.current;
+      pendingPrdRef.current = null;
+      handleSendMessage(prd);
+    }
+  }, [entryState, handleSendMessage]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -202,6 +282,30 @@ function CreateModeInner({ fromAudit = false }: { fromAudit?: boolean }) {
       handleSendMessage(inputValue);
     }
   };
+
+  // Called when user successfully verifies email
+  const handleEmailVerified = useCallback((verifiedToken: string) => {
+    markEmailVerified(verifiedToken);
+    setEmailVerified(true);
+    setShowEmailGate(false);
+
+    // Resume the pending entry state selection if there was one
+    const pendingState = pendingEntryStateRef.current;
+    pendingEntryStateRef.current = null;
+
+    if (pendingState) {
+      if (pendingState === 'have-prd') {
+        setShowPrdInput(true);
+      } else {
+        setEntryState(pendingState);
+        const initialMessages =
+          pendingState === 'building-new'
+            ? CREATE_INITIAL_MESSAGES_NEW
+            : CREATE_INITIAL_MESSAGES_EXISTING;
+        setMessages(initialMessages);
+      }
+    }
+  }, []);
 
   const handleNewChat = useCallback(() => {
     if (messages.length > 1 && !confirm('Start over? Current file will be lost.')) {
@@ -215,6 +319,8 @@ function CreateModeInner({ fromAudit = false }: { fromAudit?: boolean }) {
     setBeforeAfter([]);
     setError(null);
     setInputValue('');
+    setShowPrdInput(false);
+    setPrdText('');
   }, [messages.length]);
 
   // Export handlers
@@ -296,54 +402,123 @@ function CreateModeInner({ fromAudit = false }: { fromAudit?: boolean }) {
                 <p className="text-text-secondary mb-8 max-w-sm text-center text-sm">
                   Make your design decisions readable to AI coding tools and LLMs.
                 </p>
-                <div className="flex gap-4">
-                  <button
-                    onClick={() => handleSelectEntryState('building-new')}
-                    className="border-border-light hover:border-accent-primary hover:bg-accent-primary/5 flex w-48 flex-col items-center gap-2 rounded-xl border p-6 text-center transition-colors"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="text-accent-primary h-8 w-8"
+                {showPrdInput ? (
+                  <div className="flex w-full max-w-lg flex-col gap-4">
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => {
+                          setShowPrdInput(false);
+                          setPrdText('');
+                        }}
+                        className="text-text-tertiary hover:text-text-primary transition-colors"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="h-5 w-5"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
+                          />
+                        </svg>
+                      </button>
+                      <h3 className="text-text-primary text-sm font-medium">Paste your PRD</h3>
+                    </div>
+                    <textarea
+                      value={prdText}
+                      onChange={(e) => setPrdText(e.target.value)}
+                      placeholder="Paste your PRD, spec, or product brief here..."
+                      rows={12}
+                      className="border-border-light focus:border-accent-primary w-full resize-none rounded-xl border px-4 py-3 text-sm transition-colors outline-none"
+                    />
+                    <button
+                      onClick={handleSubmitPrd}
+                      disabled={!prdText.trim()}
+                      className="bg-accent-primary hover:bg-accent-hover disabled:bg-bg-tertiary disabled:text-text-tertiary self-end rounded-xl px-6 py-3 text-sm font-medium text-white transition-colors"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M12 4.5v15m7.5-7.5h-15"
-                      />
-                    </svg>
-                    <span className="text-text-primary text-sm font-medium">Building new</span>
-                    <span className="text-text-tertiary text-xs">
-                      Starting a new product or feature
-                    </span>
-                  </button>
-                  <button
-                    onClick={() => handleSelectEntryState('existing-product')}
-                    className="border-border-light hover:border-accent-primary hover:bg-accent-primary/5 flex w-48 flex-col items-center gap-2 rounded-xl border p-6 text-center transition-colors"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="text-accent-primary h-8 w-8"
+                      Start
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex gap-4">
+                    <button
+                      onClick={() => handleSelectEntryState('building-new')}
+                      className="border-border-light hover:border-accent-primary hover:bg-accent-primary/5 flex w-48 flex-col items-center gap-2 rounded-xl border p-6 text-center transition-colors"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"
-                      />
-                    </svg>
-                    <span className="text-text-primary text-sm font-medium">Existing product</span>
-                    <span className="text-text-tertiary text-xs">
-                      Document decisions already made
-                    </span>
-                  </button>
-                </div>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="text-accent-primary h-8 w-8"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M12 4.5v15m7.5-7.5h-15"
+                        />
+                      </svg>
+                      <span className="text-text-primary text-sm font-medium">Building new</span>
+                      <span className="text-text-tertiary text-xs">
+                        Starting a new product or feature
+                      </span>
+                    </button>
+                    <button
+                      onClick={() => handleSelectEntryState('existing-product')}
+                      className="border-border-light hover:border-accent-primary hover:bg-accent-primary/5 flex w-48 flex-col items-center gap-2 rounded-xl border p-6 text-center transition-colors"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="text-accent-primary h-8 w-8"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"
+                        />
+                      </svg>
+                      <span className="text-text-primary text-sm font-medium">
+                        Existing product
+                      </span>
+                      <span className="text-text-tertiary text-xs">
+                        Document decisions already made
+                      </span>
+                    </button>
+                    <button
+                      onClick={() => handleSelectEntryState('have-prd')}
+                      className="border-border-light hover:border-accent-primary hover:bg-accent-primary/5 flex w-48 flex-col items-center gap-2 rounded-xl border p-6 text-center transition-colors"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="text-accent-primary h-8 w-8"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m6.75 12H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"
+                        />
+                      </svg>
+                      <span className="text-text-primary text-sm font-medium">I have a PRD</span>
+                      <span className="text-text-tertiary text-xs">
+                        Paste your PRD to get started
+                      </span>
+                    </button>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="space-y-4">
@@ -439,6 +614,16 @@ function CreateModeInner({ fromAudit = false }: { fromAudit?: boolean }) {
           />
         </div>
       </div>
+
+      {showEmailGate && (
+        <EmailGate
+          onVerified={handleEmailVerified}
+          onClose={() => {
+            setShowEmailGate(false);
+            pendingEntryStateRef.current = null;
+          }}
+        />
+      )}
 
       <Toast
         message={toast.message}

@@ -102,6 +102,76 @@ export function renderFullFeature(feature: Feature): string {
     md += '\n';
   }
 
+  // States
+  if (
+    feature.states &&
+    (feature.states.empty ||
+      feature.states.loading ||
+      feature.states.populated ||
+      feature.states.error ||
+      feature.states.edgeCases.length > 0)
+  ) {
+    md += `### States\n\n`;
+    if (feature.states.empty) {
+      md += `**Empty:** ${feature.states.empty}\n\n`;
+    }
+    if (feature.states.loading) {
+      md += `**Loading:** ${feature.states.loading}\n\n`;
+    }
+    if (feature.states.populated) {
+      md += `**Populated:** ${feature.states.populated}\n\n`;
+    }
+    if (feature.states.error) {
+      md += `**Error:** ${feature.states.error}\n\n`;
+    }
+    if (feature.states.edgeCases.length > 0) {
+      md += `**Edge Cases:**\n`;
+      feature.states.edgeCases.forEach((item) => {
+        md += `- ${item}\n`;
+      });
+      md += '\n';
+    }
+  }
+
+  // Execution
+  if (
+    feature.execution &&
+    (feature.execution.stackAndComponents ||
+      feature.execution.layout ||
+      feature.execution.keyCopy.length > 0 ||
+      feature.execution.interactions ||
+      feature.execution.responsiveBehavior ||
+      feature.execution.visualReferences.length > 0)
+  ) {
+    md += `### Execution\n\n`;
+    if (feature.execution.stackAndComponents) {
+      md += `**Stack & Components:** ${feature.execution.stackAndComponents}\n\n`;
+    }
+    if (feature.execution.layout) {
+      md += `**Layout:** ${feature.execution.layout}\n\n`;
+    }
+    if (feature.execution.keyCopy.length > 0) {
+      md += `**Key Copy:**\n`;
+      feature.execution.keyCopy.forEach((item) => {
+        md += `- ${item}\n`;
+      });
+      md += '\n';
+    }
+    if (feature.execution.interactions) {
+      md += `**Interactions:** ${feature.execution.interactions}\n\n`;
+    }
+    if (feature.execution.responsiveBehavior) {
+      md += `**Responsive:** ${feature.execution.responsiveBehavior}\n\n`;
+    }
+    if (feature.execution.visualReferences.length > 0) {
+      md += `**Visual References:**\n`;
+      feature.execution.visualReferences.forEach((item) => {
+        md += `- ${item}\n`;
+      });
+      md += '\n';
+    }
+  }
+
   return md;
 }
 

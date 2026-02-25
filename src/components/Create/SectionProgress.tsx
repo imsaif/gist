@@ -14,6 +14,8 @@ const SECTION_LABELS: Record<string, string> = {
   constraints: 'Constraints',
   notThis: 'Not This',
   openQuestions: 'Questions',
+  states: 'States',
+  execution: 'Execution',
 };
 
 const STATUS_COLORS: Record<SectionStatus, string> = {

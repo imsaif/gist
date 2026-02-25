@@ -49,6 +49,16 @@ export const CREATE_INITIAL_MESSAGES_EXISTING: Message[] = [
   },
 ];
 
+export const CREATE_INITIAL_MESSAGES_PRD: Message[] = [
+  {
+    id: '1',
+    role: 'assistant',
+    content:
+      "Paste your PRD below. I'll read through it and build your gist.design file, asking clarifying questions about design decisions that aren't covered.",
+    timestamp: new Date(),
+  },
+];
+
 // ============================================
 // Audit-Aware Initial Messages
 // ============================================
@@ -161,6 +171,31 @@ function serializeFeature(feature: Feature): string {
   if (feature.openQuestions.length > 0) {
     ctx += `    Open questions: ${feature.openQuestions.join('; ')}\n`;
   }
+  if (feature.states) {
+    const s = feature.states;
+    const parts: string[] = [];
+    if (s.empty) parts.push(`empty: ${s.empty}`);
+    if (s.loading) parts.push(`loading: ${s.loading}`);
+    if (s.populated) parts.push(`populated: ${s.populated}`);
+    if (s.error) parts.push(`error: ${s.error}`);
+    if (s.edgeCases.length > 0) parts.push(`edge cases: ${s.edgeCases.join('; ')}`);
+    if (parts.length > 0) {
+      ctx += `    States: ${parts.join(' | ')}\n`;
+    }
+  }
+  if (feature.execution) {
+    const e = feature.execution;
+    const parts: string[] = [];
+    if (e.stackAndComponents) parts.push(`stack: ${e.stackAndComponents}`);
+    if (e.layout) parts.push(`layout: ${e.layout}`);
+    if (e.keyCopy.length > 0) parts.push(`copy: ${e.keyCopy.join('; ')}`);
+    if (e.interactions) parts.push(`interactions: ${e.interactions}`);
+    if (e.responsiveBehavior) parts.push(`responsive: ${e.responsiveBehavior}`);
+    if (e.visualReferences.length > 0) parts.push(`refs: ${e.visualReferences.join('; ')}`);
+    if (parts.length > 0) {
+      ctx += `    Execution: ${parts.join(' | ')}\n`;
+    }
+  }
 
   return ctx;
 }
@@ -237,6 +272,8 @@ You guide a conversation that produces a gist.design file. This file captures:
 - **Patterns used**: Which proven AI UX patterns apply and how
 - **Constraints**: Hard limits and design responses
 - **Not This**: Explicit anti-patterns and misinterpretations to avoid
+- **States** (optional): What the feature looks like when empty, loading, populated, errored, plus edge cases
+- **Execution** (optional): Stack/components, layout, key copy, interactions, responsive behavior, visual references
 
 ## The Pattern Library
 
@@ -256,11 +293,13 @@ ${patternList}
 
 4. **Specificity push**: If an answer is vague, push: "Can you give me a specific example?" or "Walk me through exactly what the user sees."
 
-### Two Entry States
+### Three Entry States
 
 **Building new**: User is creating a new product. Start with the elevator pitch, then audience, then feature-by-feature.
 
 **Existing product**: User has a product already. Start with the feature that causes the most confusion, then work outward.
+
+**Have a PRD**: User pastes a PRD or spec. Read it thoroughly, extract product info and design decisions into the gist.design file, then ask clarifying questions about design decisions that aren't covered in the document.
 
 ### Conversation Flow
 
@@ -275,6 +314,10 @@ Then feature-by-feature:
 7. **Patterns** (1 exchange): Which AI UX patterns apply?
 8. **Constraints** (1 exchange): Any hard limits?
 9. **Not This** (1 exchange): What would an AI tool get wrong?
+
+Optional deeper sections (offer when the user wants implementation-ready detail):
+10. **States** (1-2 exchanges): What does this look like empty? Loading? With data? On error? Any edge cases?
+11. **Execution** (1-2 exchanges): What stack/components? Layout structure? Key copy strings? Interaction details? Responsive behavior? Visual references?
 
 Then move to the next feature.
 
@@ -357,7 +400,22 @@ After each response, include updates in these XML tags:
     }
   ],
   "notThis": ["What AI tools should NOT do"],
-  "openQuestions": ["Unresolved question"]
+  "openQuestions": ["Unresolved question"],
+  "states": {
+    "empty": "What the feature looks like with no data",
+    "loading": "What happens during loading",
+    "populated": "What it looks like with data",
+    "error": "What happens on error",
+    "edgeCases": ["Edge case description"]
+  },
+  "execution": {
+    "stackAndComponents": "Tech stack and component breakdown",
+    "layout": "Layout structure description",
+    "keyCopy": ["Exact UI copy string"],
+    "interactions": "Interaction details",
+    "responsiveBehavior": "How it adapts across breakpoints",
+    "visualReferences": ["Reference URL or description"]
+  }
 }
 </file_update>
 
@@ -386,6 +444,9 @@ When you identify a concrete before/after example, include:
 - Positioning: scalars overwrite, comparisons append via addComparisons
 - Context: scalars overwrite, arrays (integratesWith, requires) append
 - Feature arrays: always append (notTryingTo, primaryFlow, keyInteractions, errorHandling, designDecisions, patterns, constraints, notThis, openQuestions)
+- States: scalars overwrite, edgeCases appends
+- Execution: scalars overwrite, keyCopy and visualReferences append
+- States and Execution are optional — only include when the user provides implementation-level detail
 - Use stable kebab-case IDs for features (e.g., "ai-suggestions", "user-onboarding")
 - Include before_after_update when you discover a clear contrast between "without" and "with" the gist.design guidance
 

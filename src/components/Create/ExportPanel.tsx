@@ -67,7 +67,7 @@ export function ExportPanel({
       </h2>
 
       {/* Stats */}
-      <div className="border-border-light mb-4 grid grid-cols-3 gap-3 rounded-xl border bg-white p-4 shadow-sm">
+      <div className="border-border-light bg-bg-tertiary mb-4 grid grid-cols-3 gap-3 rounded-xl border p-4 shadow-sm">
         <div className="text-center">
           <div className="text-text-primary text-lg font-semibold">{featureCount}</div>
           <div className="text-text-tertiary text-xs">Features</div>
