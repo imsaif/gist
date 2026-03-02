@@ -7,7 +7,7 @@ import {
   getMockLLMResponse,
 } from '@/lib/audit/providers';
 import { buildAuditPrompt, buildAnalysisPrompt, getMockAnalysis } from '@/lib/audit/prompts';
-import { checkRateLimit } from '@/lib/audit/rateLimit';
+import { checkAuditRateLimit } from '@/lib/rateLimit';
 import { LLMResponse, GapAnalysis } from '@/types/audit';
 import Anthropic from '@anthropic-ai/sdk';
 
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
 
     // Rate limiting
     const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
-    const rateLimit = checkRateLimit(ip);
+    const rateLimit = checkAuditRateLimit(ip);
     if (!rateLimit.allowed) {
       return Response.json(
         {
@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
 
           if (isMock) {
             // Staggered mock responses
-            const providers = ['chatgpt', 'claude', 'perplexity'] as const;
+            const providers = ['chatgpt', 'claude'] as const;
             const delays = [2000, 4000, 6000];
 
             for (let i = 0; i < providers.length; i++) {
@@ -112,14 +112,15 @@ export async function POST(request: NextRequest) {
                 responses.claude = r;
                 send('llm_response', r);
               }),
-              queryPerplexity(prompt)
-                .then((r) => {
-                  responses.perplexity = r;
-                  send('llm_response', r);
-                })
-                .catch(() => {
-                  // Perplexity is optional — audit continues with ChatGPT + Claude
-                }),
+              // Perplexity disabled — re-enable when API key is active
+              // queryPerplexity(prompt)
+              //   .then((r) => {
+              //     responses.perplexity = r;
+              //     send('llm_response', r);
+              //   })
+              //   .catch(() => {
+              //     // Perplexity is optional — audit continues with ChatGPT + Claude
+              //   }),
             ];
 
             await Promise.all(queries);
@@ -136,7 +137,7 @@ export async function POST(request: NextRequest) {
               siteContent.content,
               responses.chatgpt?.content || '[Error: ChatGPT did not respond]',
               responses.claude?.content || '[Error: Claude did not respond]',
-              responses.perplexity?.content || '[Error: Perplexity did not respond]'
+              '[Perplexity: not queried]'
             );
 
             const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });

@@ -48,6 +48,14 @@ npm run build    # Build for production
 
 ## Recent Sessions
 
+### Session 2026-03-02 16:35 (MacBook)
+
+- **Pattern:** General updates
+- **Status:** Work in progress
+- **Files Changed:** 25
+- **Tests Added/Modified:** 10
+- **Notes:** Audit-first landing page rework. Moved audit flow from /audit into the homepage hero. New flow: Enter URL → email gate (before API calls) → audit runs → results + "Create gist.design" CTA. Created AuditHero (state machine), AuditEmailGate, LandingWithAudit (client wrapper). /audit now redirects to /. Marketing sections hide when audit is active. Removed Audit nav link, updated bottom CTA to "Create your gist.design file".
+
 - **2026-02-25 12:54** | MacBook | Files: 4 | Tests: 0
   - **Notes:** Added Heroicons to file preview section headings (Product Overview, Positioning, Context, Features). Replaced empty features placeholder with "What gets captured" section showing the 6 feature dimensions (Intent, Interaction model, Design decisions, Patterns, Constraints, States) with icons and descriptions.
 - **2026-02-25 12:27** | MacBook | Files: 20 | Tests: 0

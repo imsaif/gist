@@ -6,7 +6,7 @@ interface AuditResultsProps {
   result: AuditResult;
 }
 
-const providers: LLMProvider[] = ['chatgpt', 'claude', 'perplexity'];
+const providers: LLMProvider[] = ['chatgpt', 'claude'];
 
 export function AuditResults({ result }: AuditResultsProps) {
   const { responses, analysis } = result;
@@ -25,9 +25,9 @@ export function AuditResults({ result }: AuditResultsProps) {
     <div className="space-y-8">
       <div>
         <h3 className="text-text-primary mb-4 text-lg font-semibold">
-          What 3 LLMs said about your product
+          What 2 LLMs said about your product
         </h3>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {providers.map((provider) => (
             <LLMResponseCard
               key={provider}

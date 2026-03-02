@@ -111,7 +111,7 @@ export function buildAuditContextBlock(analysis: GapAnalysis): string {
 const AUDIT_CONTEXT_PROMPT = `
 ## Audit Context
 
-This conversation started from an AI readability audit. The user's product was described by 3 LLMs (ChatGPT, Claude, Perplexity) and gaps were identified. Your job is to help create a gist.design file that fixes these gaps.
+This conversation started from an AI readability audit. The user's product was described by 2 LLMs (ChatGPT and Claude) and gaps were identified. Your job is to help create a gist.design file that fixes these gaps.
 
 ### How to use the audit findings:
 

@@ -6,7 +6,7 @@ interface AuditLoadingProps {
   isFetching: boolean;
 }
 
-const providers: LLMProvider[] = ['chatgpt', 'claude', 'perplexity'];
+const providers: LLMProvider[] = ['chatgpt', 'claude'];
 
 export function AuditLoading({ responses, isFetching }: AuditLoadingProps) {
   return (
@@ -18,7 +18,7 @@ export function AuditLoading({ responses, isFetching }: AuditLoadingProps) {
         </div>
       )}
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {providers.map((provider) => (
           <LLMResponseCard
             key={provider}
@@ -28,7 +28,7 @@ export function AuditLoading({ responses, isFetching }: AuditLoadingProps) {
         ))}
       </div>
 
-      {Object.keys(responses).length === 3 && (
+      {Object.keys(responses).length === 2 && (
         <div className="flex items-center gap-3">
           <div className="border-border-medium border-t-text-secondary h-4 w-4 animate-spin rounded-full border-2" />
           <span className="text-text-secondary text-sm">Analyzing gaps across models...</span>

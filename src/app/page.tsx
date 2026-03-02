@@ -9,6 +9,7 @@ import {
   SparklesIcon,
 } from '@heroicons/react/24/outline';
 import HowItWorks from '@/components/HowItWorks';
+import { LandingWithAudit } from './LandingWithAudit';
 
 function Section({ id, children }: { id?: string; children: React.ReactNode }) {
   return (
@@ -22,88 +23,9 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
   return <h2 className="text-text-primary mb-4 text-3xl font-bold tracking-tight">{children}</h2>;
 }
 
-export default function Home() {
+function MarketingSections() {
   return (
-    <div className="bg-bg-primary min-h-screen">
-      {/* Hero area with gradient background */}
-      <div className="hero-gradient-bg relative">
-        {/* Header */}
-        <header className="glass-nav sticky top-0 z-50 flex h-14 items-center justify-between px-6">
-          <h1 className="text-text-primary text-xl font-semibold">Gist</h1>
-          <nav className="flex items-center gap-6">
-            <Link
-              href="/spec"
-              className="text-text-secondary hover:text-text-primary text-sm font-medium transition-colors"
-            >
-              Spec
-            </Link>
-            <Link
-              href="/audit"
-              className="text-text-secondary hover:text-text-primary text-sm font-medium transition-colors"
-            >
-              Audit
-            </Link>
-            <Link
-              href="/create"
-              className="text-accent-primary hover:text-accent-hover text-sm font-medium transition-colors"
-            >
-              Create
-            </Link>
-          </nav>
-        </header>
-
-        <div className="relative z-10 mx-auto max-w-6xl px-6">
-          {/* Hero */}
-          <section className="pt-24 pb-28 md:pt-32 md:pb-36">
-            <h2 className="text-text-primary mb-4 text-4xl font-extrabold tracking-tight md:text-5xl">
-              Fix how AI describes your product
-            </h2>
-            <p className="text-text-primary mb-8 max-w-xl text-xl leading-relaxed">
-              Run a free audit to see how ChatGPT, Claude, and Perplexity describe your product.
-              Then fix the gaps with a{' '}
-              <code className="bg-bg-secondary rounded px-1.5 py-0.5 text-[0.9em]">
-                gist.design
-              </code>{' '}
-              file.
-            </p>
-            <div className="flex flex-wrap items-center gap-4">
-              <Link
-                href="/create"
-                className="bg-accent-primary hover:bg-accent-hover inline-flex items-center gap-2 rounded-2xl px-6 py-3 text-base font-semibold text-white transition-colors"
-              >
-                Create your gist.design
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  stroke="currentColor"
-                  className="h-4 w-4"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
-                  />
-                </svg>
-              </Link>
-              <a
-                href="https://github.com/imsaif/gist"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-text-secondary hover:text-text-primary inline-flex items-center gap-2 rounded-2xl border border-white/[0.08] px-4 py-3 text-sm font-medium transition-colors hover:border-white/[0.15]"
-                title="Install Claude Code skill"
-              >
-                <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
-                  <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
-                </svg>
-                Claude Code skill
-              </a>
-            </div>
-          </section>
-        </div>
-      </div>
-
+    <>
       {/* Why gist.design */}
       <div className="relative overflow-hidden">
         {/* Ambient orbs */}
@@ -778,17 +700,18 @@ export default function Home() {
         <div className="ambient-orb top-1/2 left-1/2 h-80 w-80 -translate-x-1/2 -translate-y-1/2 bg-indigo-500/[0.06]" />
         <div className="glass rounded-2xl border border-white/[0.08] p-8 text-center">
           <h2 className="text-text-primary mb-4 text-3xl font-bold tracking-tight">
-            Start with an audit
+            Create your gist.design file
           </h2>
           <p className="text-text-secondary mx-auto max-w-lg text-lg leading-relaxed">
-            Find out what AI tools get wrong about your product. Takes 30 seconds, costs nothing.
+            Fix the gaps AI tools get wrong about your product. Generate a structured file that
+            coding tools and LLMs actually read.
           </p>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+          <div className="mt-8">
             <Link
-              href="/audit"
+              href="/create"
               className="bg-accent-primary hover:bg-accent-hover inline-flex items-center gap-2 rounded-2xl px-8 py-4 text-lg font-semibold text-white transition-colors"
             >
-              Run free audit
+              Create gist.design
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -804,33 +727,13 @@ export default function Home() {
                 />
               </svg>
             </Link>
-            <Link
-              href="/create"
-              className="text-text-secondary hover:text-text-primary text-base font-medium transition-colors"
-            >
-              or skip to file creation
-            </Link>
           </div>
         </div>
       </div>
-
-      {/* Footer */}
-      <footer className="py-12">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6">
-          <span className="text-text-tertiary text-sm">gist.design · 2026</span>
-          <span className="text-text-tertiary text-sm">
-            Powered by{' '}
-            <a
-              href="https://aiuxdesign.guide"
-              className="text-text-secondary hover:text-text-primary transition-colors"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              aiuxdesign.guide
-            </a>
-          </span>
-        </div>
-      </footer>
-    </div>
+    </>
   );
+}
+
+export default function Home() {
+  return <LandingWithAudit marketingSections={<MarketingSections />} />;
 }

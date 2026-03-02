@@ -1,7 +1,9 @@
+import { NextRequest } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { getCreateSystemPrompt, buildContextBlock } from '@/lib/createPrompt';
 import { GistDesignFile } from '@/types/file';
 import { Message } from '@/types';
+import { checkChatRateLimit } from '@/lib/rateLimit';
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -219,8 +221,20 @@ Want to add another feature, or are you ready to export what we have? You can al
   return '';
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
+    // Rate limiting
+    const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+    const rateLimit = checkChatRateLimit(ip);
+    if (!rateLimit.allowed) {
+      return Response.json(
+        {
+          error: `Rate limit exceeded. Try again in ${Math.ceil(rateLimit.retryAfterSeconds / 60)} minutes.`,
+        },
+        { status: 429 }
+      );
+    }
+
     const { messages, fileState, currentFeatureId, auditContext } = await request.json();
 
     // Use mock mode if enabled
