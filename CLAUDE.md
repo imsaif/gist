@@ -8,7 +8,7 @@
 - **Stack:** Next.js 14+, TypeScript, Tailwind CSS, Claude API
 - **Purpose:** Generate structured `.gist.design` files from conversational design decisions
 - **Distribution:** Two channels — Claude Code skill (primary for developers) + web app at /create (for non-developers)
-- **Claude Code skill:** SKILL.md + references/ at repo root (same repo as web app)
+- **Claude Code skill:** `skills/gist-design/` subfolder (SKILL.md + references/) — isolated from web app
 
 ## Key Files
 
@@ -47,6 +47,14 @@ npm run build    # Build for production
 ```
 
 ## Recent Sessions
+
+### Session 2026-03-04 17:45 (MacBook)
+
+- **Pattern:** General updates
+- **Status:** Work in progress
+- **Files Changed:** 15
+- **Tests Added/Modified:** 0
+- **Notes:** Made gist-design skill distributable and useful for others. Renamed skill/ → skills/gist-design/ for Agent Skills convention. Added quick mode (/gist-design quick for 2-3 turn generation), default-to-audit behavior, argument-hint, and developer-natural trigger phrases to SKILL.md. Wrote 3 new example .gist.design files (Linear, v0, Raycast) with before/after showcase. Created install.sh one-liner installer with sparse clone. Rewrote README with quick-start at top, collapsible before/after preview, and 3 install methods.
 
 ### Session 2026-03-02 16:35 (MacBook)
 

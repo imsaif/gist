@@ -1,5 +1,6 @@
 ---
 name: gist-design
+argument-hint: '[audit | quick | create]'
 description: >
   Generate a gist.design file for any product — a structured markdown document that
   makes design decisions, interaction models, and product positioning readable to AI tools.
@@ -8,6 +9,8 @@ description: >
   an existing product, or when they want to audit how AI tools currently describe their
   product. Invoked with /gist-design or when users mention "gist.design",
   "design decisions for AI", "make my product readable to AI", "document design intent",
+  "document this project", "create design docs", "prepare this repo for AI tools",
+  "what would Cursor get wrong about this", "add AI context to this project",
   "audit my product", "how does AI see my product", "what do AI tools get wrong",
   "how do AI tools describe my product", or "AI readability audit".
 ---
@@ -24,12 +27,19 @@ A single `gist.design` markdown file placed at the project root. This file follo
 
 1. Read the pattern library reference at `references/patterns.md` in this skill's directory for the full list of AI UX patterns you can identify during conversation.
 2. Read the file format reference at `references/file-format.md` for the exact output structure.
+3. Read the example files in `references/` to see completed gist.design files for different product types:
+   - `references/example-spark-mail.gist.design` — AI feature layer in an email client
+   - `references/example-linear.gist.design` — opinionated project management tool
+   - `references/example-v0.gist.design` — iterative AI code generation
+   - `references/example-raycast.gist.design` — extensible desktop launcher with AI
 
 ## How the conversation works
 
 ### Detect the entry state
 
 People arrive in three states. Detect which one from their first message:
+
+**Default behavior: When `/gist-design` is invoked without a specific message inside a project directory, default to State C (audit).** Don't ask what they want to do. Open immediately with: "Let me see how AI tools would describe this project." This gives instant value without any setup. The audit results will naturally lead to creating or fixing a gist.design file.
 
 **State A — "I'm building something new"**
 They're mid-design or post-design. They want AI tools to understand what they're creating.
@@ -44,12 +54,30 @@ The product exists. The pain is already happening.
 - After they describe it: "Which feature do AI tools get most wrong?"
 
 **State C — "Audit how AI sees this project"**
-They want to see how AI tools currently describe their product, based on what's in the repo. This is the "show me the problem" entry point.
+They want to see how AI tools currently describe their product, based on what's in the repo. This is the "show me the problem" entry point. **This is the default when invoked inside a project without additional context.**
 
 - Trigger phrases: "audit my product", "how does AI see my product", "what do AI tools get wrong about this", "AI readability audit", "how would AI describe this project"
-- This state can also be detected when a user invokes the skill from within an existing project without describing a specific product — they want you to look at what's here.
+- Also triggered when a user invokes `/gist-design` or `/gist-design audit` from within an existing project without describing a specific product
 
 See the **Audit flow** section below for the full audit process.
+
+### Quick mode
+
+Triggered by `/gist-design quick` or phrases like "just generate it", "fast mode", "quick gist", "starter file".
+
+Quick mode generates a starter `.gist.design` file in 2-3 turns instead of the full guided conversation. Use this when someone wants a working file fast and can refine later.
+
+**Quick mode flow:**
+
+1. Ask one question: "Describe your product in 2-3 sentences, and tell me what AI tools get most wrong about it."
+2. If a README.md exists in the project, read it for additional context.
+3. Generate a gist.design file with:
+   - Product Overview (from their description + README)
+   - One feature (the one AI tools get most wrong) with full Intent, Interaction Model, Design Decisions, and Not This sections
+   - An Open Questions section noting: "Generated in quick mode. Run `/gist-design` for a full guided conversation that covers more features and deeper design decisions."
+4. Write the file and offer: "This is a starter file. Want to go deeper on any section, or add more features?"
+
+Quick mode still follows the file format spec. The output is a valid, useful gist.design file — just thinner than what a full conversation produces.
 
 ### Guide the conversation (per feature)
 
@@ -286,7 +314,7 @@ After writing the file, tell the user:
 
 ## What NOT to do
 
-- Don't generate a file without having a conversation first. The conversation IS the value.
+- Don't generate a file without having a conversation first. The conversation IS the value. (Exception: quick mode — one question, then generate.)
 - Don't ask questions in the order of file sections. Follow the person's thinking.
 - Don't force patterns where none exist. Not every feature maps to a named pattern.
 - Don't use pattern names without explanation. Not everyone knows what "Progressive Disclosure" means.
