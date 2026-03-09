@@ -36,9 +36,9 @@ export function buildAnalysisPrompt(
   claudeResponse: string,
   perplexityResponse: string
 ): string {
-  return `You are an AI readability analyst. LLMs were given website content and asked to describe the product. Identify gaps: where they got it wrong, fabricated details, blended with competitors, or missed key info.
+  return `You are an AI readability analyst. LLMs were given a product's website and asked to describe it. Your job is to identify gaps in their understanding — where they got it wrong, were vague, blended with competitors, or missed key info.
 
-## Website content (reference):
+## Website content (partial reference):
 
 ${truncate(siteContent, 5000)}
 
@@ -56,17 +56,27 @@ ${truncate(perplexityResponse, 2000)}
 
 ## Your task
 
-Analyze the three responses and identify gaps in how accurately these models understood and described the product. For each gap, categorize it as one of:
+Analyze the LLM responses and identify gaps in how accurately they understood the product.
+
+IMPORTANT: The website content above is a partial, text-only extraction of the page. It does NOT capture:
+- Interactive elements (search bars, filters, dropdowns, modals)
+- Client-rendered UI (React/Next.js components that render after JavaScript loads)
+- Content on subpages (only the homepage was scraped)
+- Visual layout, images, icons, or navigation structure
+
+Do NOT flag something as "fabricated" just because it doesn't appear in the scraped text. If an LLM describes a plausible feature (like search or filtering), it may be correctly describing interactive UI that the scraper couldn't capture. Only flag fabrication when a claim is clearly invented and contradicts what the site actually is (e.g., claiming a documentation site has a paid SaaS tier, or describing features from a completely different product).
+
+For each gap found, categorize it as one of:
 
 - **competitor_blending**: The model described features or behaviors from a competitor's product, not this one
-- **invisible_mechanics**: The model couldn't explain how the product actually works (key mechanics are invisible)
+- **invisible_mechanics**: The model described what a feature IS but not HOW it works — the interaction model is missing or vague
 - **missing_decisions**: The model missed or got wrong a design decision that makes this product unique
-- **fabrication**: The model made up specific details (pricing, features, capabilities) that aren't on the site
+- **fabrication**: The model clearly invented details that contradict the product's actual nature (NOT just details missing from the scraped text)
 - **missing_boundaries**: The model didn't know what the product is NOT or who it's NOT for
 - **positioning_drift**: The model placed the product in the wrong category or compared it to the wrong competitors
 
 For severity:
-- **critical**: Fundamentally misrepresents the product (wrong category, fabricated features, competitor confusion)
+- **critical**: Fundamentally misrepresents the product (wrong category, clearly fabricated features, competitor confusion)
 - **high**: Significant gap that would lead to wrong recommendations or implementations
 - **medium**: Minor inaccuracy or missing nuance
 
@@ -101,7 +111,9 @@ Rules:
 - modelsAffected should only include models that exhibited the gap
 - whatFileNeeds should be specific and actionable
 - Generate real gap IDs like "gap-1", "gap-2", etc.
-- worstModel/bestModel should reflect which model had the most/fewest issues`;
+- worstModel/bestModel should reflect which model had the most/fewest issues
+- If an LLM errored out (returned an error message instead of a product description), exclude it from the analysis entirely — do not count it as "best" or "worst" model
+- Err on the side of fewer, higher-confidence gaps over many speculative ones`;
 }
 
 // ============================================

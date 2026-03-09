@@ -36,10 +36,8 @@ export async function fetchSiteContent(url: string): Promise<FetchedContent> {
 function parseHTML(url: string, html: string): FetchedContent {
   const $ = cheerio.load(html);
 
-  // Remove non-content elements
-  $('script, style, nav, footer, iframe, noscript, svg, header').remove();
-  $('[role="navigation"], [role="banner"], [role="contentinfo"]').remove();
-  $('[aria-hidden="true"]').remove();
+  // Remove non-content elements (keep nav/header — they contain real product features like search, filters)
+  $('script, style, iframe, noscript').remove();
 
   // Extract metadata
   const title = $('title').text().trim() || $('h1').first().text().trim() || '';

@@ -48,6 +48,14 @@ npm run build    # Build for production
 
 ## Recent Sessions
 
+### Session 2026-03-09 16:58 (MacBook)
+
+- **Pattern:** General updates
+- **Status:** Work in progress
+- **Files Changed:** 3
+- **Tests Added/Modified:** 0
+- **Notes:** Fixed audit false positives: scraper was stripping nav/header/svg/aria-hidden elements which removed real interactive features (search, filters). Analysis prompt now warns that scraped content is partial and won't flag plausible features as fabricated. LLM errors (like ChatGPT 429) now passed as explicit exclusion markers to analysis instead of empty strings.
+
 ### Session 2026-03-09 16:42 (MacBook)
 
 - **Pattern:** General updates

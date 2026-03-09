@@ -119,10 +119,18 @@ export async function POST(request: NextRequest) {
             await new Promise((r) => setTimeout(r, 2000));
             analysis = getMockAnalysis();
           } else {
+            // Pass error context to analysis so it can exclude errored models
+            const chatgptContent = responses.chatgpt?.error
+              ? `[ChatGPT error: ${responses.chatgpt.error} — exclude this model from analysis]`
+              : responses.chatgpt?.content || '[ChatGPT: not queried]';
+            const claudeContent = responses.claude?.error
+              ? `[Claude error: ${responses.claude.error} — exclude this model from analysis]`
+              : responses.claude?.content || '[Claude: not queried]';
+
             const analysisPrompt = buildAnalysisPrompt(
               siteContent.content,
-              responses.chatgpt?.content || '[Error: ChatGPT did not respond]',
-              responses.claude?.content || '[Error: Claude did not respond]',
+              chatgptContent,
+              claudeContent,
               '[Perplexity: not queried]'
             );
 
