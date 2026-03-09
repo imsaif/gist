@@ -173,11 +173,11 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
 
       {/* Loading phases */}
       {(phase === 'fetching' || phase === 'querying' || phase === 'analyzing') && (
-        <div className="w-full max-w-5xl">
-          <div className="mb-6 flex items-center justify-between">
+        <div className="w-full max-w-7xl">
+          <div className="mb-8 flex items-center justify-between">
             <div>
-              <h3 className="text-text-primary text-lg font-semibold">Auditing {url}</h3>
-              <p className="text-text-tertiary text-sm">
+              <h3 className="text-text-primary text-xl font-bold tracking-tight">Auditing {url}</h3>
+              <p className="text-text-tertiary mt-1 text-sm">
                 {phase === 'fetching' && 'Fetching your site...'}
                 {phase === 'querying' && 'Asking 2 LLMs about your product...'}
                 {phase === 'analyzing' && 'Analyzing gaps across models...'}
@@ -196,7 +196,7 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
 
       {/* Email gate — after URL, before audit runs */}
       {phase === 'email-gate' && (
-        <div className="w-full max-w-5xl">
+        <div className="w-full max-w-7xl">
           <div className="mb-6 flex items-center justify-between">
             <div>
               <h3 className="text-text-primary text-lg font-semibold">Audit {url}</h3>
@@ -215,11 +215,11 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
 
       {/* Complete phase — results + CTA */}
       {phase === 'complete' && result && (
-        <div className="w-full max-w-5xl space-y-8">
+        <div className="w-full max-w-7xl space-y-8">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-text-primary text-lg font-semibold">Audit Results</h3>
-              <p className="text-text-tertiary text-sm">{url}</p>
+              <h3 className="text-text-primary text-xl font-bold tracking-tight">Audit Results</h3>
+              <p className="text-text-tertiary mt-1 text-sm">{url}</p>
             </div>
             <button
               onClick={handleReset}

@@ -16,18 +16,34 @@ export function AuditToConversation({ result }: AuditToConversationProps) {
   };
 
   const gapCount = result.analysis?.summary.totalGaps || 0;
+  const criticalCount = result.analysis?.summary.criticalGaps || 0;
 
   return (
-    <div className="border-border-light bg-bg-primary rounded-xl border p-6 text-center">
-      <h3 className="text-text-primary mb-2 text-lg font-semibold">Fix these gaps</h3>
-      <p className="text-text-secondary mb-4 text-sm">
+    <div className="border-border-light bg-bg-primary rounded-xl border p-8 text-center">
+      <h3 className="text-text-primary mb-2 text-xl font-bold tracking-tight">Fix these gaps</h3>
+      <p className="text-text-secondary mx-auto mb-6 max-w-md text-sm leading-relaxed">
         Generate a gist.design file that addresses{' '}
-        {gapCount > 0 ? `all ${gapCount} gap${gapCount !== 1 ? 's' : ''}` : 'potential issues'}{' '}
-        found in the audit. The conversation will start with your audit findings as context.
+        {gapCount > 0 ? (
+          <>
+            {criticalCount > 0 && (
+              <span className="font-semibold text-red-400">
+                {criticalCount} critical
+                {gapCount - criticalCount > 0 && ` and ${gapCount - criticalCount} other`}{' '}
+              </span>
+            )}
+            {criticalCount === 0 && (
+              <span className="text-text-primary font-semibold">all {gapCount} </span>
+            )}
+            gap{gapCount !== 1 ? 's' : ''}
+          </>
+        ) : (
+          'potential issues'
+        )}{' '}
+        found in the audit.
       </p>
       <button
         onClick={handleClick}
-        className="bg-accent-primary hover:bg-accent-hover inline-flex items-center gap-2 rounded-xl px-6 py-3 font-semibold text-white transition-colors"
+        className="bg-accent-primary hover:bg-accent-hover inline-flex items-center gap-2 rounded-xl px-8 py-3.5 text-base font-semibold text-white transition-colors"
       >
         Create gist.design file
         <svg

@@ -29,36 +29,39 @@ export function GapItem({ gap }: GapItemProps) {
   const severity = severityConfig[gap.severity];
 
   return (
-    <div className="border-border-light bg-bg-primary rounded-lg border p-4">
-      <div className="mb-2 flex items-center gap-2">
+    <tr className="border-border-light border-b last:border-b-0">
+      {/* Issue + Affected */}
+      <td className="px-6 py-5 align-top">
+        <p className="text-text-primary text-sm leading-relaxed">{gap.description}</p>
+        <div className="mt-2 flex flex-wrap items-center gap-1.5">
+          <span className="text-text-tertiary text-xs">Affected:</span>
+          {gap.modelsAffected.map((model) => (
+            <span
+              key={model}
+              className="bg-bg-secondary text-text-secondary rounded-md px-2 py-0.5 text-xs font-medium"
+            >
+              {providerNames[model]}
+            </span>
+          ))}
+        </div>
+      </td>
+
+      {/* Fix */}
+      <td className="px-6 py-5 align-top">
+        <p className="text-text-secondary text-sm leading-relaxed">{gap.whatFileNeeds}</p>
+      </td>
+
+      {/* Severity */}
+      <td className="px-6 py-5 align-top">
         <span
-          className={`rounded-full px-2 py-0.5 text-xs font-semibold ${severity.bg} ${severity.text}`}
+          className={`inline-block rounded-full px-2.5 py-1 text-xs font-bold tracking-wide uppercase ${severity.bg} ${severity.text}`}
         >
           {gap.severity}
         </span>
-        <span className="text-text-tertiary text-xs">{categoryLabels[gap.category]}</span>
-      </div>
-
-      <p className="text-text-primary mb-2 text-sm leading-relaxed">{gap.description}</p>
-
-      <div className="mb-2 flex items-center gap-1">
-        <span className="text-text-tertiary text-xs">Affected:</span>
-        {gap.modelsAffected.map((model) => (
-          <span
-            key={model}
-            className="bg-bg-secondary text-text-secondary rounded px-1.5 py-0.5 text-xs"
-          >
-            {providerNames[model]}
-          </span>
-        ))}
-      </div>
-
-      <div className="bg-bg-secondary rounded-lg p-3">
-        <p className="text-text-tertiary mb-1 text-xs font-medium">
-          What your gist.design file needs:
+        <p className="text-text-tertiary mt-1.5 text-xs font-medium">
+          {categoryLabels[gap.category]}
         </p>
-        <p className="text-text-secondary text-sm">{gap.whatFileNeeds}</p>
-      </div>
-    </div>
+      </td>
+    </tr>
   );
 }

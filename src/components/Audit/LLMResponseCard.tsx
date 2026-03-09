@@ -26,15 +26,15 @@ export function LLMResponseCard({ response, isLoading, gapCount }: LLMResponseCa
 
   if (isLoading) {
     return (
-      <div className="border-border-light bg-bg-primary animate-pulse rounded-xl border p-5">
-        <div className="mb-3 flex items-center gap-2">
-          <div className="bg-bg-tertiary h-4 w-20 rounded" />
-          <div className="bg-bg-tertiary h-3 w-16 rounded" />
+      <div className="border-border-light bg-bg-primary animate-pulse rounded-xl border p-6">
+        <div className="mb-4 flex items-center gap-2">
+          <div className="bg-bg-tertiary h-5 w-24 rounded" />
+          <div className="bg-bg-tertiary h-4 w-16 rounded" />
         </div>
-        <div className="space-y-2">
-          <div className="bg-bg-secondary h-3 w-full rounded" />
-          <div className="bg-bg-secondary h-3 w-5/6 rounded" />
-          <div className="bg-bg-secondary h-3 w-4/6 rounded" />
+        <div className="space-y-2.5">
+          <div className="bg-bg-secondary h-3.5 w-full rounded" />
+          <div className="bg-bg-secondary h-3.5 w-5/6 rounded" />
+          <div className="bg-bg-secondary h-3.5 w-4/6 rounded" />
         </div>
       </div>
     );
@@ -56,13 +56,15 @@ export function LLMResponseCard({ response, isLoading, gapCount }: LLMResponseCa
       : '';
 
   return (
-    <div className="border-border-light bg-bg-primary rounded-xl border p-5">
-      <div className="mb-3 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="text-text-primary text-sm font-semibold">
+    <div className="border-border-light bg-bg-primary flex flex-col rounded-xl border p-6">
+      <div className="mb-4 flex items-center justify-between">
+        <div className="flex items-center gap-2.5">
+          <span className="text-text-primary text-base font-bold">
             {providerNames[response.model]}
           </span>
-          <span className="text-text-tertiary text-xs">{providerModels[response.model]}</span>
+          <span className="text-text-tertiary text-xs font-medium">
+            {providerModels[response.model]}
+          </span>
         </div>
         <span className="text-text-tertiary text-xs">
           {(response.durationMs / 1000).toFixed(1)}s
@@ -70,16 +72,16 @@ export function LLMResponseCard({ response, isLoading, gapCount }: LLMResponseCa
       </div>
 
       {response.error ? (
-        <p className="text-sm text-red-500">Error: {response.error}</p>
+        <p className="text-sm leading-relaxed text-red-400">Error: {response.error}</p>
       ) : (
         <>
-          <p className="text-text-secondary text-sm leading-relaxed whitespace-pre-wrap">
+          <p className="text-text-secondary flex-1 text-sm leading-relaxed whitespace-pre-wrap">
             {displayContent}
           </p>
           {content.length > 300 && (
             <button
               onClick={() => setIsExpanded(!isExpanded)}
-              className="text-accent-primary hover:text-accent-hover mt-2 text-sm font-medium transition-colors"
+              className="text-accent-primary hover:text-accent-hover mt-3 text-sm font-semibold transition-colors"
             >
               {isExpanded ? 'Show less' : 'Show more'}
             </button>
@@ -88,9 +90,9 @@ export function LLMResponseCard({ response, isLoading, gapCount }: LLMResponseCa
       )}
 
       {gapCount !== undefined && (
-        <div className="border-border-light mt-3 border-t pt-3">
+        <div className="border-border-light mt-4 border-t pt-4">
           <span
-            className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${gapBadgeStyle}`}
+            className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${gapBadgeStyle}`}
           >
             {gapCount} gap{gapCount !== 1 ? 's' : ''} identified
           </span>

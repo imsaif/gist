@@ -48,6 +48,14 @@ npm run build    # Build for production
 
 ## Recent Sessions
 
+### Session 2026-03-09 17:25 (MacBook)
+
+- **Pattern:** General updates
+- **Status:** Work in progress
+- **Files Changed:** 7
+- **Tests Added/Modified:** 0
+- **Notes:** Redesigned audit results UI: gaps now display as a single sorted table (Issue/Fix/Severity columns) instead of grouped card lists. Removed hero title/description and gradient background when audit is active for clean transition. Widened audit layout to max-w-7xl. Improved summary bar with 4-column grid metrics, larger font sizes, and more padding throughout all audit components.
+
 ### Session 2026-03-09 16:58 (MacBook)
 
 - **Pattern:** General updates

@@ -22,11 +22,14 @@ export function AuditResults({ result }: AuditResultsProps) {
   }
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h3 className="text-text-primary mb-4 text-lg font-semibold">
+    <div className="space-y-10">
+      <section>
+        <h3 className="text-text-primary mb-1 text-xl font-bold tracking-tight">
           What 2 LLMs said about your product
         </h3>
+        <p className="text-text-tertiary mb-5 text-sm">
+          Each model was given your homepage content and asked to describe your product.
+        </p>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {providers.map((provider) => (
             <LLMResponseCard
@@ -37,14 +40,9 @@ export function AuditResults({ result }: AuditResultsProps) {
             />
           ))}
         </div>
-      </div>
+      </section>
 
-      {analysis && (
-        <div>
-          <h3 className="text-text-primary mb-4 text-lg font-semibold">Gap Analysis</h3>
-          <GapAnalysis analysis={analysis} />
-        </div>
-      )}
+      {analysis && <GapAnalysis analysis={analysis} />}
     </div>
   );
 }

@@ -9,68 +9,76 @@ interface GapAnalysisProps {
 export function GapAnalysis({ analysis }: GapAnalysisProps) {
   const { gaps, summary } = analysis;
 
-  // Group gaps by severity
-  const critical = gaps.filter((g) => g.severity === 'critical');
-  const high = gaps.filter((g) => g.severity === 'high');
-  const medium = gaps.filter((g) => g.severity === 'medium');
+  // Sort by severity: critical first, then high, then medium
+  const severityOrder = { critical: 0, high: 1, medium: 2 };
+  const sortedGaps = [...gaps].sort(
+    (a, b) => severityOrder[a.severity] - severityOrder[b.severity]
+  );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Summary bar */}
-      <div className="border-border-light bg-bg-primary flex flex-wrap items-center gap-4 rounded-xl border p-5">
-        <div className="flex items-center gap-2">
-          <span className="text-text-secondary text-sm">AI Readability:</span>
+      <div className="border-border-light bg-bg-primary grid grid-cols-2 gap-4 rounded-xl border p-6 sm:grid-cols-4">
+        <div>
+          <p className="text-text-tertiary mb-1 text-xs font-medium tracking-wider uppercase">
+            AI Readability
+          </p>
           <ReadabilityScore score={summary.readabilityScore} />
         </div>
-        <div className="bg-border-light h-5 w-px" />
-        <div className="text-text-secondary text-sm">
-          <span className="text-text-primary font-semibold">{summary.totalGaps}</span> gaps found
-          {summary.criticalGaps > 0 && (
-            <span className="ml-1 text-red-400">({summary.criticalGaps} critical)</span>
-          )}
+        <div>
+          <p className="text-text-tertiary mb-1 text-xs font-medium tracking-wider uppercase">
+            Gaps Found
+          </p>
+          <p className="text-text-primary text-2xl font-bold">
+            {summary.totalGaps}
+            {summary.criticalGaps > 0 && (
+              <span className="ml-2 text-sm font-medium text-red-400">
+                {summary.criticalGaps} critical
+              </span>
+            )}
+          </p>
         </div>
-        <div className="bg-border-light h-5 w-px" />
-        <div className="text-text-secondary text-sm">
-          Worst: <span className="text-text-primary font-medium">{summary.worstModel}</span>
+        <div>
+          <p className="text-text-tertiary mb-1 text-xs font-medium tracking-wider uppercase">
+            Most Issues
+          </p>
+          <p className="text-text-primary text-base font-semibold capitalize">
+            {summary.worstModel}
+          </p>
         </div>
-        <div className="text-text-secondary text-sm">
-          Best: <span className="text-text-primary font-medium">{summary.bestModel}</span>
+        <div>
+          <p className="text-text-tertiary mb-1 text-xs font-medium tracking-wider uppercase">
+            Fewest Issues
+          </p>
+          <p className="text-text-primary text-base font-semibold capitalize">
+            {summary.bestModel}
+          </p>
         </div>
       </div>
 
-      {/* Gaps by severity */}
-      {critical.length > 0 && (
-        <div>
-          <h4 className="text-text-primary mb-3 text-sm font-semibold">
-            Critical ({critical.length})
-          </h4>
-          <div className="space-y-3">
-            {critical.map((gap) => (
-              <GapItem key={gap.id} gap={gap} />
-            ))}
-          </div>
-        </div>
-      )}
-
-      {high.length > 0 && (
-        <div>
-          <h4 className="text-text-primary mb-3 text-sm font-semibold">High ({high.length})</h4>
-          <div className="space-y-3">
-            {high.map((gap) => (
-              <GapItem key={gap.id} gap={gap} />
-            ))}
-          </div>
-        </div>
-      )}
-
-      {medium.length > 0 && (
-        <div>
-          <h4 className="text-text-primary mb-3 text-sm font-semibold">Medium ({medium.length})</h4>
-          <div className="space-y-3">
-            {medium.map((gap) => (
-              <GapItem key={gap.id} gap={gap} />
-            ))}
-          </div>
+      {/* Single gap table */}
+      {sortedGaps.length > 0 && (
+        <div className="border-border-light overflow-hidden rounded-xl border">
+          <table className="w-full table-fixed">
+            <thead>
+              <tr className="bg-bg-secondary">
+                <th className="text-text-tertiary w-[45%] px-6 py-3.5 text-left text-xs font-semibold tracking-wider uppercase">
+                  Issue
+                </th>
+                <th className="text-text-tertiary w-[35%] px-6 py-3.5 text-left text-xs font-semibold tracking-wider uppercase">
+                  Fix
+                </th>
+                <th className="text-text-tertiary w-[20%] px-6 py-3.5 text-left text-xs font-semibold tracking-wider uppercase">
+                  Severity
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-bg-primary">
+              {sortedGaps.map((gap) => (
+                <GapItem key={gap.id} gap={gap} />
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </div>
