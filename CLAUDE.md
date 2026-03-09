@@ -48,6 +48,14 @@ npm run build    # Build for production
 
 ## Recent Sessions
 
+### Session 2026-03-09 16:42 (MacBook)
+
+- **Pattern:** General updates
+- **Status:** Work in progress
+- **Files Changed:** 11
+- **Tests Added/Modified:** 0
+- **Notes:** Tech debt cleanup: deleted stale TODO.md, dead /audit route, unused simple-icons dep, dead queryPerplexity code, legacy PatternCard props, dead nav links. Polished Claude Code skill (SKILL.md): added detailed audit scoring rubric, quality checklist (11 checks), common mistakes section, product type guidance (SaaS/CLI/API/mobile/AI-native/plugins), better quick mode (reads repo first, generates 2-3 features), fixed file writing to use Write tool. Upgraded Spark Mail example with Positioning and Context sections.
+
 ### Session 2026-03-04 17:45 (MacBook)
 
 - **Pattern:** General updates

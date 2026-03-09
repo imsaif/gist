@@ -1,11 +1,6 @@
 import { NextRequest } from 'next/server';
 import { fetchSiteContent } from '@/lib/audit/fetcher';
-import {
-  queryOpenAI,
-  queryClaude,
-  queryPerplexity,
-  getMockLLMResponse,
-} from '@/lib/audit/providers';
+import { queryOpenAI, queryClaude, getMockLLMResponse } from '@/lib/audit/providers';
 import { buildAuditPrompt, buildAnalysisPrompt, getMockAnalysis } from '@/lib/audit/prompts';
 import { checkAuditRateLimit } from '@/lib/rateLimit';
 import { LLMResponse, GapAnalysis } from '@/types/audit';
@@ -112,15 +107,6 @@ export async function POST(request: NextRequest) {
                 responses.claude = r;
                 send('llm_response', r);
               }),
-              // Perplexity disabled — re-enable when API key is active
-              // queryPerplexity(prompt)
-              //   .then((r) => {
-              //     responses.perplexity = r;
-              //     send('llm_response', r);
-              //   })
-              //   .catch(() => {
-              //     // Perplexity is optional — audit continues with ChatGPT + Claude
-              //   }),
             ];
 
             await Promise.all(queries);

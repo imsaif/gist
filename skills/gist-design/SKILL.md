@@ -65,19 +65,20 @@ See the **Audit flow** section below for the full audit process.
 
 Triggered by `/gist-design quick` or phrases like "just generate it", "fast mode", "quick gist", "starter file".
 
-Quick mode generates a starter `.gist.design` file in 2-3 turns instead of the full guided conversation. Use this when someone wants a working file fast and can refine later.
+Quick mode generates a solid `.gist.design` file in 2-3 turns instead of the full guided conversation. Use this when someone wants a working file fast and can refine later.
 
 **Quick mode flow:**
 
-1. Ask one question: "Describe your product in 2-3 sentences, and tell me what AI tools get most wrong about it."
-2. If a README.md exists in the project, read it for additional context.
+1. Read the project context first: README.md, package.json (or equivalent), CLAUDE.md, directory structure. Understand what the product is before asking anything.
+2. Ask one focused question: "Based on the repo, this looks like [your understanding]. What do AI tools get most wrong about it, and what's the one feature they'd describe incorrectly?"
 3. Generate a gist.design file with:
-   - Product Overview (from their description + README)
-   - One feature (the one AI tools get most wrong) with full Intent, Interaction Model, Design Decisions, and Not This sections
-   - An Open Questions section noting: "Generated in quick mode. Run `/gist-design` for a full guided conversation that covers more features and deeper design decisions."
-4. Write the file and offer: "This is a starter file. Want to go deeper on any section, or add more features?"
+   - Product Overview (from repo context + their answer)
+   - 2-3 features: the one they flagged plus 1-2 you identified from the codebase. Each feature gets full Intent, Interaction Model, Design Decisions, and Not This sections.
+   - A Positioning section if the product is publicly available
+   - An Open Questions section noting areas where you had to guess, plus: "Generated in quick mode. Run `/gist-design create` for a guided conversation that goes deeper."
+4. Write the file and offer: "This covers [n] features. Want to go deeper on any section, or add more features?"
 
-Quick mode still follows the file format spec. The output is a valid, useful gist.design file — just thinner than what a full conversation produces.
+Quick mode still follows the file format spec and the quality checklist. The output should be useful on its own — not just a placeholder.
 
 ### Guide the conversation (per feature)
 
@@ -147,14 +148,14 @@ Write a natural paragraph describing the product the way ChatGPT, Claude, or Per
 
 ### Step 3 — Score the readability
 
-Rate the project's AI readability across four categories:
+Rate the project's AI readability across four categories using this rubric:
 
-| Category              | What it means                                                    | Score                 |
-| --------------------- | ---------------------------------------------------------------- | --------------------- |
-| **Positioning**       | Can AI tools accurately describe what this product is and isn't? | Poor / Partial / Good |
-| **Features**          | Can AI tools describe how the product's features actually work?  | Poor / Partial / Good |
-| **Interaction Model** | Can AI tools explain the user experience step by step?           | Poor / Partial / Good |
-| **Boundaries**        | Can AI tools tell what this product is NOT?                      | Poor / Partial / Good |
+| Category              | Poor                                                                       | Partial                                                                                                    | Good                                                                                         |
+| --------------------- | -------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| **Positioning**       | No description beyond generic category. AI would confuse with competitors. | README/docs say what it is but not what makes it different. AI gets the category right but blends details. | Clear "what it is, who it's for, what it's NOT" — AI can distinguish from competitors.       |
+| **Features**          | Feature names visible but no description of how they work. AI would guess. | Some features documented but key interactions are missing or vague.                                        | Core features have documented flows, states, and behaviors. AI can describe them accurately. |
+| **Interaction Model** | No step-by-step flows anywhere. AI would infer from component names.       | Partial flows exist (e.g., in README or comments) but miss error states and edge cases.                    | Primary flows documented with steps, states, and what happens when things go wrong.          |
+| **Boundaries**        | Nothing says what the product is NOT. AI would blend freely.               | Some boundaries implied but not explicit. AI might still confuse with similar products.                    | Explicit "not this" statements. AI can tell what the product deliberately doesn't do.        |
 
 ### Step 4 — Highlight specific gaps
 
@@ -289,11 +290,11 @@ After the conversation concludes, generate the `gist.design` file at the project
 
 Write the file using the person's own language. Don't sanitize their words into corporate speak. "Will this make me sound like a robot?" is better than "User concern about AI-generated content authenticity."
 
-```bash
-# Place the file at project root
-cat > ./gist.design << 'GISTEOF'
-[generated content]
-GISTEOF
+Use the Write tool to create the file at the project root:
+
+```
+Write to: ./gist.design
+Content: [generated content]
 ```
 
 After writing the file, tell the user:
@@ -311,6 +312,65 @@ After writing the file, tell the user:
      ```
 3. Offer the verify flow: "Want me to verify how this changes what AI tools would say about your product?"
 4. Suggest testing: "Paste the file into ChatGPT and ask about your product. If it gets something wrong, that section needs more detail."
+
+## Quality checklist — evaluate before writing the file
+
+Before generating the final file, check every feature against this list. If a feature fails 2+ checks, go back and ask one more question.
+
+**Intent:**
+
+- [ ] Goal is measurable or observable, not just "help users do X" — what does success actually look like?
+- [ ] "Not trying to" entries name specific things, not vague categories. "Not trying to replace sprint planning" beats "not trying to do too much."
+- [ ] Core anxiety is in the user's voice, not corporate language. A quote works best.
+
+**Interaction Model:**
+
+- [ ] Primary flow has 3+ concrete steps describing what the user sees and does — not what the system does internally.
+- [ ] At least one error state describes what the user sees AND what they can do about it.
+- [ ] Key interactions explain WHY that interaction type was chosen, not just what it is.
+
+**Design Decisions:**
+
+- [ ] Every decision has a real rejected alternative — something the team actually considered, not a straw man.
+- [ ] "Because" explains reasoning, not just restates the choice. "Because users don't know tone until they see output" beats "Because it's better."
+
+**Not This:**
+
+- [ ] At least one entry names a specific competitor or well-known product.
+- [ ] Entries describe what AI tools would actually get wrong, not just generic negations.
+
+**Overall:**
+
+- [ ] The file uses the team's language, not sanitized corporate speak.
+- [ ] A coding assistant reading this file would build the right thing — not just understand the product abstractly.
+- [ ] Open Questions are honest, not performative. If nothing is unresolved, omit the section.
+
+## Common mistakes in generated files
+
+Avoid these — they make gist.design files less useful:
+
+- **Generic goals.** "Help users manage their tasks efficiently" could describe any product. Be specific: "Move incoming issues from Triage to the right place in under 5 seconds per issue, using only the keyboard."
+- **Implementation descriptions instead of user descriptions.** "The system renders a React component with streaming" describes code. "AI streams a response inline with syntax highlighting for code blocks" describes what the user sees.
+- **Missing the "Over" in Design Decisions.** Every choice is only meaningful in contrast to what was rejected. If you can't name what was considered and rejected, the decision isn't documented — it's just a description.
+- **Pattern name-dropping.** "Uses Human-in-the-Loop" is a label. "Every draft requires user action before sending — but the action is editing (low friction) not approving (high friction)" is a design. Always describe the specific implementation.
+- **Weak "Not This" entries.** "This is not a bad product" says nothing. "This is not Gmail Smart Compose — Smart Compose predicts the next few words, this generates complete email drafts from thread context" tells an AI tool exactly how to distinguish them.
+- **Inventing constraints.** Only include constraints that actually shaped the design. If mobile didn't change any decisions, don't add a mobile constraint just to fill the section.
+
+## Adapting to product types
+
+Different products need different emphasis in their gist.design files:
+
+**SaaS / Web apps:** Focus on interaction flows and feature boundaries. AI tools tend to blend SaaS products with competitors in the same category. Strong "Not This" and Positioning sections are critical.
+
+**CLI tools / Developer tools:** Focus on command behavior, flags, and what the tool does NOT do. AI coding assistants will try to invent flags and options. Document the actual interface precisely. Interaction Model should describe terminal input/output, not GUI flows.
+
+**APIs / SDKs:** Focus on the API's opinions and constraints. What are the required parameters? What are the deliberate limitations? AI tools will suggest API patterns from other services — "Not This" should clarify where this API differs from similar ones.
+
+**Mobile apps:** Focus on gesture interactions, navigation patterns, and platform-specific decisions (iOS vs Android differences). AI tools default to web interaction patterns — document what's different on mobile.
+
+**AI-native products (where AI IS the product):** Focus on the AI's boundaries — what it will and won't do, how it handles uncertainty, and what the human's role is. These products need the strongest "Not trying to" and constraint sections because AI tools assume AI products can do everything.
+
+**Plugins / Extensions / Integrations:** Focus on scope boundaries. AI tools will confuse the plugin's capabilities with the host platform's capabilities. Document what belongs to the plugin vs. the host.
 
 ## What NOT to do
 

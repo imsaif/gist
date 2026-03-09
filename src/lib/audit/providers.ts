@@ -14,13 +14,6 @@ function getAnthropicClient(): Anthropic {
   return new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 }
 
-function getPerplexityClient(): OpenAI {
-  return new OpenAI({
-    apiKey: process.env.PERPLEXITY_API_KEY,
-    baseURL: 'https://api.perplexity.ai',
-  });
-}
-
 // ============================================
 // Provider Queries
 // ============================================
@@ -67,30 +60,6 @@ export async function queryClaude(prompt: string): Promise<LLMResponse> {
   } catch (err) {
     return {
       model: 'claude',
-      content: '',
-      durationMs: Date.now() - start,
-      error: err instanceof Error ? err.message : 'Unknown error',
-    };
-  }
-}
-
-export async function queryPerplexity(prompt: string): Promise<LLMResponse> {
-  const start = Date.now();
-  try {
-    const client = getPerplexityClient();
-    const response = await client.chat.completions.create({
-      model: 'sonar',
-      messages: [{ role: 'user', content: prompt }],
-      max_tokens: 1024,
-    });
-    return {
-      model: 'perplexity',
-      content: response.choices[0]?.message?.content || '',
-      durationMs: Date.now() - start,
-    };
-  } catch (err) {
-    return {
-      model: 'perplexity',
       content: '',
       durationMs: Date.now() - start,
       error: err instanceof Error ? err.message : 'Unknown error',

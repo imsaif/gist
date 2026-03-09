@@ -3,31 +3,23 @@
 import { Pattern } from '@/types/patterns';
 import { getCategoryMeta } from '@/lib/patterns/patterns';
 
-type AddToMode = 'brief' | 'map' | 'rationale';
-
 interface PatternCardProps {
   pattern: Pattern;
   reason?: string;
-  onAddToBrief?: () => void;
-  isAddedToBrief?: boolean;
-  // Generic add action for any mode
   onAdd?: () => void;
   isAdded?: boolean;
-  addLabel?: string; // e.g., "Add to brief", "Add to step", "Add to decision"
+  addLabel?: string;
 }
 
 export function PatternCard({
   pattern,
   reason,
-  onAddToBrief,
-  isAddedToBrief = false,
   onAdd,
-  isAdded,
-  addLabel = 'Add to brief',
+  isAdded = false,
+  addLabel = 'Add',
 }: PatternCardProps) {
-  // Use generic props if provided, otherwise fall back to brief-specific props
-  const handleAdd = onAdd ?? onAddToBrief;
-  const hasBeenAdded = isAdded ?? isAddedToBrief;
+  const handleAdd = onAdd;
+  const hasBeenAdded = isAdded;
   const categoryMeta = getCategoryMeta(pattern.category);
   const categoryColor = categoryMeta?.color ?? '#6b7280';
 
@@ -159,7 +151,7 @@ export function PatternCard({
   );
 }
 
-// Compact version for display in brief artifact
+// Compact version for display in file preview
 export function PatternCardCompact({ pattern }: { pattern: Pattern }) {
   const categoryMeta = getCategoryMeta(pattern.category);
   const categoryColor = categoryMeta?.color ?? '#6b7280';
