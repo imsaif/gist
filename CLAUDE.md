@@ -48,6 +48,14 @@ npm run build    # Build for production
 
 ## Recent Sessions
 
+### Session 2026-03-10 20:40 (MacBook)
+
+- **Pattern:** General updates
+- **Status:** Work in progress
+- **Files Changed:** 20
+- **Tests Added/Modified:** 1
+- **Notes:** Built audit-to-fix flow: after audit completes, floating CTA bar leads to progressive gap-fixer (one question per gap, sorted by severity). Removed standalone /create flow and chat drawer — audit-only MVP. Added draftFile pre-fill from audit analysis, editable fields with gap highlights, download + copy-to-clipboard + setup instructions on done screen, and LLM benefits section (stops blending, prevents fabrication, improves codegen, accurate recommendations).
+
 ### Session 2026-03-09 17:25 (MacBook)
 
 - **Pattern:** General updates

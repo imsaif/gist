@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, type ComponentType, type SVGProps } from 'react';
-import { GistDesignFile, FeatureProgress, BeforeAfterItem } from '@/types/file';
+import { GistDesignFile, FeatureProgress, BeforeAfterItem, ProductOverview } from '@/types/file';
+import { Gap } from '@/types/audit';
 import {
   ViewfinderCircleIcon,
   ArrowsRightLeftIcon,
@@ -28,6 +29,12 @@ interface FileContainerProps {
   onCopyBrief: () => void;
   auditUrl?: string;
   originalResponse?: string;
+  auditGaps?: Gap[];
+  isFromAudit?: boolean;
+  initialFile?: GistDesignFile | null;
+  onProductFieldChange?: (field: keyof ProductOverview, value: string) => void;
+  onPositioningFieldChange?: (field: 'category' | 'forWho' | 'notForWho', value: string) => void;
+  onContextFieldChange?: (field: 'pricing' | 'stage', value: string) => void;
 }
 
 type Tab = 'preview' | 'export';
@@ -42,6 +49,12 @@ export function FileContainer({
   onCopyBrief,
   auditUrl,
   originalResponse,
+  auditGaps,
+  isFromAudit,
+  initialFile,
+  onProductFieldChange,
+  onPositioningFieldChange,
+  onContextFieldChange,
 }: FileContainerProps) {
   const [activeTab, setActiveTab] = useState<Tab>('preview');
 
@@ -99,15 +112,56 @@ export function FileContainer({
             })}
           </div>
         )}
+
+        {/* Audit gap summary pill */}
+        {isFromAudit && auditGaps && auditGaps.length > 0 && (
+          <div className="ml-auto flex items-center gap-1.5">
+            <span className="flex items-center gap-1 rounded-full bg-amber-500/10 px-2.5 py-1 text-xs font-medium text-amber-400">
+              {auditGaps.length} gap{auditGaps.length !== 1 ? 's' : ''} to address
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Content */}
       <div className="flex-1 overflow-y-auto p-6">
         {activeTab === 'preview' ? (
           <>
-            <ProductOverviewSection product={file.product} />
-            <PositioningSection positioning={file.positioning} />
-            <ContextSection context={file.context} />
+            {/* Audit context banner */}
+            {isFromAudit && (
+              <div className="mb-6 rounded-xl border border-amber-500/20 bg-amber-500/5 p-4">
+                <p className="mb-1 text-xs font-medium tracking-wide text-amber-400 uppercase">
+                  Pre-filled from audit
+                </p>
+                <p className="text-text-secondary text-sm">
+                  Values in <span className="text-amber-300/90">amber</span> are what LLMs currently
+                  think about your product. Click any field to correct it, or use the chat to make
+                  changes.
+                </p>
+              </div>
+            )}
+
+            <ProductOverviewSection
+              product={file.product}
+              gaps={auditGaps}
+              isFromAudit={isFromAudit}
+              onFieldChange={onProductFieldChange}
+              initialProduct={initialFile?.product}
+            />
+            <PositioningSection
+              positioning={file.positioning}
+              gaps={auditGaps}
+              isFromAudit={isFromAudit}
+              onFieldChange={onPositioningFieldChange}
+              initialPositioning={initialFile?.positioning}
+            />
+            <ContextSection
+              context={file.context}
+              gaps={auditGaps}
+              isFromAudit={isFromAudit}
+              onFieldChange={onContextFieldChange}
+              initialContext={initialFile?.context}
+            />
             {file.features.length > 0 ? (
               <div>
                 <h2 className="text-text-secondary mb-3 flex items-center gap-2 text-sm font-semibold tracking-wide uppercase">

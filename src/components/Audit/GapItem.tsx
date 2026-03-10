@@ -26,7 +26,7 @@ const providerNames: Record<LLMProvider, string> = {
 };
 
 export function GapItem({ gap }: GapItemProps) {
-  const severity = severityConfig[gap.severity];
+  const severity = severityConfig[gap.severity] || severityConfig.medium;
 
   return (
     <tr className="border-border-light border-b last:border-b-0">

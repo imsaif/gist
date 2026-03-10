@@ -22,12 +22,6 @@ export default function SpecPage() {
           >
             Spec
           </Link>
-          <Link
-            href="/create"
-            className="text-text-secondary hover:text-text-primary text-sm font-medium transition-colors"
-          >
-            Create
-          </Link>
         </nav>
       </header>
 

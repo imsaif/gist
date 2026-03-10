@@ -7,3 +7,7 @@ export { SectionProgress } from './SectionProgress';
 export { ExportPanel } from './ExportPanel';
 export { BeforeAfterPreview } from './BeforeAfterPreview';
 export { EmailGate } from './EmailGate';
+export { EditableField } from './EditableField';
+export { GapCard } from './GapCard';
+export { GapFixer } from './GapFixer';
+export { ChatDrawer } from './ChatDrawer';

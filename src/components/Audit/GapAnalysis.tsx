@@ -10,9 +10,9 @@ export function GapAnalysis({ analysis }: GapAnalysisProps) {
   const { gaps, summary } = analysis;
 
   // Sort by severity: critical first, then high, then medium
-  const severityOrder = { critical: 0, high: 1, medium: 2 };
+  const severityOrder: Record<string, number> = { critical: 0, high: 1, medium: 2 };
   const sortedGaps = [...gaps].sort(
-    (a, b) => severityOrder[a.severity] - severityOrder[b.severity]
+    (a, b) => (severityOrder[a.severity] ?? 3) - (severityOrder[b.severity] ?? 3)
   );
 
   return (

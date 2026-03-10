@@ -1,57 +1,21 @@
 'use client';
 
-import { useState, useCallback, useRef, useEffect, Suspense } from 'react';
+import { useState, useCallback, useEffect, Suspense } from 'react';
 import Link from 'next/link';
-import { Message } from '@/types';
-import { GistDesignFile, FeatureProgress, BeforeAfterItem, EntryState } from '@/types/file';
-import {
-  INITIAL_GIST_FILE,
-  CREATE_INITIAL_MESSAGES_NEW,
-  CREATE_INITIAL_MESSAGES_EXISTING,
-  CREATE_INITIAL_MESSAGES_PRD,
-  getAuditInitialMessages,
-  buildAuditContextBlock,
-} from '@/lib/createPrompt';
-import { useSearchParams } from 'next/navigation';
-import { AuditResult } from '@/types/audit';
-import { parseFileResponse, mergeFileUpdate, calculateFeatureProgress } from '@/lib/fileParser';
+import { useRouter } from 'next/navigation';
+import { GistDesignFile, ProductOverview } from '@/types/file';
+import { INITIAL_GIST_FILE } from '@/lib/createPrompt';
+import { AuditResult, Gap } from '@/types/audit';
 import { generateGistDesignMarkdown } from '@/lib/export/markdown';
-import { generateDeveloperBrief } from '@/lib/export/developerBrief';
-import { FileContainer, EmailGate } from '@/components/Create';
-import { PatternCard } from '@/components/PatternCard';
+import { GapFixer } from '@/components/Create/GapFixer';
 import { Toast } from '@/components/Toast';
-import { getPatternById } from '@/lib/patterns/patterns';
-
-// --- localStorage helpers ---
-function getHasUsedFreeFile(): boolean {
-  return localStorage.getItem('hasUsedFreeFile') === 'true';
-}
-
-function markFreeFileUsed(): void {
-  localStorage.setItem('hasUsedFreeFile', 'true');
-}
-
-function getEmailVerified(): boolean {
-  return localStorage.getItem('emailVerified') === 'true';
-}
-
-function markEmailVerified(verifiedToken: string): void {
-  localStorage.setItem('emailVerified', 'true');
-  localStorage.setItem('verifiedToken', verifiedToken);
-}
 
 // ============================================
 // Page Component
 // ============================================
 
-function generateId(): string {
-  return Math.random().toString(36).substring(2, 15);
-}
-
 function CreateModeContent() {
-  const searchParams = useSearchParams();
-  const fromAudit = searchParams.get('from') === 'audit';
-  return <CreateModeInner fromAudit={fromAudit} />;
+  return <CreateModeInner />;
 }
 
 export default function CreateMode() {
@@ -70,260 +34,101 @@ function CreateModeLoading() {
   );
 }
 
-function CreateModeInner({ fromAudit = false }: { fromAudit?: boolean }) {
-  // Session state
-  const [entryState, setEntryState] = useState<EntryState | null>(null);
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [file, setFile] = useState<GistDesignFile>(INITIAL_GIST_FILE);
-  const [currentFeatureId, setCurrentFeatureId] = useState<string | null>(null);
-  const [featureProgress, setFeatureProgress] = useState<FeatureProgress[]>([]);
-  const [beforeAfter, setBeforeAfter] = useState<BeforeAfterItem[]>([]);
-  const [auditContextString, setAuditContextString] = useState<string | null>(null);
-  const [auditUrl, setAuditUrl] = useState<string | undefined>(undefined);
-  const [originalResponse, setOriginalResponse] = useState<string | undefined>(undefined);
+function loadAuditContext(): {
+  file: GistDesignFile;
+  initialFile: GistDesignFile | null;
+  gaps: Gap[];
+} | null {
+  try {
+    const stored = typeof window !== 'undefined' ? sessionStorage.getItem('audit_context') : null;
+    if (!stored) return null;
 
-  // PRD paste state
-  const [showPrdInput, setShowPrdInput] = useState(false);
-  const [prdText, setPrdText] = useState('');
-  const pendingPrdRef = useRef<string | null>(null);
+    const auditResult: AuditResult = JSON.parse(stored);
+    if (!auditResult.analysis) return null;
 
-  // Email gate state
-  const [hasUsedFreeFile, setHasUsedFreeFileState] = useState(false);
-  const [emailVerified, setEmailVerified] = useState(false);
-  const [showEmailGate, setShowEmailGate] = useState(false);
+    sessionStorage.removeItem('audit_context');
+
+    const draft = auditResult.analysis.draftFile;
+    if (draft) {
+      const prefilledFile: GistDesignFile = {
+        product: {
+          name: draft.product.name,
+          description: draft.product.description,
+          audience: draft.product.audience,
+          aiApproach: null,
+        },
+        positioning: {
+          category: draft.positioning.category,
+          forWho: draft.positioning.forWho,
+          notForWho: draft.positioning.notForWho,
+          comparisons: [],
+        },
+        context: {
+          pricing: draft.context.pricing,
+          integratesWith: [],
+          requires: [],
+          stage: draft.context.stage,
+        },
+        features: [],
+      };
+      return {
+        file: prefilledFile,
+        initialFile: structuredClone(prefilledFile),
+        gaps: auditResult.analysis.gaps,
+      };
+    }
+
+    return { file: INITIAL_GIST_FILE, initialFile: null, gaps: auditResult.analysis.gaps };
+  } catch (err) {
+    console.error('Failed to load audit context:', err);
+    return null;
+  }
+}
+
+function CreateModeInner() {
+  const router = useRouter();
+
+  const [auditContext] = useState(loadAuditContext);
+  const [file, setFile] = useState<GistDesignFile>(auditContext?.file ?? INITIAL_GIST_FILE);
+  const [initialFile] = useState<GistDesignFile | null>(auditContext?.initialFile ?? null);
+  const [auditGaps] = useState<Gap[]>(auditContext?.gaps ?? []);
 
   // UI state
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [inputValue, setInputValue] = useState('');
   const [toast, setToast] = useState({ isVisible: false, message: '' });
-  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Load audit context from sessionStorage on mount
+  // Redirect to home if no audit context
   useEffect(() => {
-    if (fromAudit) {
-      try {
-        const stored = sessionStorage.getItem('audit_context');
-        if (stored) {
-          const auditResult: AuditResult = JSON.parse(stored);
-          if (auditResult.analysis) {
-            const contextBlock = buildAuditContextBlock(auditResult.analysis);
-            setAuditContextString(contextBlock);
-            setAuditUrl(auditResult.url);
-            // Store first available LLM response for verification later
-            const firstResponse =
-              auditResult.responses.chatgpt?.content ||
-              auditResult.responses.claude?.content ||
-              auditResult.responses.perplexity?.content ||
-              '';
-            setOriginalResponse(firstResponse);
-            setEntryState('existing-product');
-            setMessages(getAuditInitialMessages(auditResult.analysis.summary.totalGaps));
-            sessionStorage.removeItem('audit_context');
-          }
-        }
-      } catch (err) {
-        console.error('Failed to load audit context:', err);
-      }
+    if (!auditContext) {
+      router.replace('/');
     }
-  }, [fromAudit]);
+  }, [auditContext, router]);
 
-  // Initialize gate state from localStorage
-  useEffect(() => {
-    setHasUsedFreeFileState(getHasUsedFreeFile());
-    setEmailVerified(getEmailVerified());
+  // Inline edit handlers
+  const handleProductFieldChange = useCallback((field: keyof ProductOverview, value: string) => {
+    setFile((prev) => ({
+      ...prev,
+      product: { ...prev.product, [field]: value },
+    }));
   }, []);
 
-  // Auto-scroll to bottom on new messages
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, isLoading]);
-
-  const showToast = (message: string) => {
-    setToast({ isVisible: true, message });
-  };
-
-  // Pending entry state — set when user selects but gate intervenes
-  const pendingEntryStateRef = useRef<EntryState | null>(null);
-
-  // Select entry state and initialize messages
-  const handleSelectEntryState = (state: EntryState) => {
-    if (state === 'have-prd') {
-      // For PRD: check gate before showing input
-      if (hasUsedFreeFile && !emailVerified) {
-        pendingEntryStateRef.current = state;
-        setShowEmailGate(true);
-        return;
-      }
-      setShowPrdInput(true);
-      return;
-    }
-
-    // Check email gate for second+ conversations
-    if (hasUsedFreeFile && !emailVerified) {
-      pendingEntryStateRef.current = state;
-      setShowEmailGate(true);
-      return;
-    }
-
-    setEntryState(state);
-    const initialMessages =
-      state === 'building-new' ? CREATE_INITIAL_MESSAGES_NEW : CREATE_INITIAL_MESSAGES_EXISTING;
-    setMessages(initialMessages);
-  };
-
-  // Submit PRD text and start chat
-  const handleSubmitPrd = () => {
-    if (!prdText.trim()) return;
-    pendingPrdRef.current = prdText.trim();
-    setEntryState('have-prd');
-    setMessages(CREATE_INITIAL_MESSAGES_PRD);
-    setShowPrdInput(false);
-  };
-
-  // Send message
-  const handleSendMessage = useCallback(
-    async (content: string) => {
-      if (!content.trim() || isLoading || !entryState) return;
-
-      setError(null);
-
-      const userMessage: Message = {
-        id: generateId(),
-        role: 'user',
-        content: content.trim(),
-        timestamp: new Date(),
-      };
-      const newMessages = [...messages, userMessage];
-      setMessages(newMessages);
-      setInputValue('');
-      setIsLoading(true);
-
-      try {
-        const response = await fetch('/api/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            messages: newMessages,
-            skill: 'create',
-            fileState: file,
-            currentFeatureId,
-            auditContext: auditContextString,
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to get response');
-        }
-
-        // Mark that the user has used their free file (after first successful response)
-        if (!hasUsedFreeFile) {
-          markFreeFileUsed();
-          setHasUsedFreeFileState(true);
-        }
-
-        const data = await response.json();
-        const { displayContent, fileUpdate, beforeAfterUpdate, identifiedPattern } =
-          parseFileResponse(data.message);
-
-        const aiMessage: Message = {
-          id: generateId(),
-          role: 'assistant',
-          content: displayContent,
-          timestamp: new Date(),
-          identifiedPattern: identifiedPattern ?? undefined,
-        };
-        setMessages((prev) => [...prev, aiMessage]);
-
-        // Merge file update
-        if (fileUpdate) {
-          setFile((prev) => {
-            const updated = mergeFileUpdate(prev, fileUpdate);
-
-            // Track current feature
-            if (fileUpdate.featureId) {
-              setCurrentFeatureId(fileUpdate.featureId);
-            }
-
-            // Recalculate progress for all features
-            const progress = updated.features.map(calculateFeatureProgress);
-            setFeatureProgress(progress);
-
-            return updated;
-          });
-        }
-
-        // Accumulate before/after items
-        if (beforeAfterUpdate?.items) {
-          setBeforeAfter((prev) => [...prev, ...beforeAfterUpdate.items]);
-        }
-      } catch (err) {
-        console.error('Chat error:', err);
-        setError('Failed to get response. Please try again.');
-      } finally {
-        setIsLoading(false);
-      }
+  const handlePositioningFieldChange = useCallback(
+    (field: 'category' | 'forWho' | 'notForWho', value: string) => {
+      setFile((prev) => ({
+        ...prev,
+        positioning: { ...prev.positioning, [field]: value },
+      }));
     },
-    [messages, isLoading, entryState, file, currentFeatureId, auditContextString, hasUsedFreeFile]
+    []
   );
 
-  // Auto-send PRD after state settles
-  useEffect(() => {
-    if (entryState === 'have-prd' && pendingPrdRef.current) {
-      const prd = pendingPrdRef.current;
-      pendingPrdRef.current = null;
-      handleSendMessage(prd);
-    }
-  }, [entryState, handleSendMessage]);
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage(inputValue);
-    }
-  };
-
-  // Called when user successfully verifies email
-  const handleEmailVerified = useCallback((verifiedToken: string) => {
-    markEmailVerified(verifiedToken);
-    setEmailVerified(true);
-    setShowEmailGate(false);
-
-    // Resume the pending entry state selection if there was one
-    const pendingState = pendingEntryStateRef.current;
-    pendingEntryStateRef.current = null;
-
-    if (pendingState) {
-      if (pendingState === 'have-prd') {
-        setShowPrdInput(true);
-      } else {
-        setEntryState(pendingState);
-        const initialMessages =
-          pendingState === 'building-new'
-            ? CREATE_INITIAL_MESSAGES_NEW
-            : CREATE_INITIAL_MESSAGES_EXISTING;
-        setMessages(initialMessages);
-      }
-    }
+  const handleContextFieldChange = useCallback((field: 'pricing' | 'stage', value: string) => {
+    setFile((prev) => ({
+      ...prev,
+      context: { ...prev.context, [field]: value },
+    }));
   }, []);
 
-  const handleNewChat = useCallback(() => {
-    if (messages.length > 1 && !confirm('Start over? Current file will be lost.')) {
-      return;
-    }
-    setEntryState(null);
-    setMessages([]);
-    setFile(INITIAL_GIST_FILE);
-    setCurrentFeatureId(null);
-    setFeatureProgress([]);
-    setBeforeAfter([]);
-    setError(null);
-    setInputValue('');
-    setShowPrdInput(false);
-    setPrdText('');
-  }, [messages.length]);
-
-  // Export handlers
+  // Download handler
   const handleDownload = useCallback(() => {
     const markdown = generateGistDesignMarkdown(file);
     const blob = new Blob([markdown], { type: 'text/markdown' });
@@ -333,20 +138,20 @@ function CreateModeInner({ fromAudit = false }: { fromAudit?: boolean }) {
     a.download = `${(file.product.name || 'untitled').toLowerCase().replace(/\s+/g, '-')}.gist.design`;
     a.click();
     URL.revokeObjectURL(url);
-    showToast('File downloaded');
+    setToast({ isVisible: true, message: 'File downloaded' });
   }, [file]);
 
-  const handleCopyMarkdown = useCallback(async () => {
+  // Copy markdown handler
+  const handleCopyMarkdown = useCallback(() => {
     const markdown = generateGistDesignMarkdown(file);
-    await navigator.clipboard.writeText(markdown);
-    showToast('Markdown copied to clipboard');
+    navigator.clipboard.writeText(markdown);
+    setToast({ isVisible: true, message: 'Copied to clipboard' });
   }, [file]);
 
-  const handleCopyBrief = useCallback(async () => {
-    const brief = generateDeveloperBrief(file, beforeAfter);
-    await navigator.clipboard.writeText(brief);
-    showToast('Developer brief copied to clipboard');
-  }, [file, beforeAfter]);
+  // If no audit context, we're redirecting — show loading
+  if (!auditContext) {
+    return <CreateModeLoading />;
+  }
 
   return (
     <div className="flex h-screen flex-col">
@@ -372,258 +177,33 @@ function CreateModeInner({ fromAudit = false }: { fromAudit?: boolean }) {
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m3.75 9v6m3-3H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"
+                d="M11.42 15.17 17.25 21A2.652 2.652 0 0 0 21 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 1 1-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 0 0 4.486-6.336l-3.276 3.277a3.004 3.004 0 0 1-2.25-2.25l3.276-3.276a4.5 4.5 0 0 0-6.336 4.486c.049.58.025 1.194-.14 1.743"
               />
             </svg>
-            <span className="text-text-secondary">Create</span>
+            <span className="text-text-secondary">Fix gaps</span>
           </span>
         </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={handleNewChat}
-            className="border-border-light text-text-secondary hover:bg-bg-secondary rounded-lg border px-4 py-2 text-sm font-medium transition-colors"
-          >
-            New
-          </button>
-        </div>
+        <Link
+          href="/"
+          className="border-border-light text-text-secondary hover:bg-bg-secondary rounded-lg border px-4 py-2 text-sm font-medium transition-colors"
+        >
+          New audit
+        </Link>
       </header>
 
-      {/* Main content */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Left panel - Conversation */}
-        <div className="border-border-light flex w-2/5 flex-col border-r">
-          <div className="flex-1 overflow-y-auto p-6">
-            {/* Entry state selection */}
-            {!entryState ? (
-              <div className="flex h-full flex-col items-center justify-center">
-                <h2 className="text-text-primary mb-2 text-lg font-semibold">
-                  Create a gist.design file
-                </h2>
-                <p className="text-text-secondary mb-8 max-w-sm text-center text-sm">
-                  Make your design decisions readable to AI coding tools and LLMs.
-                </p>
-                {showPrdInput ? (
-                  <div className="flex w-full max-w-lg flex-col gap-4">
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => {
-                          setShowPrdInput(false);
-                          setPrdText('');
-                        }}
-                        className="text-text-tertiary hover:text-text-primary transition-colors"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth={1.5}
-                          stroke="currentColor"
-                          className="h-5 w-5"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
-                          />
-                        </svg>
-                      </button>
-                      <h3 className="text-text-primary text-sm font-medium">Paste your PRD</h3>
-                    </div>
-                    <textarea
-                      value={prdText}
-                      onChange={(e) => setPrdText(e.target.value)}
-                      placeholder="Paste your PRD, spec, or product brief here..."
-                      rows={12}
-                      className="border-border-light focus:border-accent-primary w-full resize-none rounded-xl border px-4 py-3 text-sm transition-colors outline-none"
-                    />
-                    <button
-                      onClick={handleSubmitPrd}
-                      disabled={!prdText.trim()}
-                      className="bg-accent-primary hover:bg-accent-hover disabled:bg-bg-tertiary disabled:text-text-tertiary self-end rounded-xl px-6 py-3 text-sm font-medium text-white transition-colors"
-                    >
-                      Start
-                    </button>
-                  </div>
-                ) : (
-                  <div className="flex gap-4">
-                    <button
-                      onClick={() => handleSelectEntryState('building-new')}
-                      className="border-border-light hover:border-accent-primary hover:bg-accent-primary/5 flex w-48 flex-col items-center gap-2 rounded-xl border p-6 text-center transition-colors"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="text-accent-primary h-8 w-8"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M12 4.5v15m7.5-7.5h-15"
-                        />
-                      </svg>
-                      <span className="text-text-primary text-sm font-medium">Building new</span>
-                      <span className="text-text-tertiary text-xs">
-                        Starting a new product or feature
-                      </span>
-                    </button>
-                    <button
-                      onClick={() => handleSelectEntryState('existing-product')}
-                      className="border-border-light hover:border-accent-primary hover:bg-accent-primary/5 flex w-48 flex-col items-center gap-2 rounded-xl border p-6 text-center transition-colors"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="text-accent-primary h-8 w-8"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"
-                        />
-                      </svg>
-                      <span className="text-text-primary text-sm font-medium">
-                        Existing product
-                      </span>
-                      <span className="text-text-tertiary text-xs">
-                        Document decisions already made
-                      </span>
-                    </button>
-                    <button
-                      onClick={() => handleSelectEntryState('have-prd')}
-                      className="border-border-light hover:border-accent-primary hover:bg-accent-primary/5 flex w-48 flex-col items-center gap-2 rounded-xl border p-6 text-center transition-colors"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="text-accent-primary h-8 w-8"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m6.75 12H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"
-                        />
-                      </svg>
-                      <span className="text-text-primary text-sm font-medium">I have a PRD</span>
-                      <span className="text-text-tertiary text-xs">
-                        Paste your PRD to get started
-                      </span>
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {messages.map((message) => {
-                  const identifiedPattern = message.identifiedPattern
-                    ? getPatternById(message.identifiedPattern.patternId)
-                    : null;
-
-                  return (
-                    <div key={message.id}>
-                      <div
-                        className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-                      >
-                        <div
-                          className={`max-w-[80%] rounded-2xl px-4 py-3 ${
-                            message.role === 'user'
-                              ? 'bg-msg-user-bg text-msg-user-text'
-                              : 'bg-msg-ai-bg text-text-primary'
-                          }`}
-                        >
-                          <p className="text-base leading-relaxed whitespace-pre-wrap">
-                            {message.content}
-                          </p>
-                        </div>
-                      </div>
-                      {identifiedPattern && message.identifiedPattern && (
-                        <div className="mt-2 flex justify-start">
-                          <div className="max-w-[80%]">
-                            <PatternCard
-                              pattern={identifiedPattern}
-                              reason={message.identifiedPattern.reason}
-                            />
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-                {isLoading && (
-                  <div className="flex justify-start">
-                    <div className="bg-msg-ai-bg text-text-secondary rounded-2xl px-4 py-3">
-                      <span className="inline-flex gap-1">
-                        <span className="animate-bounce">.</span>
-                        <span className="animate-bounce [animation-delay:0.2s]">.</span>
-                        <span className="animate-bounce [animation-delay:0.4s]">.</span>
-                      </span>
-                    </div>
-                  </div>
-                )}
-                <div ref={messagesEndRef} />
-              </div>
-            )}
-          </div>
-
-          {/* Input area */}
-          {entryState && (
-            <div className="border-border-light border-t p-4">
-              {error && <p className="mb-2 text-sm text-red-500">{error}</p>}
-              <div className="flex gap-2">
-                <textarea
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  placeholder="Describe your product or feature..."
-                  disabled={isLoading}
-                  rows={1}
-                  className="border-border-light focus:border-accent-primary disabled:bg-bg-secondary disabled:text-text-tertiary flex-1 resize-none rounded-xl border px-4 py-3 text-base transition-colors outline-none"
-                />
-                <button
-                  onClick={() => handleSendMessage(inputValue)}
-                  disabled={isLoading || !inputValue.trim()}
-                  className="bg-accent-primary hover:bg-accent-hover disabled:bg-bg-tertiary disabled:text-text-tertiary rounded-xl px-6 py-3 font-medium text-white transition-colors"
-                >
-                  Send
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Right panel - File Preview */}
-        <div className="bg-bg-secondary flex w-3/5 flex-col">
-          <FileContainer
-            file={file}
-            currentFeatureId={currentFeatureId}
-            featureProgress={featureProgress}
-            beforeAfter={beforeAfter}
-            onDownload={handleDownload}
-            onCopyMarkdown={handleCopyMarkdown}
-            onCopyBrief={handleCopyBrief}
-            auditUrl={auditUrl}
-            originalResponse={originalResponse}
-          />
-        </div>
-      </div>
-
-      {showEmailGate && (
-        <EmailGate
-          onVerified={handleEmailVerified}
-          onClose={() => {
-            setShowEmailGate(false);
-            pendingEntryStateRef.current = null;
-          }}
+      {/* Gap fixer */}
+      <div className="flex-1 overflow-y-auto">
+        <GapFixer
+          gaps={auditGaps}
+          file={file}
+          initialFile={initialFile}
+          onProductFieldChange={handleProductFieldChange}
+          onPositioningFieldChange={handlePositioningFieldChange}
+          onContextFieldChange={handleContextFieldChange}
+          onDownload={handleDownload}
+          onCopyMarkdown={handleCopyMarkdown}
         />
-      )}
+      </div>
 
       <Toast
         message={toast.message}

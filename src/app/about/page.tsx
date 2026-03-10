@@ -24,12 +24,6 @@ export default function AboutPage() {
           <Link href="/about" className="text-accent-primary text-sm font-medium">
             About
           </Link>
-          <Link
-            href="/create"
-            className="text-text-secondary hover:text-text-primary text-sm font-medium transition-colors"
-          >
-            Create
-          </Link>
         </nav>
       </header>
 
@@ -86,12 +80,12 @@ export default function AboutPage() {
               <li>
                 <strong className="text-text-primary">Web app</strong> — same guided conversation at{' '}
                 <Link
-                  href="/create"
+                  href="/"
                   className="text-accent-primary hover:text-accent-hover transition-colors"
                 >
-                  gist.design/create
+                  gist.design
                 </Link>
-                . Works for anyone on the team.
+                . Run an audit, fix the gaps, download your file.
               </li>
             </ul>
             <p className="text-text-secondary mt-3 text-base leading-relaxed">
@@ -149,10 +143,10 @@ export default function AboutPage() {
               Install Claude Code skill
             </a>
             <Link
-              href="/create"
+              href="/"
               className="text-text-secondary hover:text-text-primary text-base font-medium transition-colors"
             >
-              or generate in browser
+              or run a free audit
             </Link>
           </div>
         </div>

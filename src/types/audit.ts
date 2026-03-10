@@ -40,9 +40,33 @@ export interface GapAnalysisSummary {
   bestModel: LLMProvider;
 }
 
+export interface DraftProductOverview {
+  name: string | null;
+  description: string | null;
+  audience: string | null;
+}
+
+export interface DraftPositioning {
+  category: string | null;
+  forWho: string | null;
+  notForWho: string | null;
+}
+
+export interface DraftContext {
+  pricing: string | null;
+  stage: string | null;
+}
+
+export interface DraftFile {
+  product: DraftProductOverview;
+  positioning: DraftPositioning;
+  context: DraftContext;
+}
+
 export interface GapAnalysis {
   gaps: Gap[];
   summary: GapAnalysisSummary;
+  draftFile?: DraftFile;
 }
 
 export interface FetchedContent {

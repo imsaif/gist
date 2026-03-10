@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import Link from 'next/link';
 import { AuditResult, LLMProvider, LLMResponse, GapAnalysis } from '@/types/audit';
 import { parseSSEEvents } from '@/lib/audit/sseParser';
 import { AuditInput } from './AuditInput';
@@ -29,7 +28,7 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
   const [responses, setResponses] = useState<Partial<Record<LLMProvider, LLMResponse>>>({});
   const [result, setResult] = useState<AuditResult | null>(null);
   const [errorMessage, setErrorMessage] = useState('');
-  const [remaining, setRemaining] = useState<number | undefined>(undefined);
+  const [remaining] = useState<number | undefined>(undefined);
 
   const updatePhase = useCallback(
     (newPhase: AuditPhase) => {
@@ -162,12 +161,6 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
       {phase === 'input' && (
         <div className="flex flex-col items-start">
           <AuditInput onSubmit={handleUrlSubmit} isLoading={false} remaining={remaining} />
-          <Link
-            href="/create"
-            className="text-text-tertiary hover:text-text-secondary mt-3 text-sm transition-colors"
-          >
-            or skip to file creation
-          </Link>
         </div>
       )}
 
@@ -213,9 +206,9 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
         </div>
       )}
 
-      {/* Complete phase — results + CTA */}
+      {/* Complete phase — results */}
       {phase === 'complete' && result && (
-        <div className="w-full max-w-7xl space-y-8">
+        <div className="w-full max-w-7xl space-y-8 pb-24">
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-text-primary text-xl font-bold tracking-tight">Audit Results</h3>
@@ -229,7 +222,25 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
             </button>
           </div>
           <AuditResults result={result} />
-          <AuditToConversation result={result} />
+        </div>
+      )}
+
+      {/* Fixed bottom CTA bar */}
+      {phase === 'complete' && result && (
+        <div className="border-border-light bg-bg-primary/80 fixed right-0 bottom-0 left-0 z-50 border-t backdrop-blur-xl">
+          <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+            <div className="text-sm">
+              <span className="text-text-secondary">
+                {result.analysis?.summary.totalGaps || 0} gaps found
+              </span>
+              {(result.analysis?.summary.criticalGaps || 0) > 0 && (
+                <span className="ml-2 font-semibold text-red-400">
+                  {result.analysis?.summary.criticalGaps} critical
+                </span>
+              )}
+            </div>
+            <AuditToConversation result={result} />
+          </div>
         </div>
       )}
 

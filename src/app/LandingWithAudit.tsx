@@ -29,12 +29,6 @@ export function LandingWithAudit({ marketingSections }: LandingWithAuditProps) {
             >
               Spec
             </Link>
-            <Link
-              href="/create"
-              className="text-accent-primary hover:text-accent-hover text-sm font-medium transition-colors"
-            >
-              Create
-            </Link>
           </nav>
         </header>
 

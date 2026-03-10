@@ -1,4 +1,4 @@
-import { GapAnalysis } from '@/types/audit';
+import { GapAnalysis, DraftFile } from '@/types/audit';
 
 // ============================================
 // Audit Prompt (sent to all 3 LLMs)
@@ -80,6 +80,8 @@ For severity:
 - **high**: Significant gap that would lead to wrong recommendations or implementations
 - **medium**: Minor inaccuracy or missing nuance
 
+Also extract a "draftFile" — your best guess at structured product info based on what the LLMs described. This is what the LLMs CURRENTLY think the product is (even if wrong). Use null for fields you can't determine.
+
 Respond with ONLY valid JSON matching this exact structure (no markdown, no code fences):
 
 ${JSON.stringify(
@@ -101,6 +103,22 @@ ${JSON.stringify(
       worstModel: 'chatgpt',
       bestModel: 'claude',
     },
+    draftFile: {
+      product: {
+        name: 'Product name as described by LLMs',
+        description: 'What LLMs think the product does',
+        audience: 'Who LLMs think it is for',
+      },
+      positioning: {
+        category: 'Category LLMs placed it in',
+        forWho: 'Target audience per LLMs',
+        notForWho: null,
+      },
+      context: {
+        pricing: null,
+        stage: null,
+      },
+    } satisfies DraftFile,
   } satisfies GapAnalysis,
   null,
   2
@@ -189,6 +207,23 @@ export function getMockAnalysis(): GapAnalysis {
       readabilityScore: 'Poor',
       worstModel: 'chatgpt',
       bestModel: 'claude',
+    },
+    draftFile: {
+      product: {
+        name: 'Mock Product',
+        description:
+          'A project management tool that helps teams organize work, track tasks, and collaborate effectively using Kanban boards and team messaging.',
+        audience: 'Teams and organizations of all sizes',
+      },
+      positioning: {
+        category: 'Project management',
+        forWho: 'Teams who need to organize and track work',
+        notForWho: null,
+      },
+      context: {
+        pricing: null,
+        stage: null,
+      },
     },
   };
 }

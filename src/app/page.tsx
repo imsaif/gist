@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import {
   ShieldCheckIcon,
   ExclamationTriangleIcon,
@@ -138,8 +137,8 @@ function MarketingSections() {
                 Best when you are already in a coding environment
               </p>
             </a>
-            <Link
-              href="/create"
+            <a
+              href="#top"
               className="glass group rounded-2xl p-6 transition-colors hover:border-white/[0.12] hover:bg-[rgba(26,29,39,0.6)]"
             >
               <div className="text-text-secondary mb-3">
@@ -159,11 +158,11 @@ function MarketingSections() {
               </div>
               <h3 className="text-text-primary mb-2 text-xl font-semibold">In your browser</h3>
               <p className="text-text-secondary text-base leading-relaxed">
-                Same guided conversation, same output format. Works for anyone on the team — PMs,
-                designers, founders, engineers.
+                Run an audit above to see what LLMs get wrong, then fix the gaps and download your
+                file.
               </p>
               <p className="text-text-tertiary mt-3 text-sm">No setup required</p>
-            </Link>
+            </a>
           </div>
         </div>
       </div>
@@ -707,11 +706,11 @@ function MarketingSections() {
             coding tools and LLMs actually read.
           </p>
           <div className="mt-8">
-            <Link
-              href="/create"
+            <a
+              href="#top"
               className="bg-accent-primary hover:bg-accent-hover inline-flex items-center gap-2 rounded-2xl px-8 py-4 text-lg font-semibold text-white transition-colors"
             >
-              Create gist.design
+              Run free audit
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -726,7 +725,7 @@ function MarketingSections() {
                   d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
                 />
               </svg>
-            </Link>
+            </a>
           </div>
         </div>
       </div>
