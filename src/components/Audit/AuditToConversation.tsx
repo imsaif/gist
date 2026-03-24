@@ -8,7 +8,7 @@ interface AuditToConversationProps {
 
 export function AuditToConversation({ result }: AuditToConversationProps) {
   const handleClick = () => {
-    sessionStorage.setItem('audit_context', JSON.stringify(result));
+    localStorage.setItem('audit_context', JSON.stringify(result));
     window.location.href = '/create';
   };
 

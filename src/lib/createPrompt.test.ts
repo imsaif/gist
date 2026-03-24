@@ -151,18 +151,18 @@ describe('buildAuditContextBlock', () => {
       {
         id: 'g1',
         severity: 'critical',
-        category: 'competitor_blending',
-        description: 'Models confuse this with competitors',
-        modelsAffected: ['chatgpt', 'perplexity'],
+        category: 'contradiction',
+        description: 'Models contradict each other about product category',
+        modelsAffected: ['chatgpt', 'claude'],
         whatFileNeeds: 'Clear positioning section',
       },
       {
         id: 'g2',
         severity: 'high',
-        category: 'missing_decisions',
-        description: 'No design decisions documented',
+        category: 'fabrication',
+        description: 'ChatGPT fabricated features',
         modelsAffected: ['chatgpt'],
-        whatFileNeeds: 'Design decisions per feature',
+        whatFileNeeds: 'Explicit feature list',
       },
     ],
   };
@@ -185,13 +185,13 @@ describe('buildAuditContextBlock', () => {
 
   it('lists gaps with severity and category labels', () => {
     const ctx = buildAuditContextBlock(mockAnalysis);
-    expect(ctx).toContain('[CRITICAL] Competitor Blending');
-    expect(ctx).toContain('[HIGH] Missing Decisions');
+    expect(ctx).toContain('[CRITICAL] Contradiction');
+    expect(ctx).toContain('[HIGH] Fabrication');
   });
 
   it('includes affected models and what file needs', () => {
     const ctx = buildAuditContextBlock(mockAnalysis);
-    expect(ctx).toContain('Affected: chatgpt, perplexity');
+    expect(ctx).toContain('Affected: chatgpt, claude');
     expect(ctx).toContain('File needs: Clear positioning section');
   });
 

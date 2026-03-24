@@ -27,7 +27,7 @@ export function GapAnalysis({ analysis }: GapAnalysisProps) {
         </div>
         <div>
           <p className="text-text-tertiary mb-1 text-xs font-medium tracking-wider uppercase">
-            Gaps Found
+            Conflicts Found
           </p>
           <p className="text-text-primary text-2xl font-bold">
             {summary.totalGaps}
@@ -40,7 +40,7 @@ export function GapAnalysis({ analysis }: GapAnalysisProps) {
         </div>
         <div>
           <p className="text-text-tertiary mb-1 text-xs font-medium tracking-wider uppercase">
-            Most Issues
+            Most Conflicts
           </p>
           <p className="text-text-primary text-base font-semibold capitalize">
             {summary.worstModel}
@@ -48,7 +48,7 @@ export function GapAnalysis({ analysis }: GapAnalysisProps) {
         </div>
         <div>
           <p className="text-text-tertiary mb-1 text-xs font-medium tracking-wider uppercase">
-            Fewest Issues
+            Most Accurate
           </p>
           <p className="text-text-primary text-base font-semibold capitalize">
             {summary.bestModel}

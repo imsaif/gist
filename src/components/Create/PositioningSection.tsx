@@ -14,7 +14,7 @@ interface PositioningSectionProps {
   initialPositioning?: Positioning | null;
 }
 
-const SECTION_GAP_CATEGORIES = ['positioning_drift', 'competitor_blending', 'missing_boundaries'];
+const SECTION_GAP_CATEGORIES = ['contradiction', 'category_conflict'];
 
 export function PositioningSection({
   positioning,
@@ -37,14 +37,11 @@ export function PositioningSection({
 
   function isGapResolved(gap: Gap): boolean {
     if (!isFromAudit) return false;
-    if (gap.category === 'positioning_drift') {
+    if (gap.category === 'category_conflict') {
       return isFieldChanged('category');
     }
-    if (gap.category === 'competitor_blending') {
-      return positioning.comparisons.length > (initialPositioning?.comparisons.length || 0);
-    }
-    if (gap.category === 'missing_boundaries') {
-      return isFieldChanged('notForWho');
+    if (gap.category === 'contradiction') {
+      return isFieldChanged('category') || isFieldChanged('forWho');
     }
     return false;
   }

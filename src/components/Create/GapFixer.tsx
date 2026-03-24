@@ -10,9 +10,13 @@ import {
   InformationCircleIcon,
   CheckCircleIcon,
   ArrowDownTrayIcon,
-  ArrowLeftIcon,
   DocumentDuplicateIcon,
+  ShieldExclamationIcon,
+  MapPinIcon,
+  SparklesIcon,
+  NoSymbolIcon,
 } from '@heroicons/react/24/outline';
+import { CheckCircleIcon as CheckCircleSolidIcon } from '@heroicons/react/24/solid';
 
 interface GapFixerProps {
   gaps: Gap[];
@@ -23,9 +27,10 @@ interface GapFixerProps {
   onContextFieldChange: (field: 'pricing' | 'stage', value: string) => void;
   onDownload: () => void;
   onCopyMarkdown: () => void;
+  onBackToAudit?: () => void;
 }
 
-// Each gap category maps to a question and the fields the answer populates
+// Each conflict category maps to a question and the fields the answer populates
 const gapQuestions: Record<
   string,
   {
@@ -34,64 +39,73 @@ const gapQuestions: Record<
     fields: { key: string; sectionKey: string }[];
   }
 > = {
-  competitor_blending: {
+  contradiction: {
     question:
-      'LLMs are confusing your product with competitors. What category does your product actually belong to, and what is it NOT?',
+      'LLMs are contradicting each other about your product. Which description is correct, and what should they both say?',
     placeholder:
-      'e.g. "We\'re a design handoff tool, not a project management tool. We\'re not Asana or Trello — closer to Zeplin but focused on developer specs."',
+      'e.g. "We ARE a SaaS with subscription pricing starting at $19/mo. We are NOT open source or free. The correct description is..."',
     fields: [
+      { key: 'description', sectionKey: 'product' },
       { key: 'category', sectionKey: 'positioning' },
-      { key: 'notForWho', sectionKey: 'positioning' },
     ],
   },
-  positioning_drift: {
+  fabrication: {
     question:
-      'LLMs are placing your product in the wrong category. What does your product actually do, and who is it for?',
+      "An LLM is claiming your product has features that don't exist. What does your product actually do?",
     placeholder:
-      'e.g. "We\'re a browser-based IDE for data scientists, not a general code editor. Built for people who think in notebooks, not files."',
+      'e.g. "We do NOT have a Slack integration. Our integrations are GitHub and Linear only. The core product does..."',
+    fields: [
+      { key: 'description', sectionKey: 'product' },
+      { key: 'name', sectionKey: 'product' },
+    ],
+  },
+  category_conflict: {
+    question:
+      "LLMs can't agree on what type of product you are. What category does your product belong to?",
+    placeholder:
+      'e.g. "We are a developer tool, specifically a CLI for database migrations. Not a design tool, not a project management tool."',
     fields: [
       { key: 'category', sectionKey: 'positioning' },
       { key: 'forWho', sectionKey: 'positioning' },
     ],
   },
-  fabrication: {
+  shared_inaccuracy: {
     question:
-      "LLMs are making up features that don't exist. In one or two sentences, what does your product actually do?",
+      "Both LLMs agree on something that's actually wrong about your product. What's the correct information?",
     placeholder:
-      'e.g. "We do automated accessibility testing for web apps. We don\'t do performance monitoring, analytics, or SEO — just accessibility."',
-    fields: [
-      { key: 'name', sectionKey: 'product' },
-      { key: 'description', sectionKey: 'product' },
-    ],
-  },
-  invisible_mechanics: {
-    question:
-      'LLMs can describe what your product IS but not HOW it works. Walk me through the core mechanic — what happens when someone uses it?',
-    placeholder:
-      'e.g. "You paste a URL, we crawl it, run 50+ WCAG checks, and give you a prioritized fix list with code snippets. Takes about 30 seconds."',
+      'e.g. "We don\'t support Python. We are JavaScript/TypeScript only. Both models got this wrong because..."',
     fields: [
       { key: 'description', sectionKey: 'product' },
-      { key: 'aiApproach', sectionKey: 'product' },
-    ],
-  },
-  missing_decisions: {
-    question:
-      "LLMs describe your product generically — like marketing copy. What's the one design decision that makes you different from obvious alternatives?",
-    placeholder:
-      'e.g. "We chose real-time collaboration over version control because our users are non-technical and the merge conflict model breaks their mental model."',
-    fields: [
-      { key: 'aiApproach', sectionKey: 'product' },
-      { key: 'description', sectionKey: 'product' },
-    ],
-  },
-  missing_boundaries: {
-    question:
-      "LLMs don't know what your product is NOT for. Who should NOT use your product, and what should they use instead?",
-    placeholder:
-      'e.g. "Not for enterprise teams with 100+ users — we\'re built for small teams of 2-10. Large teams should look at Figma or Abstract."',
-    fields: [
-      { key: 'notForWho', sectionKey: 'positioning' },
       { key: 'audience', sectionKey: 'product' },
+    ],
+  },
+  audience_mismatch: {
+    question:
+      'LLMs disagree on who your product is for. Who is your actual target audience, and who is it NOT for?',
+    placeholder:
+      'e.g. "We\'re built for solo founders and teams under 10. NOT for enterprises. Think indie hackers, not Fortune 500."',
+    fields: [
+      { key: 'forWho', sectionKey: 'positioning' },
+      { key: 'notForWho', sectionKey: 'positioning' },
+    ],
+  },
+  missing_differentiator: {
+    question:
+      'Both LLMs describe your product generically — their descriptions could apply to any competitor. What makes your product different?',
+    placeholder:
+      'e.g. "Unlike Trello, we auto-prioritize tasks using deadlines and dependencies. No manual dragging — the board organizes itself."',
+    fields: [
+      { key: 'description', sectionKey: 'product' },
+      { key: 'category', sectionKey: 'positioning' },
+    ],
+  },
+  pricing_confusion: {
+    question: "LLMs are guessing or getting your pricing wrong. What's the actual pricing model?",
+    placeholder:
+      'e.g. "Free for up to 3 users. Pro plan is $12/user/month. No enterprise tier — we don\'t do annual contracts."',
+    fields: [
+      { key: 'pricing', sectionKey: 'context' },
+      { key: 'description', sectionKey: 'product' },
     ],
   },
 };
@@ -120,6 +134,16 @@ const severityConfig: Record<
   },
 };
 
+const categoryMeta: Record<string, { label: string; icon: typeof ShieldExclamationIcon }> = {
+  contradiction: { label: 'Contradiction', icon: ShieldExclamationIcon },
+  fabrication: { label: 'Fabrication', icon: SparklesIcon },
+  category_conflict: { label: 'Category conflict', icon: MapPinIcon },
+  shared_inaccuracy: { label: 'Shared inaccuracy', icon: NoSymbolIcon },
+  audience_mismatch: { label: 'Audience mismatch', icon: ExclamationCircleIcon },
+  missing_differentiator: { label: 'No differentiator', icon: InformationCircleIcon },
+  pricing_confusion: { label: 'Pricing confusion', icon: ExclamationTriangleIcon },
+};
+
 function getFieldValue(file: GistDesignFile, sectionKey: string, fieldKey: string): string | null {
   if (sectionKey === 'product')
     return (file.product as unknown as Record<string, string | null>)[fieldKey] ?? null;
@@ -138,6 +162,7 @@ export function GapFixer({
   onContextFieldChange,
   onDownload,
   onCopyMarkdown,
+  onBackToAudit,
 }: GapFixerProps) {
   const severityOrder: Record<string, number> = { critical: 0, high: 1, medium: 2 };
   const sortedGaps = [...gaps].sort(
@@ -147,11 +172,11 @@ export function GapFixer({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [skippedIds, setSkippedIds] = useState<Set<string>>(new Set());
+  const [showDone, setShowDone] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const addressedCount = Object.keys(answers).length;
   const totalCount = sortedGaps.length;
-  const allDone = addressedCount + skippedIds.size >= totalCount;
 
   const currentGap = sortedGaps[currentIndex];
   const isCurrentAnswered = currentGap ? !!answers[currentGap.id] : false;
@@ -171,7 +196,8 @@ export function GapFixer({
     const questionConfig = gapQuestions[gap.category];
     if (!questionConfig) return;
 
-    setAnswers((prev) => ({ ...prev, [gapId]: answer.trim() }));
+    const newAnswers = { ...answers, [gapId]: answer.trim() };
+    setAnswers(newAnswers);
 
     const primaryField = questionConfig.fields[0];
     if (primaryField) {
@@ -185,6 +211,12 @@ export function GapFixer({
       } else if (primaryField.sectionKey === 'context') {
         onContextFieldChange(primaryField.key as 'pricing' | 'stage', answer.trim());
       }
+    }
+
+    // Check if all done after this answer
+    if (Object.keys(newAnswers).length + skippedIds.size >= totalCount) {
+      setShowDone(true);
+      return;
     }
 
     goToNext();
@@ -203,206 +235,315 @@ export function GapFixer({
   }
 
   function handleSkip() {
-    setSkippedIds((prev) => new Set(prev).add(currentGap.id));
+    const newSkipped = new Set(skippedIds).add(currentGap.id);
+    setSkippedIds(newSkipped);
+
+    // Check if all done after skip
+    if (Object.keys(answers).length + newSkipped.size >= totalCount) {
+      setShowDone(true);
+      return;
+    }
     goToNext();
   }
 
-  function handleBack() {
-    window.history.back();
-  }
+  // Done view — full width
+  if (showDone) {
+    return (
+      <div className="mx-auto max-w-3xl px-6 py-8">
+        <CheckCircleIcon className="mb-4 h-10 w-10 text-green-400" />
+        <h2 className="text-text-primary mb-2 text-xl font-semibold">Your file is ready</h2>
+        <p className="text-text-secondary mb-8 max-w-lg text-sm leading-relaxed">
+          Download your{' '}
+          <code className="text-text-primary bg-bg-tertiary rounded px-1.5 py-0.5 font-mono text-xs">
+            .gist.design
+          </code>{' '}
+          file and drop it in your project root. AI coding tools will read it automatically.
+        </p>
 
-  return (
-    <div className="mx-auto flex h-full max-w-3xl flex-col px-6 py-8">
-      {/* Back + Progress */}
-      <div className="mb-8">
-        <div className="mb-4">
+        <div className="mb-4 flex gap-3">
           <button
-            onClick={handleBack}
-            className="text-text-tertiary hover:text-text-primary flex items-center gap-1.5 text-sm transition-colors"
+            onClick={onDownload}
+            className="bg-accent-primary hover:bg-accent-hover flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-medium text-white transition-colors"
           >
-            <ArrowLeftIcon className="h-4 w-4" />
-            Back to audit
+            <ArrowDownTrayIcon className="h-4 w-4" />
+            Download file
+          </button>
+          <button
+            onClick={onCopyMarkdown}
+            className="border-border-light text-text-secondary hover:bg-bg-secondary flex items-center gap-2 rounded-xl border px-6 py-3 text-sm font-medium transition-colors"
+          >
+            <DocumentDuplicateIcon className="h-4 w-4" />
+            Copy to clipboard
           </button>
         </div>
-        <div className="mb-2 flex items-center justify-between">
-          <span className="text-text-secondary text-sm font-medium">
-            {addressedCount} of {totalCount} gaps addressed
-          </span>
-        </div>
-        <div className="flex gap-1">
-          {sortedGaps.map((gap, i) => {
-            const answered = !!answers[gap.id];
-            const skipped = skippedIds.has(gap.id);
-            const isCurrent = i === currentIndex;
-            return (
-              <button
-                key={gap.id}
-                onClick={() => setCurrentIndex(i)}
-                className={`h-2 flex-1 rounded-full transition-all ${
-                  answered
-                    ? 'bg-green-500'
-                    : skipped
-                      ? 'bg-bg-tertiary'
-                      : isCurrent
-                        ? 'bg-accent-primary'
-                        : 'bg-bg-tertiary'
-                }`}
-              />
-            );
-          })}
-        </div>
-      </div>
+        <button
+          onClick={() => setShowDone(false)}
+          className="text-text-tertiary hover:text-text-primary mb-10 flex items-center gap-1 text-sm transition-colors"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            stroke="currentColor"
+            className="h-3.5 w-3.5"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+          </svg>
+          Edit answers
+        </button>
 
-      {/* All done — download + instructions */}
-      {allDone ? (
-        <div className="flex-1">
-          <CheckCircleIcon className="mb-4 h-10 w-10 text-green-400" />
-          <h2 className="text-text-primary mb-2 text-xl font-semibold">Your file is ready</h2>
-          <p className="text-text-secondary mb-8 max-w-lg text-sm leading-relaxed">
-            Download your{' '}
-            <code className="text-text-primary bg-bg-tertiary rounded px-1.5 py-0.5 font-mono text-xs">
-              .gist.design
-            </code>{' '}
-            file and drop it in your project root. AI coding tools will read it automatically.
-          </p>
-
-          {/* Download actions */}
-          <div className="mb-10 flex gap-3">
-            <button
-              onClick={onDownload}
-              className="bg-accent-primary hover:bg-accent-hover flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-medium text-white transition-colors"
-            >
-              <ArrowDownTrayIcon className="h-4 w-4" />
-              Download file
-            </button>
-            <button
-              onClick={onCopyMarkdown}
-              className="border-border-light text-text-secondary hover:bg-bg-secondary flex items-center gap-2 rounded-xl border px-6 py-3 text-sm font-medium transition-colors"
-            >
-              <DocumentDuplicateIcon className="h-4 w-4" />
-              Copy to clipboard
-            </button>
-          </div>
-
-          {/* What this fixes for LLMs */}
-          <div className="mb-8">
-            <h3 className="text-text-primary mb-4 text-sm font-semibold">
-              What this fixes for LLMs
-            </h3>
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <div className="border-border-light rounded-xl border p-4">
-                <p className="text-text-primary mb-1 text-sm font-medium">
-                  Stops competitor blending
-                </p>
-                <p className="text-text-tertiary text-xs leading-relaxed">
-                  LLMs will know exactly what category you belong to and stop confusing you with
-                  similar products
-                </p>
-              </div>
-              <div className="border-border-light rounded-xl border p-4">
-                <p className="text-text-primary mb-1 text-sm font-medium">
-                  Prevents feature fabrication
-                </p>
-                <p className="text-text-tertiary text-xs leading-relaxed">
-                  Clear boundaries mean LLMs won&apos;t invent capabilities that don&apos;t exist
-                  when recommending your product
-                </p>
-              </div>
-              <div className="border-border-light rounded-xl border p-4">
-                <p className="text-text-primary mb-1 text-sm font-medium">
-                  Improves code generation
-                </p>
-                <p className="text-text-tertiary text-xs leading-relaxed">
-                  AI coding tools will understand your intent and design decisions, building what
-                  you actually want
-                </p>
-              </div>
-              <div className="border-border-light rounded-xl border p-4">
-                <p className="text-text-primary mb-1 text-sm font-medium">
-                  Accurate recommendations
-                </p>
-                <p className="text-text-tertiary text-xs leading-relaxed">
-                  When users ask LLMs for tool suggestions, your product gets recommended to the
-                  right people for the right reasons
-                </p>
-              </div>
+        <div className="mb-8">
+          <h3 className="text-text-primary mb-4 text-sm font-semibold">What this fixes for LLMs</h3>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className="border-border-light rounded-xl border p-4">
+              <p className="text-text-primary mb-1 text-sm font-medium">Resolves contradictions</p>
+              <p className="text-text-tertiary text-xs leading-relaxed">
+                LLMs will give consistent, accurate descriptions instead of contradicting each other
+                about what your product does
+              </p>
+            </div>
+            <div className="border-border-light rounded-xl border p-4">
+              <p className="text-text-primary mb-1 text-sm font-medium">Prevents fabrication</p>
+              <p className="text-text-tertiary text-xs leading-relaxed">
+                Clear feature boundaries mean LLMs won&apos;t invent capabilities that don&apos;t
+                exist
+              </p>
+            </div>
+            <div className="border-border-light rounded-xl border p-4">
+              <p className="text-text-primary mb-1 text-sm font-medium">Clarifies your category</p>
+              <p className="text-text-tertiary text-xs leading-relaxed">
+                LLMs will agree on what type of product you are instead of placing you in different
+                categories
+              </p>
+            </div>
+            <div className="border-border-light rounded-xl border p-4">
+              <p className="text-text-primary mb-1 text-sm font-medium">Corrects shared errors</p>
+              <p className="text-text-tertiary text-xs leading-relaxed">
+                When both LLMs get the same thing wrong, the file sets the record straight
+              </p>
             </div>
           </div>
+        </div>
 
-          {/* Setup instructions */}
-          <div className="border-border-light rounded-xl border p-6">
-            <h3 className="text-text-primary mb-4 text-sm font-semibold">How to use your file</h3>
-            <ol className="space-y-4 text-sm">
-              <li className="flex gap-3">
-                <span className="bg-bg-tertiary text-text-secondary flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold">
-                  1
-                </span>
-                <div>
-                  <p className="text-text-primary font-medium">Place in your project root</p>
-                  <p className="text-text-tertiary mt-0.5">
-                    Save as{' '}
-                    <code className="bg-bg-tertiary rounded px-1 py-0.5 font-mono text-xs">
-                      your-product.gist.design
-                    </code>{' '}
-                    next to your{' '}
-                    <code className="bg-bg-tertiary rounded px-1 py-0.5 font-mono text-xs">
-                      package.json
-                    </code>{' '}
-                    or{' '}
-                    <code className="bg-bg-tertiary rounded px-1 py-0.5 font-mono text-xs">
-                      README.md
-                    </code>
-                  </p>
-                </div>
-              </li>
-              <li className="flex gap-3">
-                <span className="bg-bg-tertiary text-text-secondary flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold">
-                  2
-                </span>
-                <div>
-                  <p className="text-text-primary font-medium">AI tools read it automatically</p>
-                  <p className="text-text-tertiary mt-0.5">
-                    Claude Code, Cursor, Copilot, and ChatGPT will pick it up when working in your
-                    repo — no configuration needed
-                  </p>
-                </div>
-              </li>
-              <li className="flex gap-3">
-                <span className="bg-bg-tertiary text-text-secondary flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold">
-                  3
-                </span>
-                <div>
-                  <p className="text-text-primary font-medium">Run the audit again to verify</p>
-                  <p className="text-text-tertiary mt-0.5">
-                    After deploying,{' '}
-                    <Link
-                      href="/"
-                      className="text-accent-primary hover:text-accent-hover transition-colors"
-                    >
-                      run another audit
-                    </Link>{' '}
-                    to see if LLMs now describe your product correctly
-                  </p>
-                </div>
-              </li>
-            </ol>
+        <div className="border-border-light rounded-xl border p-6">
+          <h3 className="text-text-primary mb-4 text-sm font-semibold">How to use your file</h3>
+          <ol className="space-y-4 text-sm">
+            <li className="flex gap-3">
+              <span className="bg-bg-tertiary text-text-secondary flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold">
+                1
+              </span>
+              <div>
+                <p className="text-text-primary font-medium">Place in your project root</p>
+                <p className="text-text-tertiary mt-0.5">
+                  Save as{' '}
+                  <code className="bg-bg-tertiary rounded px-1 py-0.5 font-mono text-xs">
+                    your-product.gist.design
+                  </code>{' '}
+                  next to your{' '}
+                  <code className="bg-bg-tertiary rounded px-1 py-0.5 font-mono text-xs">
+                    package.json
+                  </code>{' '}
+                  or{' '}
+                  <code className="bg-bg-tertiary rounded px-1 py-0.5 font-mono text-xs">
+                    README.md
+                  </code>
+                </p>
+              </div>
+            </li>
+            <li className="flex gap-3">
+              <span className="bg-bg-tertiary text-text-secondary flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold">
+                2
+              </span>
+              <div>
+                <p className="text-text-primary font-medium">AI tools read it automatically</p>
+                <p className="text-text-tertiary mt-0.5">
+                  Claude Code, Cursor, Copilot, and ChatGPT will pick it up when working in your
+                  repo — no configuration needed
+                </p>
+              </div>
+            </li>
+            <li className="flex gap-3">
+              <span className="bg-bg-tertiary text-text-secondary flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold">
+                3
+              </span>
+              <div>
+                <p className="text-text-primary font-medium">Run the audit again to verify</p>
+                <p className="text-text-tertiary mt-0.5">
+                  After deploying,{' '}
+                  <Link
+                    href="/"
+                    className="text-accent-primary hover:text-accent-hover transition-colors"
+                  >
+                    run another audit
+                  </Link>{' '}
+                  to see if LLMs now describe your product correctly
+                </p>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+    );
+  }
+
+  // Two-column layout: Q&A left, checklist right
+  return (
+    <div className="mx-auto flex max-w-6xl gap-10 px-6 py-8">
+      {/* Left — Q&A */}
+      <div className="min-w-0 flex-1">
+        {/* Back to audit */}
+        {onBackToAudit && (
+          <button
+            onClick={onBackToAudit}
+            className="text-text-tertiary hover:text-text-primary mb-6 flex items-center gap-1.5 text-sm transition-colors"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+              className="h-3.5 w-3.5"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+            </svg>
+            Back to audit results
+          </button>
+        )}
+        {/* Progress bar */}
+        <div className="mb-8">
+          <div className="mb-2 flex items-center justify-between">
+            <span className="text-text-secondary text-sm font-medium">
+              {addressedCount} of {totalCount} gaps addressed
+            </span>
+          </div>
+          <div className="flex gap-1">
+            {sortedGaps.map((gap, i) => {
+              const answered = !!answers[gap.id];
+              const skipped = skippedIds.has(gap.id);
+              const isCurrent = i === currentIndex;
+              return (
+                <button
+                  key={gap.id}
+                  onClick={() => setCurrentIndex(i)}
+                  className={`h-2 flex-1 rounded-full transition-all ${
+                    answered
+                      ? 'bg-green-500'
+                      : skipped
+                        ? 'bg-bg-tertiary'
+                        : isCurrent
+                          ? 'bg-accent-primary'
+                          : 'bg-bg-tertiary'
+                  }`}
+                />
+              );
+            })}
           </div>
         </div>
-      ) : currentGap ? (
-        <GapStep
-          key={currentGap.id}
-          gap={currentGap}
-          file={file}
-          isAnswered={isCurrentAnswered}
-          answer={answers[currentGap.id] || ''}
-          onSubmit={(answer) => handleSubmitAnswer(currentGap.id, answer)}
-          onSkip={handleSkip}
-          onNext={goToNext}
-          stepNumber={currentIndex + 1}
-          totalSteps={totalCount}
-          textareaRef={textareaRef}
-        />
-      ) : null}
+
+        {currentGap && (
+          <GapStep
+            key={currentGap.id}
+            gap={currentGap}
+            file={file}
+            isAnswered={isCurrentAnswered}
+            answer={answers[currentGap.id] || ''}
+            onSubmit={(answer) => handleSubmitAnswer(currentGap.id, answer)}
+            onSkip={handleSkip}
+            onNext={goToNext}
+            onPrev={currentIndex > 0 ? () => setCurrentIndex(currentIndex - 1) : undefined}
+            stepNumber={currentIndex + 1}
+            totalSteps={totalCount}
+            textareaRef={textareaRef}
+          />
+        )}
+      </div>
+
+      {/* Right — Gap checklist */}
+      <div className="hidden w-72 shrink-0 lg:block">
+        <div className="sticky top-8">
+          <p className="text-text-tertiary mb-4 text-xs font-medium tracking-wide uppercase">
+            Gaps to fix
+          </p>
+          <div className="space-y-1">
+            {sortedGaps.map((gap, i) => {
+              const answered = !!answers[gap.id];
+              const skipped = skippedIds.has(gap.id);
+              const isCurrent = i === currentIndex;
+              const meta = categoryMeta[gap.category] || {
+                label: gap.category,
+                icon: InformationCircleIcon,
+              };
+              const CategoryIcon = meta.icon;
+              const config = severityConfig[gap.severity] || severityConfig.medium;
+
+              return (
+                <button
+                  key={gap.id}
+                  onClick={() => setCurrentIndex(i)}
+                  className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-all ${
+                    isCurrent && !answered ? 'bg-bg-secondary' : 'hover:bg-bg-secondary/50'
+                  }`}
+                >
+                  {/* Status icon */}
+                  {answered ? (
+                    <CheckCircleSolidIcon className="h-5 w-5 shrink-0 text-green-500" />
+                  ) : skipped ? (
+                    <div className="bg-bg-tertiary flex h-5 w-5 shrink-0 items-center justify-center rounded-full">
+                      <span className="text-text-tertiary text-[10px]">—</span>
+                    </div>
+                  ) : (
+                    <CategoryIcon
+                      className={`h-5 w-5 shrink-0 ${
+                        isCurrent ? config.color : 'text-text-tertiary'
+                      }`}
+                    />
+                  )}
+
+                  {/* Label + severity */}
+                  <div className="min-w-0 flex-1">
+                    <p
+                      className={`truncate text-sm ${
+                        answered
+                          ? 'text-text-tertiary line-through'
+                          : isCurrent
+                            ? 'text-text-primary font-medium'
+                            : 'text-text-secondary'
+                      }`}
+                    >
+                      {meta.label}
+                    </p>
+                  </div>
+
+                  {/* Severity dot */}
+                  {!answered && !skipped && (
+                    <span
+                      className={`h-2 w-2 shrink-0 rounded-full ${
+                        gap.severity === 'critical'
+                          ? 'bg-red-400'
+                          : gap.severity === 'high'
+                            ? 'bg-amber-400'
+                            : 'bg-blue-400'
+                      }`}
+                    />
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Summary */}
+          <div className="border-border-light mt-6 border-t pt-4">
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-text-tertiary">{addressedCount} addressed</span>
+              {skippedIds.size > 0 && (
+                <span className="text-text-tertiary">{skippedIds.size} skipped</span>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -416,6 +557,7 @@ function GapStep({
   onSubmit,
   onSkip,
   onNext,
+  onPrev,
   stepNumber,
   totalSteps,
   textareaRef,
@@ -427,6 +569,7 @@ function GapStep({
   onSubmit: (answer: string) => void;
   onSkip: () => void;
   onNext: () => void;
+  onPrev?: () => void;
   stepNumber: number;
   totalSteps: number;
   textareaRef: React.RefObject<HTMLTextAreaElement | null>;
@@ -520,6 +663,24 @@ function GapStep({
 
       {/* Actions */}
       <div className="flex items-center gap-3">
+        {onPrev && (
+          <button
+            onClick={onPrev}
+            className="text-text-tertiary hover:text-text-primary flex items-center gap-1 text-sm transition-colors"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+              className="h-3.5 w-3.5"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+            </svg>
+            Back
+          </button>
+        )}
         {isAnswered ? (
           <button
             onClick={onNext}

@@ -38,12 +38,13 @@ const severityConfig = {
 };
 
 const categoryLabels: Record<string, string> = {
-  competitor_blending: 'Competitor Blending',
-  invisible_mechanics: 'Invisible Mechanics',
-  missing_decisions: 'Missing Decisions',
+  contradiction: 'Contradiction',
   fabrication: 'Fabrication',
-  missing_boundaries: 'Missing Boundaries',
-  positioning_drift: 'Positioning Drift',
+  category_conflict: 'Category Conflict',
+  shared_inaccuracy: 'Shared Inaccuracy',
+  audience_mismatch: 'Audience Mismatch',
+  missing_differentiator: 'Missing Differentiator',
+  pricing_confusion: 'Pricing Confusion',
 };
 
 export function GapCard({ gap, isResolved }: GapCardProps) {

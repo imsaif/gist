@@ -81,12 +81,10 @@ I'll focus on the critical gaps first. To start: tell me what your product actua
 // ============================================
 
 const categoryLabels: Record<string, string> = {
-  competitor_blending: 'Competitor Blending',
-  invisible_mechanics: 'Invisible Mechanics',
-  missing_decisions: 'Missing Decisions',
+  contradiction: 'Contradiction',
   fabrication: 'Fabrication',
-  missing_boundaries: 'Missing Boundaries',
-  positioning_drift: 'Positioning Drift',
+  category_conflict: 'Category Conflict',
+  shared_inaccuracy: 'Shared Inaccuracy',
 };
 
 export function buildAuditContextBlock(analysis: GapAnalysis): string {

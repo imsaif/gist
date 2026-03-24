@@ -14,8 +14,7 @@ interface ContextSectionProps {
   initialContext?: ProductContext | null;
 }
 
-// invisible_mechanics can touch context (how things work at a product level)
-const SECTION_GAP_CATEGORIES = ['invisible_mechanics'];
+const SECTION_GAP_CATEGORIES = ['shared_inaccuracy'];
 
 export function ContextSection({
   context,
@@ -38,7 +37,7 @@ export function ContextSection({
 
   function isGapResolved(gap: Gap): boolean {
     if (!isFromAudit) return false;
-    if (gap.category === 'invisible_mechanics') {
+    if (gap.category === 'shared_inaccuracy') {
       return isFieldChanged('pricing') || isFieldChanged('stage');
     }
     return false;

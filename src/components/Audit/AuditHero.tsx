@@ -1,13 +1,17 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { AuditResult, LLMProvider, LLMResponse, GapAnalysis } from '@/types/audit';
+import { AuditResult, LLMProvider, LLMResponse, GapAnalysis, Gap } from '@/types/audit';
+import { GistDesignFile, ProductOverview } from '@/types/file';
+import { INITIAL_GIST_FILE } from '@/lib/createPrompt';
+import { generateGistDesignMarkdown } from '@/lib/export/markdown';
 import { parseSSEEvents } from '@/lib/audit/sseParser';
 import { AuditInput } from './AuditInput';
 import { AuditLoading } from './AuditLoading';
 import { AuditResults } from './AuditResults';
-import { AuditToConversation } from './AuditToConversation';
 import { AuditEmailGate } from './AuditEmailGate';
+import { GapFixer } from '@/components/Create/GapFixer';
+import { Toast } from '@/components/Toast';
 
 type AuditPhase =
   | 'input'
@@ -16,10 +20,54 @@ type AuditPhase =
   | 'querying'
   | 'analyzing'
   | 'complete'
+  | 'fixing'
   | 'error';
 
 interface AuditHeroProps {
   onPhaseChange?: (phase: string) => void;
+}
+
+function buildFileFromAudit(result: AuditResult): {
+  file: GistDesignFile;
+  initialFile: GistDesignFile | null;
+  gaps: Gap[];
+} {
+  const analysis = result.analysis;
+  if (!analysis) return { file: INITIAL_GIST_FILE, initialFile: null, gaps: [] };
+
+  const draft = analysis.draftFile;
+  const gaps = analysis.gaps ?? [];
+
+  if (draft?.product && draft?.positioning && draft?.context) {
+    const prefilledFile: GistDesignFile = {
+      product: {
+        name: draft.product.name || '',
+        description: draft.product.description || '',
+        audience: draft.product.audience || '',
+        aiApproach: null,
+      },
+      positioning: {
+        category: draft.positioning.category || '',
+        forWho: draft.positioning.forWho || '',
+        notForWho: draft.positioning.notForWho || '',
+        comparisons: [],
+      },
+      context: {
+        pricing: draft.context.pricing || '',
+        integratesWith: [],
+        requires: [],
+        stage: draft.context.stage || '',
+      },
+      features: [],
+    };
+    return {
+      file: prefilledFile,
+      initialFile: structuredClone(prefilledFile),
+      gaps,
+    };
+  }
+
+  return { file: INITIAL_GIST_FILE, initialFile: null, gaps };
 }
 
 export function AuditHero({ onPhaseChange }: AuditHeroProps) {
@@ -29,6 +77,12 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
   const [result, setResult] = useState<AuditResult | null>(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [remaining] = useState<number | undefined>(undefined);
+
+  // Gap fixer state
+  const [file, setFile] = useState<GistDesignFile>(INITIAL_GIST_FILE);
+  const [initialFile, setInitialFile] = useState<GistDesignFile | null>(null);
+  const [auditGaps, setAuditGaps] = useState<Gap[]>([]);
+  const [toast, setToast] = useState({ isVisible: false, message: '' });
 
   const updatePhase = useCallback(
     (newPhase: AuditPhase) => {
@@ -155,6 +209,57 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
     runAudit(url);
   };
 
+  const handleFixGaps = () => {
+    if (!result) return;
+    const ctx = buildFileFromAudit(result);
+    setFile(ctx.file);
+    setInitialFile(ctx.initialFile);
+    setAuditGaps(ctx.gaps);
+    updatePhase('fixing');
+  };
+
+  const handleProductFieldChange = useCallback((field: keyof ProductOverview, value: string) => {
+    setFile((prev) => ({
+      ...prev,
+      product: { ...prev.product, [field]: value },
+    }));
+  }, []);
+
+  const handlePositioningFieldChange = useCallback(
+    (field: 'category' | 'forWho' | 'notForWho', value: string) => {
+      setFile((prev) => ({
+        ...prev,
+        positioning: { ...prev.positioning, [field]: value },
+      }));
+    },
+    []
+  );
+
+  const handleContextFieldChange = useCallback((field: 'pricing' | 'stage', value: string) => {
+    setFile((prev) => ({
+      ...prev,
+      context: { ...prev.context, [field]: value },
+    }));
+  }, []);
+
+  const handleDownload = useCallback(() => {
+    const markdown = generateGistDesignMarkdown(file);
+    const blob = new Blob([markdown], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${(file.product.name || 'untitled').toLowerCase().replace(/\s+/g, '-')}.gist.design`;
+    a.click();
+    URL.revokeObjectURL(url);
+    setToast({ isVisible: true, message: 'File downloaded' });
+  }, [file]);
+
+  const handleCopyMarkdown = useCallback(() => {
+    const markdown = generateGistDesignMarkdown(file);
+    navigator.clipboard.writeText(markdown);
+    setToast({ isVisible: true, message: 'Copied to clipboard' });
+  }, [file]);
+
   return (
     <div className="w-full">
       {/* Input phase — inline URL input */}
@@ -230,17 +335,70 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
         <div className="border-border-light bg-bg-primary/80 fixed right-0 bottom-0 left-0 z-50 border-t backdrop-blur-xl">
           <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
             <div className="text-sm">
-              <span className="text-text-secondary">
-                {result.analysis?.summary.totalGaps || 0} gaps found
-              </span>
-              {(result.analysis?.summary.criticalGaps || 0) > 0 && (
-                <span className="ml-2 font-semibold text-red-400">
-                  {result.analysis?.summary.criticalGaps} critical
+              {(result.analysis?.summary.totalGaps || 0) === 0 ? (
+                <span className="font-medium text-green-400">
+                  No conflicts found — LLMs agree on your product
                 </span>
+              ) : (
+                <>
+                  <span className="text-text-secondary">
+                    {result.analysis?.summary.totalGaps || 0} conflict
+                    {(result.analysis?.summary.totalGaps || 0) !== 1 ? 's' : ''} found
+                  </span>
+                  {(result.analysis?.summary.criticalGaps || 0) > 0 && (
+                    <span className="ml-2 font-semibold text-red-400">
+                      {result.analysis?.summary.criticalGaps} critical
+                    </span>
+                  )}
+                </>
               )}
             </div>
-            <AuditToConversation result={result} />
+            {(result.analysis?.summary.totalGaps || 0) > 0 && (
+              <button
+                onClick={handleFixGaps}
+                className="bg-accent-primary hover:bg-accent-hover inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold text-white transition-colors"
+              >
+                Resolve conflicts
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="h-4 w-4"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+                  />
+                </svg>
+              </button>
+            )}
           </div>
+        </div>
+      )}
+
+      {/* Fixing phase — gap fixer inline */}
+      {phase === 'fixing' && (
+        <div className="w-full max-w-7xl">
+          <GapFixer
+            gaps={auditGaps}
+            file={file}
+            initialFile={initialFile}
+            onBackToAudit={() => updatePhase('complete')}
+            onProductFieldChange={handleProductFieldChange}
+            onPositioningFieldChange={handlePositioningFieldChange}
+            onContextFieldChange={handleContextFieldChange}
+            onDownload={handleDownload}
+            onCopyMarkdown={handleCopyMarkdown}
+          />
+
+          <Toast
+            message={toast.message}
+            isVisible={toast.isVisible}
+            onClose={() => setToast({ isVisible: false, message: '' })}
+          />
         </div>
       )}
 

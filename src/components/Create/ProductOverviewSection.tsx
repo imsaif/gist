@@ -14,7 +14,7 @@ interface ProductOverviewSectionProps {
   initialProduct?: ProductOverview | null;
 }
 
-const SECTION_GAP_CATEGORIES = ['fabrication', 'missing_decisions'];
+const SECTION_GAP_CATEGORIES = ['fabrication', 'shared_inaccuracy'];
 
 export function ProductOverviewSection({
   product,
@@ -38,7 +38,7 @@ export function ProductOverviewSection({
     if (gap.category === 'fabrication') {
       return isFieldChanged('description') || isFieldChanged('name');
     }
-    if (gap.category === 'missing_decisions') {
+    if (gap.category === 'shared_inaccuracy') {
       return isFieldChanged('aiApproach');
     }
     return false;

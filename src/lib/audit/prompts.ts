@@ -1,7 +1,7 @@
 import { GapAnalysis, DraftFile } from '@/types/audit';
 
 // ============================================
-// Audit Prompt (sent to all 3 LLMs)
+// Audit Prompt (sent to each LLM)
 // ============================================
 
 export function buildAuditPrompt(url: string, siteContent: string): string {
@@ -22,7 +22,7 @@ ${siteContent}`;
 }
 
 // ============================================
-// Analysis Prompt (Claude analysis layer)
+// Analysis Prompt (Claude conflict detection)
 // ============================================
 
 function truncate(text: string, maxLength: number): string {
@@ -33,10 +33,11 @@ function truncate(text: string, maxLength: number): string {
 export function buildAnalysisPrompt(
   siteContent: string,
   chatgptResponse: string,
-  claudeResponse: string,
-  perplexityResponse: string
+  claudeResponse: string
 ): string {
-  return `You are an AI readability analyst. LLMs were given a product's website and asked to describe it. Your job is to identify gaps in their understanding — where they got it wrong, were vague, blended with competitors, or missed key info.
+  return `You are a cross-model conflict detector. Two LLMs were given the same product website and asked to describe it. Your job is to find where they **contradict each other** or **contradict the actual website content**.
+
+You are NOT looking for what's missing. You are looking for what's WRONG or CONFLICTING.
 
 ## Website content (partial reference):
 
@@ -50,37 +51,44 @@ ${truncate(chatgptResponse, 2000)}
 
 ${truncate(claudeResponse, 2000)}
 
-## Perplexity's response:
-
-${truncate(perplexityResponse, 2000)}
-
 ## Your task
 
-Analyze the LLM responses and identify gaps in how accurately they understood the product.
+Compare the two LLM responses against each other and against the website content. Only flag REAL conflicts:
 
-IMPORTANT: The website content above is a partial, text-only extraction of the page. It does NOT capture:
-- Interactive elements (search bars, filters, dropdowns, modals)
-- Client-rendered UI (React/Next.js components that render after JavaScript loads)
-- Content on subpages (only the homepage was scraped)
-- Visual layout, images, icons, or navigation structure
+### Conflict categories:
 
-Do NOT flag something as "fabricated" just because it doesn't appear in the scraped text. If an LLM describes a plausible feature (like search or filtering), it may be correctly describing interactive UI that the scraper couldn't capture. Only flag fabrication when a claim is clearly invented and contradicts what the site actually is (e.g., claiming a documentation site has a paid SaaS tier, or describing features from a completely different product).
+- **contradiction**: ChatGPT and Claude give conflicting answers about the same aspect (e.g., one says free, the other says paid; one says it's for developers, the other says it's for designers)
+- **fabrication**: An LLM describes a feature or capability that clearly does NOT exist based on the website content and is NOT a plausible interactive element
+- **category_conflict**: The LLMs place the product in fundamentally different categories (e.g., one calls it a CRM, the other calls it a project management tool)
+- **shared_inaccuracy**: Both LLMs agree on something that clearly contradicts the website content
+- **audience_mismatch**: The LLMs describe different or wrong target audiences (e.g., one says "enterprises", the other says "small teams", or both describe an audience that doesn't match the site)
+- **missing_differentiator**: BOTH LLMs produce generic descriptions that could apply to any competitor in the same category. Neither can explain what makes this product unique. Only flag this when both descriptions are interchangeable with competitors — not when one LLM is more specific than the other.
+- **pricing_confusion**: LLMs guess, contradict, or get wrong the pricing or availability (e.g., one says free, the site says $29/mo; or one invents pricing tiers)
 
-For each gap found, categorize it as one of:
+### What is NOT a conflict:
 
-- **competitor_blending**: The model described features or behaviors from a competitor's product, not this one
-- **invisible_mechanics**: The model described what a feature IS but not HOW it works — the interaction model is missing or vague
-- **missing_decisions**: The model missed or got wrong a design decision that makes this product unique
-- **fabrication**: The model clearly invented details that contradict the product's actual nature (NOT just details missing from the scraped text)
-- **missing_boundaries**: The model didn't know what the product is NOT or who it's NOT for
-- **positioning_drift**: The model placed the product in the wrong category or compared it to the wrong competitors
+- One LLM mentioning something the other didn't → NOT a conflict (just different detail levels)
+- Both LLMs being vague about one aspect → NOT a conflict (unless it's the product's core differentiator)
+- Missing information about boundaries, decisions, or positioning → NOT a conflict
+- LLMs describing plausible interactive features not in the scraped text → NOT a conflict (the scraper misses interactive UI)
 
-For severity:
-- **critical**: Fundamentally misrepresents the product (wrong category, clearly fabricated features, competitor confusion)
-- **high**: Significant gap that would lead to wrong recommendations or implementations
-- **medium**: Minor inaccuracy or missing nuance
+### Severity:
 
-Also extract a "draftFile" — your best guess at structured product info based on what the LLMs described. This is what the LLMs CURRENTLY think the product is (even if wrong). Use null for fields you can't determine.
+- **critical**: Fundamentally wrong about what the product IS or DOES
+- **high**: Significant factual error that would mislead users
+- **medium**: Minor disagreement or inaccuracy
+
+### Scoring:
+
+- **Good**: 0 conflicts, or only 1 medium conflict. Both LLMs agree and match the site.
+- **Partial**: 1-2 conflicts with at most 1 high/critical
+- **Poor**: 3+ conflicts, or 2+ critical
+
+### Evidence:
+
+For each conflict, include direct quotes showing what each model said. This is critical — users need to see the actual disagreement.
+
+Also extract a "draftFile" — your best guess at structured product info based on what the LLMs described. Use null for fields you can't determine.
 
 Respond with ONLY valid JSON matching this exact structure (no markdown, no code fences):
 
@@ -88,30 +96,35 @@ ${JSON.stringify(
   {
     gaps: [
       {
-        id: 'gap-1',
+        id: 'conflict-1',
         severity: 'critical',
-        category: 'competitor_blending',
-        description: 'Description of the gap',
+        category: 'contradiction',
+        description: 'Clear description of the conflict',
         modelsAffected: ['chatgpt', 'claude'],
         whatFileNeeds: 'What a gist.design file should include to fix this',
+        evidence: {
+          chatgptSays: 'Direct quote from ChatGPT response',
+          claudeSays: 'Direct quote from Claude response',
+          siteContent: 'What the site actually says (if relevant)',
+        },
       },
     ],
     summary: {
-      totalGaps: 5,
-      criticalGaps: 2,
+      totalGaps: 1,
+      criticalGaps: 1,
       readabilityScore: 'Poor',
       worstModel: 'chatgpt',
       bestModel: 'claude',
     },
     draftFile: {
       product: {
-        name: 'Product name as described by LLMs',
-        description: 'What LLMs think the product does',
-        audience: 'Who LLMs think it is for',
+        name: 'Product name',
+        description: 'What LLMs agree the product does',
+        audience: 'Who LLMs agree it is for',
       },
       positioning: {
-        category: 'Category LLMs placed it in',
-        forWho: 'Target audience per LLMs',
+        category: 'Agreed category (or best guess)',
+        forWho: 'Target audience',
         notForWho: null,
       },
       context: {
@@ -125,13 +138,12 @@ ${JSON.stringify(
 )}
 
 Rules:
-- Use "Poor" if 3+ critical gaps, "Partial" if 1-2 critical, "Good" if 0 critical
-- modelsAffected should only include models that exhibited the gap
-- whatFileNeeds should be specific and actionable
-- Generate real gap IDs like "gap-1", "gap-2", etc.
-- worstModel/bestModel should reflect which model had the most/fewest issues
-- If an LLM errored out (returned an error message instead of a product description), exclude it from the analysis entirely — do not count it as "best" or "worst" model
-- Err on the side of fewer, higher-confidence gaps over many speculative ones`;
+- If both LLMs agree and match the site content, return an EMPTY gaps array and score "Good". Do NOT invent conflicts.
+- Include direct quotes in the evidence fields — short, specific phrases showing the disagreement
+- evidence.siteContent is optional — only include when the site content directly contradicts an LLM claim
+- worstModel = the model with more conflicts; bestModel = the model with fewer
+- If an LLM errored out, exclude it from analysis entirely
+- Err heavily on the side of fewer conflicts. Only flag genuine disagreements.`;
 }
 
 // ============================================
@@ -142,68 +154,88 @@ export function getMockAnalysis(): GapAnalysis {
   return {
     gaps: [
       {
-        id: 'gap-1',
+        id: 'conflict-1',
         severity: 'critical',
-        category: 'competitor_blending',
+        category: 'category_conflict',
         description:
-          'All three models compared the product to generic project management tools (Asana, Trello, Monday.com) without any basis from the website content. The product may be something entirely different.',
-        modelsAffected: ['chatgpt', 'claude', 'perplexity'],
+          'ChatGPT categorizes the product as a "project management tool" while Claude describes it as a "productivity and collaboration platform." These are meaningfully different product categories that would lead to different competitor comparisons.',
+        modelsAffected: ['chatgpt', 'claude'],
         whatFileNeeds:
-          'Positioning section with explicit category, competitor comparisons, and "not this" statements to prevent category confusion.',
+          'Positioning section with explicit product category and "not this" statements to prevent category confusion.',
+        evidence: {
+          chatgptSays: 'a project management tool that helps teams organize their work',
+          claudeSays:
+            'a productivity and project management solution... a workspace for teams to coordinate their efforts',
+          siteContent: null,
+        },
       },
       {
-        id: 'gap-2',
-        severity: 'critical',
+        id: 'conflict-2',
+        severity: 'high',
         category: 'fabrication',
         description:
-          'ChatGPT and Perplexity fabricated specific features (Kanban boards, time tracking, built-in chat) that may not exist in the product.',
-        modelsAffected: ['chatgpt', 'perplexity'],
+          'ChatGPT claims the product includes "Kanban boards, time tracking, and built-in chat" but these specific features are not mentioned on the website and Claude does not reference them either.',
+        modelsAffected: ['chatgpt'],
         whatFileNeeds:
-          'Product overview with explicit feature list and interaction model describing actual capabilities.',
+          "Product overview with explicit feature list so LLMs don't invent capabilities.",
+        evidence: {
+          chatgptSays:
+            'Kanban boards, time tracking, built-in chat, Integration with Slack and GitHub',
+          claudeSays:
+            'Task organization and tracking, Real-time collaboration features, Automated workflows',
+          siteContent: 'helps teams manage projects and collaborate effectively',
+        },
       },
       {
-        id: 'gap-3',
+        id: 'conflict-3',
         severity: 'high',
-        category: 'invisible_mechanics',
+        category: 'audience_mismatch',
         description:
-          'None of the models could explain how the product actually works. All descriptions are vague: "helps teams organize work" without any specific mechanics.',
-        modelsAffected: ['chatgpt', 'claude', 'perplexity'],
+          'ChatGPT describes the product as targeting "small to medium businesses" while Claude says it\'s for "professional teams" broadly. The site doesn\'t specify team size.',
+        modelsAffected: ['chatgpt', 'claude'],
         whatFileNeeds:
-          'Interaction model with primary flow, key interactions, and specific user workflows.',
+          'Clear audience definition specifying who the product is for and who it is NOT for.',
+        evidence: {
+          chatgptSays: 'designed for small to medium businesses',
+          claudeSays: 'professional teams who need to coordinate complex projects',
+          siteContent: null,
+        },
       },
       {
-        id: 'gap-4',
-        severity: 'high',
-        category: 'missing_boundaries',
-        description:
-          'No model identified who the product is NOT for. All assumed a generic "teams" audience without specificity.',
-        modelsAffected: ['chatgpt', 'claude', 'perplexity'],
-        whatFileNeeds:
-          'Positioning section with "for who" and "not for who" to prevent wrong-audience recommendations.',
-      },
-      {
-        id: 'gap-5',
+        id: 'conflict-4',
         severity: 'medium',
-        category: 'positioning_drift',
+        category: 'missing_differentiator',
         description:
-          'Perplexity positioned the product as a direct Monday.com/ClickUp competitor, which may misrepresent its actual market position.',
-        modelsAffected: ['perplexity'],
+          'Both LLMs describe the product generically as a "task tracking and collaboration tool." Neither can explain what makes it different from Asana, Trello, or Monday.com. The descriptions are interchangeable.',
+        modelsAffected: ['chatgpt', 'claude'],
         whatFileNeeds:
-          'Explicit competitor comparisons with honest differences in the positioning section.',
+          'A clear differentiator: what this product does differently from competitors and why someone would choose it.',
+        evidence: {
+          chatgptSays:
+            'helps teams organize their work... task tracking, team collaboration, and workflow automation',
+          claudeSays:
+            'Task organization and tracking, Real-time collaboration features, Automated workflows',
+          siteContent: null,
+        },
       },
       {
-        id: 'gap-6',
+        id: 'conflict-5',
         severity: 'medium',
-        category: 'missing_decisions',
+        category: 'pricing_confusion',
         description:
-          'No model identified any design decisions or trade-offs. All descriptions read like generic marketing copy without any "chose X over Y because Z" reasoning.',
-        modelsAffected: ['chatgpt', 'claude', 'perplexity'],
-        whatFileNeeds: 'Design decisions section capturing key trade-offs and their rationale.',
+          'ChatGPT guesses the product is "probably freemium" while Claude doesn\'t mention pricing. The site doesn\'t clearly state pricing either, leaving LLMs to guess.',
+        modelsAffected: ['chatgpt'],
+        whatFileNeeds: "Explicit pricing information so LLMs don't guess or invent pricing tiers.",
+        evidence: {
+          chatgptSays: 'Pricing is probably freemium with paid tiers for advanced features',
+          claudeSays: null,
+          siteContent: null,
+        },
       },
     ],
     summary: {
-      totalGaps: 6,
-      criticalGaps: 2,
+      totalGaps: 5,
+      criticalGaps: 1,
       readabilityScore: 'Poor',
       worstModel: 'chatgpt',
       bestModel: 'claude',
@@ -212,8 +244,8 @@ export function getMockAnalysis(): GapAnalysis {
       product: {
         name: 'Mock Product',
         description:
-          'A project management tool that helps teams organize work, track tasks, and collaborate effectively using Kanban boards and team messaging.',
-        audience: 'Teams and organizations of all sizes',
+          'A project management tool that helps teams organize work, track tasks, and collaborate effectively.',
+        audience: 'Teams and organizations',
       },
       positioning: {
         category: 'Project management',
@@ -226,4 +258,35 @@ export function getMockAnalysis(): GapAnalysis {
       },
     },
   };
+}
+
+// Keep backward-compatible export for getMockLLMResponse
+export function getMockLLMResponse(provider: 'chatgpt' | 'claude') {
+  const responses = {
+    chatgpt: {
+      model: 'chatgpt' as const,
+      content: `This product appears to be a project management tool that helps teams organize their work. It likely offers features like task tracking, team collaboration, and workflow automation. The tool seems designed for small to medium businesses looking for a streamlined way to manage projects.
+
+Key features:
+- Task management with Kanban boards
+- Team collaboration and built-in chat
+- Workflow automation
+- Time tracking and reporting
+- Integration with popular tools`,
+      durationMs: 2100,
+    },
+    claude: {
+      model: 'claude' as const,
+      content: `Based on the website content, this appears to be a productivity and project management solution. The product offers a workspace for teams to coordinate their efforts.
+
+Core capabilities seem to include:
+- Task organization and tracking
+- Real-time collaboration features
+- Automated workflows
+- Reporting and analytics
+- Cross-platform availability`,
+      durationMs: 3400,
+    },
+  };
+  return responses[provider];
 }

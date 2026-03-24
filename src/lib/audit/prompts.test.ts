@@ -22,59 +22,64 @@ describe('buildAuditPrompt', () => {
 });
 
 describe('buildAnalysisPrompt', () => {
-  it('includes all three LLM responses', () => {
-    const prompt = buildAnalysisPrompt('site', 'chatgpt says', 'claude says', 'perplexity says');
+  it('includes both LLM responses', () => {
+    const prompt = buildAnalysisPrompt('site', 'chatgpt says', 'claude says');
     expect(prompt).toContain('chatgpt says');
     expect(prompt).toContain('claude says');
-    expect(prompt).toContain('perplexity says');
   });
 
   it('truncates site content to 5000 chars', () => {
     const longContent = 'a'.repeat(6000);
-    const prompt = buildAnalysisPrompt(longContent, 'gpt', 'claude', 'pplx');
-    // The site content section should be truncated
+    const prompt = buildAnalysisPrompt(longContent, 'gpt', 'claude');
     expect(prompt).toContain('[truncated]');
-    // Should not contain the full 6000-char string
     expect(prompt).not.toContain(longContent);
   });
 
   it('truncates LLM responses to 2000 chars', () => {
     const longResponse = 'b'.repeat(3000);
-    const prompt = buildAnalysisPrompt('site', longResponse, 'claude', 'pplx');
+    const prompt = buildAnalysisPrompt('site', longResponse, 'claude');
     expect(prompt).toContain('[truncated]');
     expect(prompt).not.toContain(longResponse);
   });
 
   it('does not truncate short content', () => {
-    const prompt = buildAnalysisPrompt('short site', 'short gpt', 'short claude', 'short pplx');
+    const prompt = buildAnalysisPrompt('short site', 'short gpt', 'short claude');
     expect(prompt).not.toContain('[truncated]');
   });
 
-  it('includes gap category definitions', () => {
-    const prompt = buildAnalysisPrompt('site', 'gpt', 'claude', 'pplx');
-    expect(prompt).toContain('competitor_blending');
-    expect(prompt).toContain('invisible_mechanics');
-    expect(prompt).toContain('missing_decisions');
+  it('includes conflict category definitions', () => {
+    const prompt = buildAnalysisPrompt('site', 'gpt', 'claude');
+    expect(prompt).toContain('contradiction');
     expect(prompt).toContain('fabrication');
-    expect(prompt).toContain('missing_boundaries');
-    expect(prompt).toContain('positioning_drift');
+    expect(prompt).toContain('category_conflict');
+    expect(prompt).toContain('shared_inaccuracy');
+    expect(prompt).toContain('audience_mismatch');
+    expect(prompt).toContain('missing_differentiator');
+    expect(prompt).toContain('pricing_confusion');
   });
 
   it('includes severity definitions', () => {
-    const prompt = buildAnalysisPrompt('site', 'gpt', 'claude', 'pplx');
+    const prompt = buildAnalysisPrompt('site', 'gpt', 'claude');
     expect(prompt).toContain('critical');
     expect(prompt).toContain('high');
     expect(prompt).toContain('medium');
   });
 
-  it('includes warning about partial scraped content', () => {
-    const prompt = buildAnalysisPrompt('site', 'gpt', 'claude', 'pplx');
-    expect(prompt).toContain('partial');
-    expect(prompt).toContain('Interactive elements');
+  it('includes evidence schema', () => {
+    const prompt = buildAnalysisPrompt('site', 'gpt', 'claude');
+    expect(prompt).toContain('chatgptSays');
+    expect(prompt).toContain('claudeSays');
+    expect(prompt).toContain('siteContent');
+  });
+
+  it('instructs to return empty gaps when LLMs agree', () => {
+    const prompt = buildAnalysisPrompt('site', 'gpt', 'claude');
+    expect(prompt).toContain('EMPTY gaps array');
+    expect(prompt).toContain('"Good"');
   });
 
   it('includes JSON schema for expected response format', () => {
-    const prompt = buildAnalysisPrompt('site', 'gpt', 'claude', 'pplx');
+    const prompt = buildAnalysisPrompt('site', 'gpt', 'claude');
     expect(prompt).toContain('"gaps"');
     expect(prompt).toContain('"summary"');
     expect(prompt).toContain('"readabilityScore"');
@@ -83,7 +88,7 @@ describe('buildAnalysisPrompt', () => {
   });
 
   it('instructs to exclude errored models', () => {
-    const prompt = buildAnalysisPrompt('site', 'gpt', 'claude', 'pplx');
+    const prompt = buildAnalysisPrompt('site', 'gpt', 'claude');
     expect(prompt).toContain('errored');
     expect(prompt).toContain('exclude');
   });
@@ -103,20 +108,21 @@ describe('getMockAnalysis', () => {
     expect(mock.summary.totalGaps).toBeGreaterThan(0);
     expect(mock.summary.criticalGaps).toBeGreaterThan(0);
     expect(['Poor', 'Partial', 'Good']).toContain(mock.summary.readabilityScore);
-    expect(['chatgpt', 'claude', 'perplexity']).toContain(mock.summary.worstModel);
-    expect(['chatgpt', 'claude', 'perplexity']).toContain(mock.summary.bestModel);
+    expect(['chatgpt', 'claude']).toContain(mock.summary.worstModel);
+    expect(['chatgpt', 'claude']).toContain(mock.summary.bestModel);
   });
 
   it('has gaps with valid severity and category', () => {
     const mock = getMockAnalysis();
     const validSeverities = ['critical', 'high', 'medium'];
     const validCategories = [
-      'competitor_blending',
-      'invisible_mechanics',
-      'missing_decisions',
+      'contradiction',
       'fabrication',
-      'missing_boundaries',
-      'positioning_drift',
+      'category_conflict',
+      'shared_inaccuracy',
+      'audience_mismatch',
+      'missing_differentiator',
+      'pricing_confusion',
     ];
     for (const gap of mock.gaps) {
       expect(validSeverities).toContain(gap.severity);
@@ -125,6 +131,16 @@ describe('getMockAnalysis', () => {
       expect(gap.description).toBeTruthy();
       expect(gap.whatFileNeeds).toBeTruthy();
       expect(gap.modelsAffected.length).toBeGreaterThan(0);
+    }
+  });
+
+  it('has evidence on each gap', () => {
+    const mock = getMockAnalysis();
+    for (const gap of mock.gaps) {
+      expect(gap.evidence).toBeDefined();
+      // At least one evidence field should be present
+      const ev = gap.evidence!;
+      expect(ev.chatgptSays || ev.claudeSays || ev.siteContent).toBeTruthy();
     }
   });
 

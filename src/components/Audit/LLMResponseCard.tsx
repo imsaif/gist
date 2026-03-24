@@ -12,13 +12,11 @@ interface LLMResponseCardProps {
 const providerNames: Record<LLMProvider, string> = {
   chatgpt: 'ChatGPT',
   claude: 'Claude',
-  perplexity: 'Perplexity',
 };
 
 const providerModels: Record<LLMProvider, string> = {
   chatgpt: 'GPT-4o',
   claude: 'Sonnet 4.5',
-  perplexity: 'Sonar',
 };
 
 export function LLMResponseCard({ response, isLoading, gapCount }: LLMResponseCardProps) {
@@ -94,7 +92,7 @@ export function LLMResponseCard({ response, isLoading, gapCount }: LLMResponseCa
           <span
             className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${gapBadgeStyle}`}
           >
-            {gapCount} gap{gapCount !== 1 ? 's' : ''} identified
+            {gapCount} conflict{gapCount !== 1 ? 's' : ''}
           </span>
         </div>
       )}

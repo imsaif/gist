@@ -12,7 +12,7 @@ export function AuditResults({ result }: AuditResultsProps) {
   const { responses, analysis } = result;
 
   // Count gaps per model
-  const gapCounts: Record<LLMProvider, number> = { chatgpt: 0, claude: 0, perplexity: 0 };
+  const gapCounts: Record<LLMProvider, number> = { chatgpt: 0, claude: 0 };
   if (analysis) {
     for (const gap of analysis.gaps) {
       for (const model of gap.modelsAffected) {

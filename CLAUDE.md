@@ -48,6 +48,14 @@ npm run build    # Build for production
 
 ## Recent Sessions
 
+### Session 2026-03-24 16:49 (MacBook)
+
+- **Pattern:** General updates
+- **Status:** Work in progress
+- **Files Changed:** 19
+- **Tests Added/Modified:** 2
+- **Notes:** Redesigned audit from gap-finding to conflict-detection: analysis now compares what ChatGPT and Claude say against each other and the site content, only flagging real contradictions, fabrications, category conflicts, audience mismatches, missing differentiators, pricing confusion, and shared inaccuracies. Added evidence quotes (ChatGPT says/Claude says/Site says) to each conflict. Fixed audit-to-fix navigation by rendering GapFixer inline (no more localStorage/sessionStorage page handoff). Added two-column layout with right-side gap checklist, back navigation between questions and done screen, and back-to-audit-results link. Submitted gist-design skill PR to anthropics/skills (#753). Removed Perplexity provider.
+
 ### Session 2026-03-10 20:40 (MacBook)
 
 - **Pattern:** General updates

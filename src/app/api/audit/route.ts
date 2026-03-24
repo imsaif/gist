@@ -130,8 +130,7 @@ export async function POST(request: NextRequest) {
             const analysisPrompt = buildAnalysisPrompt(
               siteContent.content,
               chatgptContent,
-              claudeContent,
-              '[Perplexity: not queried]'
+              claudeContent
             );
 
             const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });

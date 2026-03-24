@@ -2,17 +2,18 @@
 // AI Readability Audit Types
 // ============================================
 
-export type LLMProvider = 'chatgpt' | 'claude' | 'perplexity';
+export type LLMProvider = 'chatgpt' | 'claude';
 
 export type GapSeverity = 'critical' | 'high' | 'medium';
 
 export type GapCategory =
-  | 'competitor_blending'
-  | 'invisible_mechanics'
-  | 'missing_decisions'
+  | 'contradiction'
   | 'fabrication'
-  | 'missing_boundaries'
-  | 'positioning_drift';
+  | 'category_conflict'
+  | 'shared_inaccuracy'
+  | 'audience_mismatch'
+  | 'missing_differentiator'
+  | 'pricing_confusion';
 
 export type ReadabilityScore = 'Poor' | 'Partial' | 'Good';
 
@@ -23,6 +24,12 @@ export interface LLMResponse {
   error?: string;
 }
 
+export interface ConflictEvidence {
+  chatgptSays?: string | null;
+  claudeSays?: string | null;
+  siteContent?: string | null;
+}
+
 export interface Gap {
   id: string;
   severity: GapSeverity;
@@ -30,6 +37,7 @@ export interface Gap {
   description: string;
   modelsAffected: LLMProvider[];
   whatFileNeeds: string;
+  evidence?: ConflictEvidence;
 }
 
 export interface GapAnalysisSummary {
