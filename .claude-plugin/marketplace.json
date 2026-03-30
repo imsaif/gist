@@ -1,0 +1,27 @@
+{
+  "name": "gist-design",
+  "owner": {
+    "name": "imsaif",
+    "email": "imsaif@users.noreply.github.com"
+  },
+  "metadata": {
+    "description": "Generate .gist.design files — structured design decisions for AI tools"
+  },
+  "plugins": [
+    {
+      "name": "gist-design",
+      "source": "./",
+      "description": "Generate .gist.design files through guided conversation — structured product design decisions, interaction models, and positioning readable by AI coding tools and LLMs",
+      "version": "1.0.0",
+      "category": "design",
+      "tags": ["design", "product", "documentation", "ai-readability", "llm"],
+      "keywords": [
+        "gist.design",
+        "design-decisions",
+        "product-context",
+        "ai-tools",
+        "llm-readability"
+      ]
+    }
+  ]
+}
