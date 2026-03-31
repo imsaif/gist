@@ -48,6 +48,14 @@ npm run build    # Build for production
 
 ## Recent Sessions
 
+### Session 2026-03-31 17:25 (MacBook)
+
+- **Pattern:** General updates
+- **Status:** Work in progress
+- **Files Changed:** 6
+- **Tests Added/Modified:** 0
+- **Notes:** Added custom Gist icon (globe+sparkle SVG) as favicon with prefers-color-scheme and inline GistIcon component in nav. Added "gist.design vs llms.txt" section to landing page clarifying complementary positioning. Tightened all landing page copy across every section — cut verbose descriptions to punchy one-liners.
+
 ### Session 2026-03-24 16:49 (MacBook)
 
 - **Pattern:** General updates

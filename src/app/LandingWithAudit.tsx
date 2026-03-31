@@ -2,6 +2,7 @@
 
 import { useState, ReactNode } from 'react';
 import Link from 'next/link';
+import GistIcon from '@/components/GistIcon';
 import { AuditHero } from '@/components/Audit';
 
 interface LandingWithAuditProps {
@@ -21,7 +22,10 @@ export function LandingWithAudit({ marketingSections }: LandingWithAuditProps) {
       <div className={auditActive ? 'relative' : 'hero-gradient-bg relative'}>
         {/* Header */}
         <header className="glass-nav sticky top-0 z-50 flex h-14 items-center justify-between px-6">
-          <h1 className="text-text-primary text-xl font-semibold">Gist</h1>
+          <h1 className="text-text-primary flex items-center gap-2 text-xl font-semibold">
+            <GistIcon className="h-6 w-6" />
+            Gist
+          </h1>
           <nav className="flex items-center gap-6">
             <Link
               href="/spec"

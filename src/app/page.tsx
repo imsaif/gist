@@ -35,15 +35,13 @@ function MarketingSections() {
             Why gist.design
           </h2>
           <p className="text-text-secondary mb-8 text-lg leading-relaxed">
-            AI tools can read your code but not the decisions behind it. They fill gaps with
-            competitor patterns, generic defaults, and wrong positioning.{' '}
+            AI tools read your code but not the decisions behind it. They fill gaps with competitor
+            patterns and wrong positioning.{' '}
             <code className="bg-bg-secondary rounded px-1.5 py-0.5 text-sm font-medium">
               gist.design
             </code>{' '}
-            is a structured markdown file that captures design decisions, interaction rationale,
-            product positioning, and explicit boundaries. AI coding tools read it to build features
-            that match design intent. LLMs read it to give accurate recommendations instead of
-            guessing from training data.
+            is a structured file that captures design decisions, positioning, and boundaries so AI
+            tools get it right.
           </p>
           <div className="glass-strong overflow-hidden rounded-2xl">
             <table className="w-full text-base">
@@ -103,8 +101,7 @@ function MarketingSections() {
             Generate your gist.design file
           </h2>
           <p className="text-text-secondary mb-8 text-lg leading-relaxed">
-            Two ways to create the same file. Both run the same guided conversation and produce
-            identical output.
+            Two ways to create the same file.
           </p>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <a
@@ -130,11 +127,7 @@ function MarketingSections() {
               </div>
               <h3 className="text-text-primary mb-2 text-xl font-semibold">In your editor</h3>
               <p className="text-text-secondary text-base leading-relaxed">
-                Install the Claude Code skill. The guided conversation runs inside your terminal and
-                the file drops directly into your project root.
-              </p>
-              <p className="text-text-tertiary mt-3 text-sm">
-                Best when you are already in a coding environment
+                Install the Claude Code skill. File drops directly into your project root.
               </p>
             </a>
             <a
@@ -158,10 +151,8 @@ function MarketingSections() {
               </div>
               <h3 className="text-text-primary mb-2 text-xl font-semibold">In your browser</h3>
               <p className="text-text-secondary text-base leading-relaxed">
-                Run an audit above to see what LLMs get wrong, then fix the gaps and download your
-                file.
+                Run an audit above, fix the gaps, download your file. No setup required.
               </p>
-              <p className="text-text-tertiary mt-3 text-sm">No setup required</p>
             </a>
           </div>
         </div>
@@ -210,8 +201,7 @@ function MarketingSections() {
                     >
                       gist-design skill
                     </a>{' '}
-                    to generate and use files natively. Or if you already have a file, Claude Code
-                    reads it automatically.
+                    to generate files natively, or drop one in your repo root.
                   </>
                 ),
               },
@@ -255,9 +245,8 @@ function MarketingSections() {
                   Works with Figma MCP
                 </h3>
                 <p className="text-text-secondary text-base leading-relaxed">
-                  Figma MCP gives coding assistants visual structure — layouts, components, spacing.
-                  gist.design gives them the why — patterns, rationale, boundaries. Structure +
-                  intent = accurate implementation.
+                  Figma MCP gives structure. gist.design gives intent. Together they produce
+                  accurate implementation.
                 </p>
               </div>
               <div className="flex shrink-0 items-center gap-4">
@@ -316,6 +305,42 @@ function MarketingSections() {
           </div>
         </Section>
 
+        {/* gist.design vs llms.txt */}
+        <Section id="vs-llmstxt">
+          <SectionHeading>How does this relate to llms.txt?</SectionHeading>
+          <p className="text-text-secondary mb-8 text-lg leading-relaxed">
+            They&apos;re complementary. Use both.
+          </p>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="glass rounded-2xl p-6">
+              <code className="bg-bg-secondary text-text-primary mb-3 inline-block rounded px-2 py-1 text-sm font-semibold">
+                llms.txt
+              </code>
+              <h3 className="text-text-primary mb-2 text-lg font-semibold">What it does</h3>
+              <p className="text-text-secondary text-base leading-relaxed">
+                A README for LLMs. Features, links, how to use it.
+              </p>
+              <p className="text-text-tertiary mt-4 text-sm italic">
+                &ldquo;Acme is a project management tool with kanban boards.&rdquo;
+              </p>
+            </div>
+            <div className="glass rounded-2xl border-white/[0.12] bg-[rgba(26,29,39,0.6)] p-6">
+              <code className="bg-accent-primary/20 text-accent-primary mb-3 inline-block rounded px-2 py-1 text-sm font-semibold">
+                gist.design
+              </code>
+              <h3 className="text-text-primary mb-2 text-lg font-semibold">How to talk about it</h3>
+              <p className="text-text-secondary text-base leading-relaxed">
+                Positioning, boundaries, and design rationale. Stops LLMs from getting your product
+                wrong.
+              </p>
+              <p className="text-text-tertiary mt-4 text-sm italic">
+                &ldquo;Not for enterprise. No Gantt charts by design. Chose manual scheduling
+                because teams want control.&rdquo;
+              </p>
+            </div>
+          </div>
+        </Section>
+
         {/* Principles */}
         <Section id="principles">
           {/* Ambient orbs */}
@@ -323,7 +348,7 @@ function MarketingSections() {
           <div className="ambient-orb -right-16 bottom-1/4 h-72 w-72 bg-indigo-500/[0.05]" />
           <SectionHeading>Principles</SectionHeading>
           <p className="text-text-secondary mb-8 text-lg leading-relaxed">
-            What makes a gist.design file actually useful to AI tools.
+            What makes a gist.design file useful.
           </p>
 
           {/* Bento grid */}
@@ -500,8 +525,7 @@ function MarketingSections() {
                   Negative space matters
                 </h3>
                 <p className="text-text-secondary text-base leading-relaxed">
-                  What the product is NOT is as important as what it is. The Not This section
-                  prevents AI tools from filling gaps with competitor patterns.
+                  What it&apos;s NOT prevents AI from filling gaps with competitor patterns.
                 </p>
               </div>
             </div>
@@ -560,8 +584,7 @@ function MarketingSections() {
                   One file per feature
                 </h3>
                 <p className="text-text-secondary text-base leading-relaxed">
-                  A product might have multiple gist.design files, one for each significant feature.
-                  Keeps each file focused and contextually useful.
+                  One file per significant feature. Keeps each file focused and useful.
                 </p>
               </div>
             </div>
@@ -604,8 +627,7 @@ function MarketingSections() {
                   Generated, not written
                 </h3>
                 <p className="text-text-secondary text-base leading-relaxed">
-                  If designers have to author this file manually, it won&apos;t happen. The
-                  conversation tool handles the format; the designer handles the thinking.
+                  The tool handles the format. You handle the thinking.
                 </p>
               </div>
             </div>
@@ -651,14 +673,14 @@ function MarketingSections() {
                   </a>
                 </td>
                 <td className="text-text-secondary px-5 py-3.5">
-                  LLMs &mdash; What content matters?
+                  LLMs &mdash; What does this product do?
                 </td>
               </tr>
               <tr className="bg-accent-primary/[0.08]">
                 <td className="text-accent-primary px-5 py-3.5 font-semibold">gist.design</td>
                 <td className="text-text-primary px-5 py-3.5 font-medium">
-                  AI coding tools + LLMs &mdash; How does it work, why, and when should you
-                  recommend it?
+                  LLMs &mdash; How should you talk about this product? Positioning, boundaries,
+                  audience, design rationale
                 </td>
               </tr>
               <tr>
@@ -702,8 +724,7 @@ function MarketingSections() {
             Create your gist.design file
           </h2>
           <p className="text-text-secondary mx-auto max-w-lg text-lg leading-relaxed">
-            Fix the gaps AI tools get wrong about your product. Generate a structured file that
-            coding tools and LLMs actually read.
+            Fix the gaps AI gets wrong about your product.
           </p>
           <div className="mt-8">
             <a
