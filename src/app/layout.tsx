@@ -1,10 +1,38 @@
 import type { Metadata } from 'next';
 import './globals.css';
 
+const baseUrl = 'https://www.gist.design';
+
 export const metadata: Metadata = {
-  title: 'gist.design — Design decisions readable by AI coding tools and LLMs',
+  title: {
+    default: 'gist.design — Design decisions readable by AI coding tools and LLMs',
+    template: '%s | gist.design',
+  },
   description:
     'A structured file that makes your design decisions, product positioning, and interaction rationale readable to AI coding tools and LLMs.',
+  metadataBase: new URL(baseUrl),
+  alternates: {
+    canonical: baseUrl,
+  },
+  openGraph: {
+    title: 'gist.design — Design decisions readable by AI coding tools',
+    description:
+      'A structured file that makes your design decisions, product positioning, and interaction rationale readable to AI coding tools and LLMs.',
+    url: baseUrl,
+    siteName: 'gist.design',
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'gist.design — Design decisions readable by AI coding tools',
+    description:
+      'A structured file that makes your design decisions, product positioning, and interaction rationale readable to AI coding tools and LLMs.',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({
