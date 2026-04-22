@@ -48,6 +48,14 @@ npm run build    # Build for production
 
 ## Recent Sessions
 
+### Session 2026-04-22 20:17 (MacBook)
+
+- **Pattern:** General updates
+- **Status:** Work in progress
+- **Files Changed:** 5
+- **Tests Added/Modified:** 1
+- **Notes:** Rebranded product from "Gist / gist.design" (single tool) to "gistaudit" (audit product built on the open gist.design spec). Landing hero reframed around auditing ChatGPT/Claude/Perplexity output and tracking drift; replaced "Why gist.design" table with "What AI gets wrong" failure modes; added Pricing section (Free/Pro $29/Team $99) with weekly re-runs and drift alerts. Rewrote /spec as an open-specification page with "Where it fits" reference table; updated /about to reflect audit-first positioning; synced layout.tsx metadata + OG/Twitter tags to the new gistaudit brand.
+
 ### Session 2026-03-31 17:25 (MacBook)
 
 - **Pattern:** General updates

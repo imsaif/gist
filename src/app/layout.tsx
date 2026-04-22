@@ -5,29 +5,29 @@ const baseUrl = 'https://www.gist.design';
 
 export const metadata: Metadata = {
   title: {
-    default: 'gist.design — Design decisions readable by AI coding tools and LLMs',
-    template: '%s | gist.design',
+    default: 'gistaudit — See how AI describes your product',
+    template: '%s | gistaudit',
   },
   description:
-    'A structured file that makes your design decisions, product positioning, and interaction rationale readable to AI coding tools and LLMs.',
+    'Audit what ChatGPT, Claude, and Perplexity say about your product. Fix the gaps. Track drift over time.',
   metadataBase: new URL(baseUrl),
   alternates: {
     canonical: baseUrl,
   },
   openGraph: {
-    title: 'gist.design — Design decisions readable by AI coding tools',
+    title: 'gistaudit — See how AI describes your product',
     description:
-      'A structured file that makes your design decisions, product positioning, and interaction rationale readable to AI coding tools and LLMs.',
+      'Audit what ChatGPT, Claude, and Perplexity say about your product. Fix the gaps. Track drift over time.',
     url: baseUrl,
-    siteName: 'gist.design',
+    siteName: 'gistaudit',
     locale: 'en_US',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'gist.design — Design decisions readable by AI coding tools',
+    title: 'gistaudit — See how AI describes your product',
     description:
-      'A structured file that makes your design decisions, product positioning, and interaction rationale readable to AI coding tools and LLMs.',
+      'Audit what ChatGPT, Claude, and Perplexity say about your product. Fix the gaps. Track drift over time.',
   },
   robots: {
     index: true,

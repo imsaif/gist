@@ -24,9 +24,15 @@ export function LandingWithAudit({ marketingSections }: LandingWithAuditProps) {
         <header className="glass-nav sticky top-0 z-50 flex h-14 items-center justify-between px-6">
           <h1 className="text-text-primary flex items-center gap-2 text-xl font-semibold">
             <GistIcon className="h-6 w-6" />
-            Gist
+            gistaudit
           </h1>
           <nav className="flex items-center gap-6">
+            <Link
+              href="/#pricing"
+              className="text-text-secondary hover:text-text-primary text-sm font-medium transition-colors"
+            >
+              Pricing
+            </Link>
             <Link
               href="/spec"
               className="text-text-secondary hover:text-text-primary text-sm font-medium transition-colors"
@@ -45,10 +51,11 @@ export function LandingWithAudit({ marketingSections }: LandingWithAuditProps) {
             {!auditActive && (
               <>
                 <h2 className="text-text-primary mb-4 text-4xl font-extrabold tracking-tight md:text-5xl">
-                  Fix how AI describes your product
+                  See how AI describes your product
                 </h2>
                 <p className="text-text-primary mb-8 max-w-xl text-xl leading-relaxed">
-                  See how ChatGPT and Claude describe your product. Find the gaps, then fix them.
+                  Audit what ChatGPT, Claude, and Perplexity say about you. Fix the gaps. Track
+                  drift over time.
                 </p>
               </>
             )}
@@ -62,19 +69,32 @@ export function LandingWithAudit({ marketingSections }: LandingWithAuditProps) {
 
       {/* Footer */}
       <footer className="py-12">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6">
-          <span className="text-text-tertiary text-sm">gist.design · 2026</span>
-          <span className="text-text-tertiary text-sm">
-            Powered by{' '}
-            <a
-              href="https://aiuxdesign.guide"
-              className="text-text-secondary hover:text-text-primary transition-colors"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              aiuxdesign.guide
-            </a>
-          </span>
+        <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-3 px-6 sm:flex-row sm:items-center">
+          <span className="text-text-tertiary text-sm">gistaudit · 2026</span>
+          <div className="text-text-tertiary flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
+            <span>
+              Built on the open{' '}
+              <Link
+                href="/spec"
+                className="text-text-secondary hover:text-text-primary transition-colors"
+              >
+                gist.design
+              </Link>{' '}
+              spec
+            </span>
+            <span className="hidden sm:inline">·</span>
+            <span>
+              Patterns by{' '}
+              <a
+                href="https://aiuxdesign.guide"
+                className="text-text-secondary hover:text-text-primary transition-colors"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                aiuxdesign.guide
+              </a>
+            </span>
+          </div>
         </div>
       </footer>
     </div>

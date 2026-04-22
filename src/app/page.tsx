@@ -1,13 +1,13 @@
 import {
   ShieldCheckIcon,
   ExclamationTriangleIcon,
-  ScaleIcon,
-  ViewfinderCircleIcon,
-  NoSymbolIcon,
-  DocumentIcon,
-  SparklesIcon,
+  ArrowTrendingUpIcon,
+  BellAlertIcon,
+  ChartBarSquareIcon,
+  CheckCircleIcon,
+  ArrowRightIcon,
 } from '@heroicons/react/24/outline';
-import HowItWorks from '@/components/HowItWorks';
+import Link from 'next/link';
 import { LandingWithAudit } from './LandingWithAudit';
 
 function Section({ id, children }: { id?: string; children: React.ReactNode }) {
@@ -25,23 +25,15 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
 function MarketingSections() {
   return (
     <>
-      {/* Why gist.design */}
+      {/* What AI gets wrong */}
       <div className="relative overflow-hidden">
-        {/* Ambient orbs */}
         <div className="ambient-orb top-1/4 -left-32 h-96 w-96 bg-indigo-500/[0.06]" />
         <div className="ambient-orb -right-24 bottom-1/4 h-80 w-80 bg-purple-500/[0.05]" />
         <div className="mx-auto max-w-6xl px-6 py-16 md:py-20">
-          <h2 className="text-text-primary mb-4 text-3xl font-bold tracking-tight">
-            Why gist.design
-          </h2>
-          <p className="text-text-secondary mb-8 text-lg leading-relaxed">
-            AI tools read your code but not the decisions behind it. They fill gaps with competitor
-            patterns and wrong positioning.{' '}
-            <code className="bg-bg-secondary rounded px-1.5 py-0.5 text-sm font-medium">
-              gist.design
-            </code>{' '}
-            is a structured file that captures design decisions, positioning, and boundaries so AI
-            tools get it right.
+          <SectionHeading>What AI gets wrong about your product</SectionHeading>
+          <p className="text-text-secondary mb-8 max-w-2xl text-lg leading-relaxed">
+            Every LLM writes its own version of your product. Most of them are wrong in the same
+            handful of ways.
           </p>
           <div className="glass-strong overflow-hidden rounded-2xl">
             <table className="w-full text-base">
@@ -50,13 +42,13 @@ function MarketingSections() {
                   <th className="text-text-primary px-5 py-3.5 text-left font-semibold">
                     <span className="inline-flex items-center gap-1.5">
                       <ExclamationTriangleIcon className="text-text-secondary h-4 w-4" />
-                      Without gist.design
+                      Failure mode
                     </span>
                   </th>
                   <th className="text-text-primary px-5 py-3.5 text-left font-semibold">
                     <span className="inline-flex items-center gap-1.5">
                       <ShieldCheckIcon className="text-accent-primary h-4 w-4" />
-                      What prevents it
+                      What the audit surfaces
                     </span>
                   </th>
                 </tr>
@@ -64,22 +56,20 @@ function MarketingSections() {
               <tbody className="divide-y divide-white/[0.06]">
                 {[
                   {
-                    failure:
-                      'AI coding tool builds auto-execute when you designed for user approval',
-                    fix: 'Design Decisions: "chose X over Y because Z"',
+                    failure: 'ChatGPT calls you a clone of your biggest competitor',
+                    fix: 'Positioning drift — models collapse you into a category you deliberately left',
                   },
                   {
-                    failure:
-                      'AI fills gaps with competitor patterns your product deliberately avoids',
-                    fix: 'Not This: explicit boundaries on what this is not',
+                    failure: 'Claude hallucinates features that do not exist in your product',
+                    fix: 'Fabrications — model fills gaps with assumed-typical functionality',
                   },
                   {
-                    failure: 'LLM recommends your product to the wrong audience',
-                    fix: "Positioning: who it's for and who it's not for",
+                    failure: 'LLMs recommend you to audiences you explicitly do not serve',
+                    fix: 'Audience mismatch — who gets suggested your product when asked for X',
                   },
                   {
-                    failure: 'LLM describes your product as a clone of a competitor',
-                    fix: 'Positioning: vs comparisons with honest differences',
+                    failure: 'AI coding tools build the wrong pattern when reading your site',
+                    fix: 'Context gaps — decisions, constraints, and boundaries nothing on the page tells them about',
                   },
                 ].map((row) => (
                   <tr key={row.failure}>
@@ -93,659 +83,252 @@ function MarketingSections() {
         </div>
       </div>
 
-      {/* Generate — two creation channels */}
+      {/* How it works — Audit, Fix, Track */}
       <div className="relative overflow-hidden">
         <div className="ambient-orb top-1/3 -right-24 h-80 w-80 bg-indigo-500/[0.05]" />
         <div className="mx-auto max-w-6xl px-6 py-16 md:py-20">
-          <h2 className="text-text-primary mb-4 text-3xl font-bold tracking-tight">
-            Generate your gist.design file
-          </h2>
-          <p className="text-text-secondary mb-8 text-lg leading-relaxed">
-            Two ways to create the same file.
+          <SectionHeading>Audit. Fix. Track.</SectionHeading>
+          <p className="text-text-secondary mb-10 max-w-2xl text-lg leading-relaxed">
+            One-time audits find today&apos;s gaps. Monitoring catches tomorrow&apos;s drift.
           </p>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <a
-              href="https://github.com/imsaif/gist"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="glass group rounded-2xl p-6 transition-colors hover:border-white/[0.12] hover:bg-[rgba(26,29,39,0.6)]"
-            >
-              <div className="text-text-secondary mb-3">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={1.5}
-                  className="h-8 w-8"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M6.75 7.5l3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0021 18V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v12a2.25 2.25 0 002.25 2.25z"
-                  />
-                </svg>
-              </div>
-              <h3 className="text-text-primary mb-2 text-xl font-semibold">In your editor</h3>
-              <p className="text-text-secondary text-base leading-relaxed">
-                Install the Claude Code skill. File drops directly into your project root.
-              </p>
-            </a>
-            <a
-              href="#top"
-              className="glass group rounded-2xl p-6 transition-colors hover:border-white/[0.12] hover:bg-[rgba(26,29,39,0.6)]"
-            >
-              <div className="text-text-secondary mb-3">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={1.5}
-                  className="h-8 w-8"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 003 12c0-1.605.42-3.113 1.157-4.418"
-                  />
-                </svg>
-              </div>
-              <h3 className="text-text-primary mb-2 text-xl font-semibold">In your browser</h3>
-              <p className="text-text-secondary text-base leading-relaxed">
-                Run an audit above, fix the gaps, download your file. No setup required.
-              </p>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      {/* How it works — step process */}
-      <HowItWorks />
-
-      <div className="relative mx-auto max-w-6xl overflow-hidden px-6">
-        {/* Integrations */}
-        <Section id="integrations">
-          {/* Ambient orb */}
-          <div className="ambient-orb top-1/3 left-1/2 h-72 w-72 -translate-x-1/2 bg-indigo-500/[0.05]" />
-          <SectionHeading>Integrations</SectionHeading>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             {[
               {
-                name: 'Cursor',
-                icon: (
-                  <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
-                    <path d="M11.503.131 1.891 5.678a.84.84 0 0 0-.42.726v11.188c0 .3.162.575.42.724l9.609 5.55a1 1 0 0 0 .998 0l9.61-5.55a.84.84 0 0 0 .42-.724V6.404a.84.84 0 0 0-.42-.726L12.497.131a1.01 1.01 0 0 0-.996 0M2.657 6.338h18.55c.263 0 .43.287.297.515L12.23 22.918c-.062.107-.229.064-.229-.06V12.335a.59.59 0 0 0-.295-.51l-9.11-5.257c-.109-.063-.064-.23.061-.23" />
-                  </svg>
-                ),
-                instruction: (
-                  <>
-                    <code className="bg-bg-secondary rounded px-1.5 py-0.5 text-xs">@Docs</code> →
-                    Add new doc → paste your gist.design URL
-                  </>
-                ),
+                icon: ChartBarSquareIcon,
+                title: 'Audit',
+                body: 'Run your URL through ChatGPT, Claude, and Perplexity. Get a scorecard of conflicts, fabrications, and positioning drift.',
               },
               {
-                name: 'Claude Code',
-                icon: (
-                  <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
-                    <path d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z" />
-                  </svg>
-                ),
-                instruction: (
-                  <>
-                    Install the{' '}
-                    <a
-                      href="https://github.com/imsaif/gist"
-                      className="text-accent-primary hover:text-accent-hover transition-colors"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      gist-design skill
-                    </a>{' '}
-                    to generate files natively, or drop one in your repo root.
-                  </>
-                ),
+                icon: CheckCircleIcon,
+                title: 'Fix',
+                body: 'Inline gap fixer produces a downloadable file that patches the context AI tools are missing. Paste into Cursor, Claude Code, or your repo.',
               },
               {
-                name: 'GitHub Copilot',
-                icon: (
-                  <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
-                    <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
-                  </svg>
-                ),
-                instruction: <>Place file in repo root</>,
+                icon: ArrowTrendingUpIcon,
+                title: 'Track',
+                body: 'Re-audit weekly. See your AI visibility score trend. Get alerted when a model materially changes how it describes you.',
               },
-              {
-                name: 'ChatGPT',
-                icon: (
-                  <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
-                    <path d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.18a5.985 5.985 0 0 0-3.998 2.9 6.046 6.046 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.99 5.99 0 0 0 3.997-2.9 6.056 6.056 0 0 0-.747-7.073zM13.26 22.43a4.476 4.476 0 0 1-2.876-1.04l.141-.081 4.779-2.758a.795.795 0 0 0 .392-.681v-6.737l2.02 1.168a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.494 4.494zM3.6 18.304a4.47 4.47 0 0 1-.535-3.014l.142.085 4.783 2.759a.771.771 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.033.062L9.74 19.95a4.5 4.5 0 0 1-6.14-1.646zM2.34 7.896a4.485 4.485 0 0 1 2.366-1.973V11.6a.766.766 0 0 0 .388.676l5.815 3.355-2.02 1.168a.076.076 0 0 1-.071 0l-4.83-2.786A4.504 4.504 0 0 1 2.34 7.872zm16.597 3.855l-5.833-3.387L15.119 7.2a.076.076 0 0 1 .071 0l4.83 2.791a4.494 4.494 0 0 1-.676 8.105v-5.678a.79.79 0 0 0-.407-.667zm2.01-3.023l-.141-.085-4.774-2.782a.776.776 0 0 0-.785 0L9.409 9.23V6.897a.066.066 0 0 1 .028-.061l4.83-2.787a4.5 4.5 0 0 1 6.68 4.66zm-12.64 4.135l-2.02-1.164a.08.08 0 0 1-.038-.057V6.075a4.5 4.5 0 0 1 7.375-3.453l-.142.08L8.704 5.46a.795.795 0 0 0-.393.681zm1.097-2.365l2.602-1.5 2.607 1.5v2.999l-2.597 1.5-2.607-1.5z" />
-                  </svg>
-                ),
-                instruction: <>Paste URL or upload file for accurate product recommendations</>,
-              },
-            ].map((tool) => (
-              <div
-                key={tool.name}
-                className="glass rounded-2xl p-5 transition-colors hover:border-white/[0.12] hover:bg-[rgba(26,29,39,0.6)]"
-              >
-                <div className="text-text-secondary mb-3">{tool.icon}</div>
-                <h3 className="text-text-primary mb-2 text-lg font-semibold">{tool.name}</h3>
-                <p className="text-text-secondary text-base leading-relaxed">{tool.instruction}</p>
+            ].map((step) => (
+              <div key={step.title} className="glass rounded-2xl p-6">
+                <step.icon className="text-accent-primary mb-4 h-7 w-7" />
+                <h3 className="text-text-primary mb-2 text-xl font-semibold">{step.title}</h3>
+                <p className="text-text-secondary text-base leading-relaxed">{step.body}</p>
               </div>
             ))}
           </div>
-        </Section>
-
-        {/* Figma MCP callout */}
-        <Section id="figma-mcp">
-          <div className="glass rounded-2xl p-6 md:p-8">
-            <div className="flex flex-col gap-6 md:flex-row md:items-center md:gap-8">
-              <div className="flex-1">
-                <h3 className="text-text-primary mb-3 text-xl font-semibold">
-                  Works with Figma MCP
-                </h3>
-                <p className="text-text-secondary text-base leading-relaxed">
-                  Figma MCP gives structure. gist.design gives intent. Together they produce
-                  accurate implementation.
-                </p>
-              </div>
-              <div className="flex shrink-0 items-center gap-4">
-                <div className="flex flex-col items-center gap-1">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.05]">
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      className="text-text-secondary h-6 w-6"
-                    >
-                      <path d="M15.852 8.981h-4.588V0h4.588c2.476 0 4.49 2.014 4.49 4.49s-2.014 4.491-4.49 4.491zM12.735 7.51h3.117c1.665 0 3.019-1.355 3.019-3.019s-1.355-3.019-3.019-3.019h-3.117V7.51zm0 8.137h-4.49c-2.476 0-4.49-2.014-4.49-4.49s2.014-4.49 4.49-4.49h4.49v8.98zm-4.49-7.51c-1.665 0-3.019 1.355-3.019 3.019s1.354 3.02 3.019 3.02h3.019V8.137h-3.019zm4.49 7.51h-4.49c-2.476 0-4.49 2.014-4.49 4.49s2.014 4.49 4.49 4.49h4.49v-8.98zm-4.49 7.51c-1.665 0-3.019-1.355-3.019-3.019s1.355-3.019 3.019-3.019h3.019v6.038h-3.019zm4.49-7.51c2.476 0 4.49 2.014 4.49 4.49s-2.014 4.49-4.49 4.49-4.49-2.014-4.49-4.49 2.014-4.49 4.49-4.49zm0 7.51c1.665 0 3.019-1.355 3.019-3.019s-1.354-3.02-3.019-3.02-3.019 1.355-3.019 3.019 1.355 3.02 3.019 3.02z" />
-                    </svg>
-                  </div>
-                  <span className="text-text-tertiary text-[10px]">Structure</span>
-                </div>
-                <span className="text-text-tertiary text-lg">+</span>
-                <div className="flex flex-col items-center gap-1">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.05]">
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth={1.5}
-                      className="text-text-secondary h-6 w-6"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
-                      />
-                    </svg>
-                  </div>
-                  <span className="text-text-tertiary text-[10px]">Intent</span>
-                </div>
-                <span className="text-text-tertiary text-lg">=</span>
-                <div className="flex flex-col items-center gap-1">
-                  <div className="bg-accent-primary/10 flex h-12 w-12 items-center justify-center rounded-xl border border-white/[0.08]">
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth={1.5}
-                      className="text-accent-primary h-6 w-6"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                  </div>
-                  <span className="text-text-tertiary text-[10px]">Accurate</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Section>
-
-        {/* gist.design vs llms.txt */}
-        <Section id="vs-llmstxt">
-          <SectionHeading>How does this relate to llms.txt?</SectionHeading>
-          <p className="text-text-secondary mb-8 text-lg leading-relaxed">
-            They&apos;re complementary. Use both.
-          </p>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div className="glass rounded-2xl p-6">
-              <code className="bg-bg-secondary text-text-primary mb-3 inline-block rounded px-2 py-1 text-sm font-semibold">
-                llms.txt
-              </code>
-              <h3 className="text-text-primary mb-2 text-lg font-semibold">What it does</h3>
-              <p className="text-text-secondary text-base leading-relaxed">
-                A README for LLMs. Features, links, how to use it.
-              </p>
-              <p className="text-text-tertiary mt-4 text-sm italic">
-                &ldquo;Acme is a project management tool with kanban boards.&rdquo;
-              </p>
-            </div>
-            <div className="glass rounded-2xl border-white/[0.12] bg-[rgba(26,29,39,0.6)] p-6">
-              <code className="bg-accent-primary/20 text-accent-primary mb-3 inline-block rounded px-2 py-1 text-sm font-semibold">
-                gist.design
-              </code>
-              <h3 className="text-text-primary mb-2 text-lg font-semibold">How to talk about it</h3>
-              <p className="text-text-secondary text-base leading-relaxed">
-                Positioning, boundaries, and design rationale. Stops LLMs from getting your product
-                wrong.
-              </p>
-              <p className="text-text-tertiary mt-4 text-sm italic">
-                &ldquo;Not for enterprise. No Gantt charts by design. Chose manual scheduling
-                because teams want control.&rdquo;
-              </p>
-            </div>
-          </div>
-        </Section>
-
-        {/* Principles */}
-        <Section id="principles">
-          {/* Ambient orbs */}
-          <div className="ambient-orb top-1/3 -left-20 h-80 w-80 bg-purple-500/[0.06]" />
-          <div className="ambient-orb -right-16 bottom-1/4 h-72 w-72 bg-indigo-500/[0.05]" />
-          <SectionHeading>Principles</SectionHeading>
-          <p className="text-text-secondary mb-8 text-lg leading-relaxed">
-            What makes a gist.design file useful.
-          </p>
-
-          {/* Bento grid */}
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-12">
-            {/* Top-left: Decisions over descriptions */}
-            <div className="glass overflow-hidden rounded-2xl md:col-span-5">
-              <div className="glass-subtle relative flex h-64 flex-col items-center justify-center gap-3 overflow-hidden p-6">
-                {/* Decorative glow */}
-                <div
-                  className="absolute inset-0 opacity-40"
-                  style={{
-                    background:
-                      'radial-gradient(circle at 50% 50%, rgba(129,140,248,0.15) 0%, transparent 70%)',
-                  }}
-                />
-                {/* Mock decision items */}
-                <div className="relative z-10 flex w-full max-w-[280px] flex-col gap-2.5">
-                  <div className="flex items-center gap-3 rounded-xl border border-white/[0.08] bg-white/[0.05] px-4 py-3 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)] backdrop-blur-sm">
-                    <ScaleIcon className="text-accent-primary h-5 w-5 shrink-0" />
-                    <span className="text-text-primary text-sm font-medium">Chose X over Y</span>
-                    <svg
-                      className="text-accent-primary ml-auto h-4 w-4 shrink-0"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={2.5}
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M4.5 12.75l6 6 9-13.5"
-                      />
-                    </svg>
-                  </div>
-                  <div className="flex items-center gap-3 rounded-xl border border-white/[0.06] bg-white/[0.03] px-4 py-3 opacity-40 backdrop-blur-sm">
-                    <div className="h-5 w-5 shrink-0 rounded bg-white/[0.08]" />
-                    <span className="text-text-secondary text-sm">The button is blue</span>
-                    <svg
-                      className="text-text-tertiary ml-auto h-4 w-4 shrink-0"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={2.5}
-                      stroke="currentColor"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </div>
-                  <div className="flex items-center gap-3 rounded-xl border border-white/[0.08] bg-white/[0.05] px-4 py-3 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)] backdrop-blur-sm">
-                    <ScaleIcon className="text-accent-primary h-5 w-5 shrink-0" />
-                    <span className="text-text-primary text-sm font-medium">Because Z matters</span>
-                    <svg
-                      className="text-accent-primary ml-auto h-4 w-4 shrink-0"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={2.5}
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M4.5 12.75l6 6 9-13.5"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-              <div className="p-5">
-                <h3 className="text-text-primary mb-2 text-xl font-semibold">
-                  Decisions over descriptions
-                </h3>
-                <p className="text-text-secondary text-base leading-relaxed">
-                  &ldquo;We chose X over Y because Z&rdquo; is useful. &ldquo;The button is
-                  blue&rdquo; is not.
-                </p>
-              </div>
-            </div>
-
-            {/* Top-right: Specific over generic */}
-            <div className="glass overflow-hidden rounded-2xl md:col-span-7">
-              <div className="glass-subtle relative flex h-64 items-center justify-center overflow-hidden p-6">
-                <div
-                  className="absolute inset-0 opacity-40"
-                  style={{
-                    background:
-                      'radial-gradient(circle at 50% 50%, rgba(129,140,248,0.15) 0%, transparent 70%)',
-                  }}
-                />
-                {/* Floating badge elements */}
-                <div className="relative z-10 flex items-center gap-6">
-                  {/* Specific example */}
-                  <div className="flex flex-col items-center gap-3">
-                    <div className="rounded-xl border border-white/[0.08] bg-white/[0.05] px-4 py-3 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)] backdrop-blur-sm">
-                      <div className="mb-2 flex items-center gap-2">
-                        <ViewfinderCircleIcon className="text-accent-primary h-4 w-4" />
-                        <span className="text-text-primary text-xs font-semibold">Specific</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <span className="bg-accent-primary/20 text-accent-primary rounded-full px-2 py-0.5 text-[10px] font-semibold">
-                          High
-                        </span>
-                        <span className="text-text-secondary rounded-full bg-white/[0.06] px-2 py-0.5 text-[10px]">
-                          Med
-                        </span>
-                        <span className="text-text-tertiary rounded-full bg-white/[0.06] px-2 py-0.5 text-[10px]">
-                          Low
-                        </span>
-                      </div>
-                      <p className="text-text-secondary mt-2 max-w-[160px] text-[10px] leading-relaxed">
-                        3-tier badge next to each suggestion
-                      </p>
-                    </div>
-                  </div>
-                  {/* Arrow */}
-                  <div className="text-text-tertiary flex flex-col items-center gap-1">
-                    <span className="text-[10px] font-medium">vs</span>
-                  </div>
-                  {/* Generic example */}
-                  <div className="flex flex-col items-center gap-3">
-                    <div className="rounded-xl border border-white/[0.06] bg-white/[0.03] px-4 py-3 opacity-40 backdrop-blur-sm">
-                      <div className="mb-2 flex items-center gap-2">
-                        <div className="h-4 w-4 rounded bg-white/[0.08]" />
-                        <span className="text-text-secondary text-xs font-semibold">Generic</span>
-                      </div>
-                      <div className="h-2 w-24 rounded-full bg-white/[0.06]" />
-                      <p className="text-text-tertiary mt-2 max-w-[160px] text-[10px] leading-relaxed">
-                        &ldquo;uses confidence visualization&rdquo;
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="p-5">
-                <h3 className="text-text-primary mb-2 text-xl font-semibold">
-                  Specific over generic
-                </h3>
-                <p className="text-text-secondary text-base leading-relaxed">
-                  &ldquo;Confidence scores appear as a 3-tier badge next to each suggestion,&rdquo;
-                  not &ldquo;uses confidence visualization.&rdquo;
-                </p>
-              </div>
-            </div>
-
-            {/* Bottom-left: Negative space matters */}
-            <div className="glass overflow-hidden rounded-2xl md:col-span-4">
-              <div className="glass-subtle relative flex h-56 flex-col items-center justify-center gap-2.5 overflow-hidden p-6">
-                <div
-                  className="absolute inset-0 opacity-40"
-                  style={{
-                    background:
-                      'radial-gradient(circle at 50% 50%, rgba(129,140,248,0.12) 0%, transparent 70%)',
-                  }}
-                />
-                <div className="relative z-10 flex w-full max-w-[220px] flex-col gap-2">
-                  <div className="flex items-center gap-2.5 rounded-lg border border-white/[0.08] bg-white/[0.05] px-3 py-2.5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)] backdrop-blur-sm">
-                    <NoSymbolIcon className="h-4 w-4 shrink-0 text-red-400/70" />
-                    <span className="text-text-secondary text-xs line-through">Auto-execute</span>
-                  </div>
-                  <div className="flex items-center gap-2.5 rounded-lg border border-white/[0.08] bg-white/[0.05] px-3 py-2.5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)] backdrop-blur-sm">
-                    <NoSymbolIcon className="h-4 w-4 shrink-0 text-red-400/70" />
-                    <span className="text-text-secondary text-xs line-through">
-                      Competitor pattern
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2.5 rounded-lg border border-white/[0.08] bg-white/[0.05] px-3 py-2.5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)] backdrop-blur-sm">
-                    <NoSymbolIcon className="h-4 w-4 shrink-0 text-red-400/70" />
-                    <span className="text-text-secondary text-xs line-through">
-                      Generic defaults
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div className="p-5">
-                <h3 className="text-text-primary mb-2 text-xl font-semibold">
-                  Negative space matters
-                </h3>
-                <p className="text-text-secondary text-base leading-relaxed">
-                  What it&apos;s NOT prevents AI from filling gaps with competitor patterns.
-                </p>
-              </div>
-            </div>
-
-            {/* Bottom-center: One file per feature */}
-            <div className="glass overflow-hidden rounded-2xl md:col-span-4">
-              <div className="glass-subtle relative flex h-56 items-center justify-center overflow-hidden p-6">
-                <div
-                  className="absolute inset-0 opacity-40"
-                  style={{
-                    background:
-                      'radial-gradient(circle at 50% 50%, rgba(129,140,248,0.12) 0%, transparent 70%)',
-                  }}
-                />
-                <div className="relative z-10 flex flex-col gap-2 rounded-xl border border-white/[0.08] bg-white/[0.05] px-5 py-4 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)] backdrop-blur-sm">
-                  {/* File tree mock */}
-                  <div className="text-text-tertiary flex items-center gap-2 text-xs">
-                    <span className="text-text-secondary font-medium">/</span>
-                  </div>
-                  <div className="text-text-tertiary flex items-center gap-2 pl-3 text-xs">
-                    <svg
-                      className="h-3.5 w-3.5 shrink-0"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z"
-                      />
-                    </svg>
-                    <span>features/</span>
-                  </div>
-                  <div className="flex items-center gap-2 pl-8 text-xs">
-                    <DocumentIcon className="text-accent-primary h-3.5 w-3.5 shrink-0" />
-                    <span className="text-accent-primary font-medium">auth.gist.design</span>
-                  </div>
-                  <div className="flex items-center gap-2 pl-8 text-xs">
-                    <DocumentIcon className="text-accent-primary h-3.5 w-3.5 shrink-0" />
-                    <span className="text-accent-primary font-medium">search.gist.design</span>
-                  </div>
-                  <div className="flex items-center gap-2 pl-8 text-xs">
-                    <DocumentIcon className="text-accent-primary h-3.5 w-3.5 shrink-0" />
-                    <span className="text-accent-primary font-medium">checkout.gist.design</span>
-                  </div>
-                  <div className="text-text-tertiary flex items-center gap-2 pl-3 text-xs">
-                    <DocumentIcon className="h-3.5 w-3.5 shrink-0" />
-                    <span>gist.design</span>
-                  </div>
-                </div>
-              </div>
-              <div className="p-5">
-                <h3 className="text-text-primary mb-2 text-xl font-semibold">
-                  One file per feature
-                </h3>
-                <p className="text-text-secondary text-base leading-relaxed">
-                  One file per significant feature. Keeps each file focused and useful.
-                </p>
-              </div>
-            </div>
-
-            {/* Bottom-right: Generated, not written */}
-            <div className="glass overflow-hidden rounded-2xl md:col-span-4">
-              <div className="glass-subtle relative flex h-56 items-center justify-center overflow-hidden p-6">
-                <div
-                  className="absolute inset-0 opacity-40"
-                  style={{
-                    background:
-                      'radial-gradient(circle at 50% 50%, rgba(129,140,248,0.12) 0%, transparent 70%)',
-                  }}
-                />
-                <div className="relative z-10 flex flex-col items-center gap-3">
-                  {/* Chat bubble mock */}
-                  <div className="bg-msg-user-bg rounded-2xl rounded-br-sm px-4 py-2.5">
-                    <span className="text-msg-user-text text-xs">
-                      We chose approval over auto-execute...
-                    </span>
-                  </div>
-                  {/* Arrow down */}
-                  <SparklesIcon className="text-accent-primary h-6 w-6" />
-                  {/* Generated file mock */}
-                  <div className="w-full max-w-[200px] rounded-lg border border-white/[0.08] bg-white/[0.05] px-3 py-2 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)] backdrop-blur-sm">
-                    <div className="mb-1 flex items-center gap-1.5">
-                      <DocumentIcon className="text-accent-primary h-3 w-3" />
-                      <span className="text-accent-primary text-[10px] font-semibold">
-                        .gist.design
-                      </span>
-                    </div>
-                    <div className="mb-1 h-1.5 w-full rounded-full bg-white/[0.06]" />
-                    <div className="mb-1 h-1.5 w-3/4 rounded-full bg-white/[0.06]" />
-                    <div className="h-1.5 w-5/6 rounded-full bg-white/[0.06]" />
-                  </div>
-                </div>
-              </div>
-              <div className="p-5">
-                <h3 className="text-text-primary mb-2 text-xl font-semibold">
-                  Generated, not written
-                </h3>
-                <p className="text-text-secondary text-base leading-relaxed">
-                  The tool handles the format. You handle the thinking.
-                </p>
-              </div>
-            </div>
-          </div>
-        </Section>
-      </div>
-
-      {/* Reference */}
-      <div className="relative mx-auto max-w-6xl overflow-hidden px-6 py-16 md:py-20">
-        {/* Ambient orb */}
-        <div className="ambient-orb top-1/2 right-0 h-72 w-72 -translate-y-1/2 bg-purple-500/[0.05]" />
-        <h2 className="text-text-primary mb-8 text-3xl font-bold tracking-tight">Reference</h2>
-        <div className="glass-strong overflow-hidden rounded-2xl">
-          <table className="w-full text-base">
-            <thead>
-              <tr className="border-b border-white/[0.06] bg-white/[0.03]">
-                <th className="text-text-primary px-5 py-3.5 text-left font-semibold">Topic</th>
-                <th className="text-text-primary px-5 py-3.5 text-left font-semibold">Details</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-white/[0.06]">
-              <tr>
-                <td className="text-text-primary px-5 py-3.5 font-medium">robots.txt</td>
-                <td className="text-text-secondary px-5 py-3.5">
-                  Crawlers &mdash; What can you access?
-                </td>
-              </tr>
-              <tr>
-                <td className="text-text-primary px-5 py-3.5 font-medium">sitemap.xml</td>
-                <td className="text-text-secondary px-5 py-3.5">
-                  Search engines &mdash; What pages exist?
-                </td>
-              </tr>
-              <tr>
-                <td className="text-text-primary px-5 py-3.5 font-medium">
-                  <a
-                    href="https://llmstxt.org"
-                    className="text-text-primary hover:text-accent-primary transition-colors"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    llms.txt
-                  </a>
-                </td>
-                <td className="text-text-secondary px-5 py-3.5">
-                  LLMs &mdash; What does this product do?
-                </td>
-              </tr>
-              <tr className="bg-accent-primary/[0.08]">
-                <td className="text-accent-primary px-5 py-3.5 font-semibold">gist.design</td>
-                <td className="text-text-primary px-5 py-3.5 font-medium">
-                  LLMs &mdash; How should you talk about this product? Positioning, boundaries,
-                  audience, design rationale
-                </td>
-              </tr>
-              <tr>
-                <td className="text-text-primary px-5 py-3.5 font-medium">File placement</td>
-                <td className="text-text-secondary px-5 py-3.5">
-                  <code className="bg-bg-secondary rounded px-1.5 py-0.5 text-sm">
-                    /gist.design
-                  </code>{' '}
-                  in the project root, or{' '}
-                  <code className="bg-bg-secondary rounded px-1.5 py-0.5 text-sm">
-                    /features/[name]/gist.design
-                  </code>{' '}
-                  for multi-feature products
-                </td>
-              </tr>
-              <tr>
-                <td className="text-text-primary px-5 py-3.5 font-medium">Spec</td>
-                <td className="text-text-secondary px-5 py-3.5">
-                  Open for community input. Pattern research at{' '}
-                  <a
-                    href="https://aiuxdesign.guide"
-                    className="text-accent-primary hover:text-accent-hover transition-colors"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    aiuxdesign.guide
-                  </a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
         </div>
       </div>
 
-      {/* CTA */}
+      {/* Monitor over time */}
+      <div className="relative overflow-hidden">
+        <div className="ambient-orb top-1/2 left-1/4 h-72 w-72 bg-purple-500/[0.05]" />
+        <div className="mx-auto max-w-6xl px-6 py-16 md:py-20">
+          <div className="grid grid-cols-1 items-center gap-10 md:grid-cols-2">
+            <div>
+              <SectionHeading>Drift happens. Get alerted when it does.</SectionHeading>
+              <p className="text-text-secondary mb-6 text-lg leading-relaxed">
+                Models update. Your site changes. Competitors launch. Your AI visibility score is
+                not static — it drifts. We re-audit on a schedule and tell you when something
+                material changed.
+              </p>
+              <ul className="text-text-secondary space-y-3 text-base">
+                <li className="flex items-start gap-3">
+                  <BellAlertIcon className="text-accent-primary mt-0.5 h-5 w-5 shrink-0" />
+                  Weekly re-audits across every major model
+                </li>
+                <li className="flex items-start gap-3">
+                  <BellAlertIcon className="text-accent-primary mt-0.5 h-5 w-5 shrink-0" />
+                  Diffs when a model changes how it describes you
+                </li>
+                <li className="flex items-start gap-3">
+                  <BellAlertIcon className="text-accent-primary mt-0.5 h-5 w-5 shrink-0" />
+                  Competitor tracking — audit yours and theirs side-by-side
+                </li>
+              </ul>
+            </div>
+            <div className="glass-strong rounded-2xl p-6">
+              <div className="text-text-tertiary mb-4 text-xs font-semibold tracking-wider uppercase">
+                AI Visibility Score
+              </div>
+              <div className="mb-6 flex items-baseline gap-3">
+                <span className="text-text-primary text-5xl font-bold">78</span>
+                <span className="text-accent-primary inline-flex items-center gap-1 text-sm font-medium">
+                  <ArrowTrendingUpIcon className="h-4 w-4" />
+                  +12 this month
+                </span>
+              </div>
+              <div className="space-y-2.5">
+                {[
+                  { model: 'ChatGPT', score: 82, trend: '+8' },
+                  { model: 'Claude', score: 79, trend: '+15' },
+                  { model: 'Perplexity', score: 74, trend: '+13' },
+                  { model: 'Gemini', score: 71, trend: '+10' },
+                ].map((row) => (
+                  <div key={row.model} className="flex items-center justify-between text-sm">
+                    <span className="text-text-primary w-24 font-medium">{row.model}</span>
+                    <div className="mx-3 h-1.5 flex-1 overflow-hidden rounded-full bg-white/[0.06]">
+                      <div
+                        className="bg-accent-primary h-full rounded-full"
+                        style={{ width: `${row.score}%` }}
+                      />
+                    </div>
+                    <span className="text-text-primary w-8 text-right font-mono">{row.score}</span>
+                    <span className="text-accent-primary ml-2 w-10 text-right font-mono text-xs">
+                      {row.trend}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <div className="border-accent-primary/20 bg-accent-primary/[0.06] mt-6 rounded-xl border p-3 text-sm">
+                <span className="text-accent-primary font-semibold">
+                  ChatGPT drift · 2 days ago
+                </span>
+                <p className="text-text-secondary mt-1 leading-relaxed">
+                  Started describing your category as &ldquo;project management&rdquo; instead of
+                  &ldquo;issue tracker.&rdquo;
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Pricing */}
+      <div className="relative overflow-hidden">
+        <div className="ambient-orb top-1/3 -left-20 h-80 w-80 bg-indigo-500/[0.06]" />
+        <div className="mx-auto max-w-6xl px-6 py-16 md:py-20" id="pricing">
+          <SectionHeading>Pricing</SectionHeading>
+          <p className="text-text-secondary mb-10 text-lg leading-relaxed">
+            Free to try. Paid when you want history, monitoring, and alerts.
+          </p>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            {[
+              {
+                name: 'Free',
+                price: '$0',
+                cadence: '',
+                body: 'One audit. One URL. Downloadable fix file.',
+                features: ['1 audit / month', 'All major models', 'Download fix file'],
+                cta: 'Run a free audit',
+                featured: false,
+              },
+              {
+                name: 'Pro',
+                price: '$29',
+                cadence: '/mo',
+                body: 'For founders and PMMs tracking a single product.',
+                features: [
+                  'Unlimited audits',
+                  'Weekly auto re-audits',
+                  'Drift alerts',
+                  'Score history',
+                  '3 URLs',
+                ],
+                cta: 'Start Pro',
+                featured: true,
+              },
+              {
+                name: 'Team',
+                price: '$99',
+                cadence: '/mo',
+                body: 'For teams tracking multiple products and competitors.',
+                features: [
+                  'Everything in Pro',
+                  '25 URLs',
+                  'Competitor tracking',
+                  'Shareable reports',
+                  'Slack alerts',
+                ],
+                cta: 'Start Team',
+                featured: false,
+              },
+            ].map((tier) => (
+              <div
+                key={tier.name}
+                className={`rounded-2xl p-6 ${tier.featured ? 'glass-strong border-accent-primary/30 relative border-2' : 'glass'}`}
+              >
+                {tier.featured && (
+                  <div className="bg-accent-primary absolute -top-3 left-6 rounded-full px-3 py-1 text-xs font-semibold text-white">
+                    Most popular
+                  </div>
+                )}
+                <h3 className="text-text-primary mb-1 text-lg font-semibold">{tier.name}</h3>
+                <div className="mb-3 flex items-baseline gap-1">
+                  <span className="text-text-primary text-3xl font-bold">{tier.price}</span>
+                  <span className="text-text-secondary text-sm">{tier.cadence}</span>
+                </div>
+                <p className="text-text-secondary mb-5 text-sm leading-relaxed">{tier.body}</p>
+                <ul className="text-text-secondary mb-6 space-y-2 text-sm">
+                  {tier.features.map((f) => (
+                    <li key={f} className="flex items-start gap-2">
+                      <CheckCircleIcon className="text-accent-primary mt-0.5 h-4 w-4 shrink-0" />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+                <a
+                  href="#top"
+                  className={`block w-full rounded-xl px-4 py-2.5 text-center text-sm font-semibold transition-colors ${
+                    tier.featured
+                      ? 'bg-accent-primary hover:bg-accent-hover text-white'
+                      : 'text-text-primary border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.06]'
+                  }`}
+                >
+                  {tier.cta}
+                </a>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Built on an open standard */}
+      <div className="relative overflow-hidden">
+        <div className="mx-auto max-w-6xl px-6 py-16 md:py-20">
+          <div className="glass rounded-2xl p-6 md:p-8">
+            <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between md:gap-8">
+              <div className="max-w-2xl">
+                <h3 className="text-text-primary mb-3 text-xl font-semibold">
+                  Built on an open standard
+                </h3>
+                <p className="text-text-secondary text-base leading-relaxed">
+                  Fixes export to{' '}
+                  <code className="bg-bg-secondary rounded px-1.5 py-0.5 text-sm font-medium">
+                    .gist.design
+                  </code>{' '}
+                  — an open file format for AI-readable product context. Drop it into your repo,
+                  point Cursor or Claude Code at it, or paste it into ChatGPT. No lock-in.
+                </p>
+              </div>
+              <Link
+                href="/spec"
+                className="text-accent-primary hover:text-accent-hover inline-flex items-center gap-2 text-sm font-semibold whitespace-nowrap transition-colors"
+              >
+                Read the spec
+                <ArrowRightIcon className="h-4 w-4" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Final CTA */}
       <div className="relative mx-auto max-w-6xl overflow-hidden px-6 pb-16 md:pb-20">
-        {/* Ambient orb */}
         <div className="ambient-orb top-1/2 left-1/2 h-80 w-80 -translate-x-1/2 -translate-y-1/2 bg-indigo-500/[0.06]" />
         <div className="glass rounded-2xl border border-white/[0.08] p-8 text-center">
           <h2 className="text-text-primary mb-4 text-3xl font-bold tracking-tight">
-            Create your gist.design file
+            See what AI says about your product
           </h2>
           <p className="text-text-secondary mx-auto max-w-lg text-lg leading-relaxed">
-            Fix the gaps AI gets wrong about your product.
+            Free audit. Takes 60 seconds. No signup.
           </p>
           <div className="mt-8">
             <a
               href="#top"
               className="bg-accent-primary hover:bg-accent-hover inline-flex items-center gap-2 rounded-2xl px-8 py-4 text-lg font-semibold text-white transition-colors"
             >
-              Run free audit
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
-                className="h-5 w-5"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
-                />
-              </svg>
+              Run your audit
+              <ArrowRightIcon className="h-5 w-5" />
             </a>
           </div>
         </div>

@@ -2,8 +2,9 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'About — gist.design',
-  description: 'gist.design is a web standard for making product decisions readable to AI tools.',
+  title: 'About — gistaudit',
+  description:
+    'gistaudit tracks how ChatGPT, Claude, and Perplexity describe your product, and helps you fix what they get wrong.',
 };
 
 export default function AboutPage() {
@@ -12,9 +13,15 @@ export default function AboutPage() {
       {/* Header */}
       <header className="glass-nav sticky top-0 z-50 flex h-14 items-center justify-between px-6">
         <Link href="/" className="text-text-primary text-xl font-semibold">
-          Gist
+          gistaudit
         </Link>
         <nav className="flex items-center gap-6">
+          <Link
+            href="/#pricing"
+            className="text-text-secondary hover:text-text-primary text-sm font-medium transition-colors"
+          >
+            Pricing
+          </Link>
           <Link
             href="/spec"
             className="text-text-secondary hover:text-text-primary text-sm font-medium transition-colors"
@@ -29,20 +36,16 @@ export default function AboutPage() {
 
       <div className="mx-auto max-w-2xl px-6 py-16 md:py-24">
         <h1 className="text-text-primary mb-8 text-4xl font-extrabold tracking-tight">
-          About gist.design
+          About gistaudit
         </h1>
 
         <div className="space-y-8">
           <section>
             <h2 className="text-text-primary mb-3 text-xl font-semibold">What this is</h2>
             <p className="text-text-secondary text-base leading-relaxed">
-              gist.design is a web standard and toolset for making product decisions readable to AI
-              tools. It produces a{' '}
-              <code className="bg-bg-secondary rounded px-1.5 py-0.5 text-sm">/gist.design</code>{' '}
-              markdown file that sits at a project root — like{' '}
-              <code className="bg-bg-secondary rounded px-1.5 py-0.5 text-sm">llms.txt</code> but
-              for product intent, interaction flows, rationale, and boundaries instead of
-              documentation.
+              gistaudit shows you how AI tools describe your product — and tracks it over time.
+              Audit your URL, see what ChatGPT, Claude, and Perplexity say, and get a downloadable
+              fix file that patches the context LLMs are missing.
             </p>
           </section>
 
@@ -50,47 +53,49 @@ export default function AboutPage() {
             <h2 className="text-text-primary mb-3 text-xl font-semibold">The problem</h2>
             <div className="text-text-secondary space-y-3 text-base leading-relaxed">
               <p>
-                AI agents misrepresent products — blending with competitors, inventing features,
-                describing things wrong. Coding assistants build the wrong thing — they see
-                structure but not intent, features but not rationale.
+                LLMs answer millions of &ldquo;what should I use for X?&rdquo; questions every day.
+                The description they give of your product decides whether you get recommended,
+                ignored, or confused with a competitor. Most of the time, they get it wrong — and no
+                one tells you.
               </p>
               <p>
-                Every product has implicit decisions that never get written down. When AI tools
-                encounter these gaps, they fill them with guesses from training data. The result is
-                code that looks right but implements the wrong thing.
+                AI coding tools have the same problem. They read your HTML but not your design
+                decisions, rejected alternatives, or boundaries — so they guess. The result is code
+                that looks right but implements the wrong thing.
               </p>
             </div>
           </section>
 
           <section>
             <h2 className="text-text-primary mb-3 text-xl font-semibold">How it works</h2>
-            <p className="text-text-secondary mb-4 text-base leading-relaxed">
-              A guided conversation asks about your product decisions, positioning, and boundaries.
-              The tool captures your thinking and produces a structured file that AI tools read
-              automatically.
+            <p className="text-text-secondary mb-3 text-base leading-relaxed">
+              You give us a URL. We audit your product through every major LLM and score the output
+              across positioning, category accuracy, feature claims, and audience fit. Gaps become a
+              downloadable{' '}
+              <code className="bg-bg-secondary rounded px-1.5 py-0.5 text-sm">.gist.design</code>{' '}
+              file you can drop into your repo or paste into Cursor, Claude Code, or ChatGPT.
             </p>
             <p className="text-text-secondary text-base leading-relaxed">
-              There are two ways to generate a file:
+              On Pro and Team plans, we re-run the audit weekly, track your AI visibility score over
+              time, and alert you when a model materially changes how it describes you.
             </p>
-            <ul className="text-text-secondary mt-3 list-inside list-disc space-y-2 text-base leading-relaxed">
-              <li>
-                <strong className="text-text-primary">Claude Code skill</strong> — runs inside your
-                terminal, writes the file directly to your project root. Recommended for developers.
-              </li>
-              <li>
-                <strong className="text-text-primary">Web app</strong> — same guided conversation at{' '}
-                <Link
-                  href="/"
-                  className="text-accent-primary hover:text-accent-hover transition-colors"
-                >
-                  gist.design
-                </Link>
-                . Run an audit, fix the gaps, download your file.
-              </li>
-            </ul>
-            <p className="text-text-secondary mt-3 text-base leading-relaxed">
-              Both produce identical files. The file format is the product. The tools are creation
-              channels.
+          </section>
+
+          <section>
+            <h2 className="text-text-primary mb-3 text-xl font-semibold">
+              Built on an open standard
+            </h2>
+            <p className="text-text-secondary text-base leading-relaxed">
+              The fix file is{' '}
+              <Link
+                href="/spec"
+                className="text-accent-primary hover:text-accent-hover transition-colors"
+              >
+                gist.design
+              </Link>
+              , an open format for AI-readable product context. Anyone can author one by hand or
+              with the Claude Code skill. gistaudit produces one as the output of every audit. The
+              spec is MIT-licensed and tool-agnostic.
             </p>
           </section>
 
@@ -99,7 +104,7 @@ export default function AboutPage() {
               Connection to aiuxdesign.guide
             </h2>
             <p className="text-text-secondary text-base leading-relaxed">
-              gist.design is powered by{' '}
+              Pattern references in the fix file link to{' '}
               <a
                 href="https://aiuxdesign.guide"
                 className="text-accent-primary hover:text-accent-hover transition-colors"
@@ -108,16 +113,14 @@ export default function AboutPage() {
               >
                 aiuxdesign.guide
               </a>
-              , which documents 28+ AI UX patterns from 50+ shipped products. During conversation,
-              the AI identifies patterns you are implementing and includes them in your file with
-              links back to the pattern library.
+              , which documents 36 AI UX patterns from shipped products.
             </p>
           </section>
 
           <section>
             <h2 className="text-text-primary mb-3 text-xl font-semibold">Who built this</h2>
             <p className="text-text-secondary text-base leading-relaxed">
-              gist.design is built by{' '}
+              Built by{' '}
               <a
                 href="https://github.com/imsaif"
                 className="text-accent-primary hover:text-accent-hover transition-colors"
@@ -126,46 +129,41 @@ export default function AboutPage() {
               >
                 Imran
               </a>
-              . The project is open for community input. If you have feedback or want to contribute
-              to the spec, reach out on GitHub.
+              . Feedback and spec contributions welcome via GitHub.
             </p>
           </section>
 
           <hr className="border-white/[0.06]" />
 
           <div className="flex flex-wrap items-center gap-4">
-            <a
-              href="https://github.com/imsaif/gist"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-accent-primary hover:bg-accent-hover inline-flex items-center gap-2 rounded-2xl px-6 py-3 text-base font-semibold text-white transition-colors"
-            >
-              Install Claude Code skill
-            </a>
             <Link
               href="/"
+              className="bg-accent-primary hover:bg-accent-hover inline-flex items-center gap-2 rounded-2xl px-6 py-3 text-base font-semibold text-white transition-colors"
+            >
+              Run a free audit
+            </Link>
+            <Link
+              href="/spec"
               className="text-text-secondary hover:text-text-primary text-base font-medium transition-colors"
             >
-              or run a free audit
+              or read the spec
             </Link>
           </div>
         </div>
       </div>
 
-      {/* Footer */}
       <footer className="py-12">
         <div className="mx-auto flex max-w-2xl items-center justify-between px-6">
-          <span className="text-text-tertiary text-sm">gist.design · 2026</span>
+          <span className="text-text-tertiary text-sm">gistaudit · 2026</span>
           <span className="text-text-tertiary text-sm">
-            Powered by{' '}
-            <a
-              href="https://aiuxdesign.guide"
+            Built on the open{' '}
+            <Link
+              href="/spec"
               className="text-text-secondary hover:text-text-primary transition-colors"
-              target="_blank"
-              rel="noopener noreferrer"
             >
-              aiuxdesign.guide
-            </a>
+              gist.design
+            </Link>{' '}
+            spec
           </span>
         </div>
       </footer>
