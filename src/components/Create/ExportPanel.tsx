@@ -62,23 +62,23 @@ export function ExportPanel({
 
   return (
     <div className="mb-6">
-      <h2 className="text-text-secondary mb-3 text-sm font-semibold tracking-wide uppercase">
+      <h2 className="text-ink-secondary mb-3 text-sm font-semibold tracking-wide uppercase">
         Export
       </h2>
 
       {/* Stats */}
-      <div className="border-border-light bg-bg-tertiary mb-4 grid grid-cols-3 gap-3 rounded-xl border p-4 shadow-sm">
+      <div className="border-border-primary bg-background-tertiary mb-4 grid grid-cols-3 gap-3 rounded-xl border p-4 shadow-sm">
         <div className="text-center">
-          <div className="text-text-primary text-lg font-semibold">{featureCount}</div>
-          <div className="text-text-tertiary text-xs">Features</div>
+          <div className="text-ink-primary text-lg font-semibold">{featureCount}</div>
+          <div className="text-ink-tertiary text-xs">Features</div>
         </div>
         <div className="text-center">
-          <div className="text-text-primary text-lg font-semibold">{decisionCount}</div>
-          <div className="text-text-tertiary text-xs">Decisions</div>
+          <div className="text-ink-primary text-lg font-semibold">{decisionCount}</div>
+          <div className="text-ink-tertiary text-xs">Decisions</div>
         </div>
         <div className="text-center">
-          <div className="text-text-primary text-lg font-semibold">{patternCount}</div>
-          <div className="text-text-tertiary text-xs">Patterns</div>
+          <div className="text-ink-primary text-lg font-semibold">{patternCount}</div>
+          <div className="text-ink-tertiary text-xs">Patterns</div>
         </div>
       </div>
 
@@ -87,7 +87,7 @@ export function ExportPanel({
         <button
           onClick={onDownload}
           disabled={featureCount === 0}
-          className="bg-accent-primary hover:bg-accent-hover disabled:bg-bg-tertiary disabled:text-text-tertiary flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-medium text-white transition-colors"
+          className="bg-brand-primary hover:bg-brand-hover disabled:bg-background-tertiary disabled:text-ink-tertiary flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-medium text-white transition-colors"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -111,7 +111,7 @@ export function ExportPanel({
           <button
             onClick={onCopyMarkdown}
             disabled={featureCount === 0}
-            className="border-border-light text-text-secondary hover:bg-bg-secondary disabled:text-text-tertiary flex items-center justify-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium transition-colors"
+            className="border-border-primary text-ink-secondary hover:bg-background-secondary disabled:text-ink-tertiary flex items-center justify-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium transition-colors"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -132,7 +132,7 @@ export function ExportPanel({
           <button
             onClick={onCopyBrief}
             disabled={featureCount === 0}
-            className="border-border-light text-text-secondary hover:bg-bg-secondary disabled:text-text-tertiary flex items-center justify-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium transition-colors"
+            className="border-border-primary text-ink-secondary hover:bg-background-secondary disabled:text-ink-tertiary flex items-center justify-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium transition-colors"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -157,7 +157,7 @@ export function ExportPanel({
           <button
             onClick={handleVerify}
             disabled={isVerifying}
-            className="border-border-light text-text-secondary hover:bg-bg-secondary disabled:text-text-tertiary flex w-full items-center justify-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium transition-colors"
+            className="border-border-primary text-ink-secondary hover:bg-background-secondary disabled:text-ink-tertiary flex w-full items-center justify-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium transition-colors"
           >
             {isVerifying ? (
               <>
@@ -191,7 +191,7 @@ export function ExportPanel({
 
       {verificationResult && (
         <div className="mt-6 space-y-4">
-          <h3 className="text-text-primary text-sm font-semibold">Verification</h3>
+          <h3 className="text-ink-primary text-sm font-semibold">Verification</h3>
           <BeforeAfter before={verificationResult.before} after={verificationResult.after} />
           <FixedGaps
             fixedGaps={verificationResult.fixedGaps}

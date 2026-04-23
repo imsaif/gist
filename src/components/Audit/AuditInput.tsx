@@ -50,20 +50,20 @@ export function AuditInput({ onSubmit, isLoading, remaining }: AuditInputProps) 
             }}
             placeholder="https://yourproduct.com"
             disabled={isLoading}
-            className="border-border-light focus:border-accent-primary disabled:bg-bg-secondary disabled:text-text-tertiary w-full rounded-xl border px-4 py-3 text-base transition-colors outline-none"
+            className="border-border-primary focus:border-border-secondary disabled:bg-background-secondary disabled:text-ink-tertiary bg-surface-primary w-full rounded-full border px-5 py-3.5 text-base shadow-[0_2px_8px_rgba(51,65,85,0.06),inset_0_1px_0_rgba(255,255,255,0.9)] transition-colors outline-none"
           />
         </div>
         <button
           type="submit"
-          disabled={isLoading || !url.trim()}
-          className="bg-accent-primary hover:bg-accent-hover disabled:bg-bg-tertiary disabled:text-text-tertiary rounded-xl px-6 py-3 font-medium text-white transition-colors"
+          disabled={isLoading}
+          className="bg-brand-primary hover:bg-brand-hover rounded-full px-7 py-3.5 font-medium text-white transition-colors disabled:opacity-60"
         >
           {isLoading ? 'Auditing...' : 'Run audit'}
         </button>
       </div>
       {error && <p className="mt-2 text-sm text-red-500">{error}</p>}
       {remaining !== undefined && remaining >= 0 && (
-        <p className="text-text-tertiary mt-2 text-sm">
+        <p className="text-ink-tertiary mt-2 text-sm">
           {remaining} audit{remaining !== 1 ? 's' : ''} remaining today
         </p>
       )}

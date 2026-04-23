@@ -23,21 +23,21 @@ ${gistDesignMarkdown}`;
   };
 
   return (
-    <div className="border-border-light bg-bg-primary rounded-xl border p-5">
+    <div className="border-border-primary bg-background-primary rounded-xl border p-5">
       <div className="mb-3 flex items-center justify-between">
-        <h4 className="text-text-primary text-sm font-semibold">Manual verification prompt</h4>
+        <h4 className="text-ink-primary text-sm font-semibold">Manual verification prompt</h4>
         <button
           onClick={handleCopy}
-          className="text-accent-primary hover:text-accent-hover text-sm font-medium transition-colors"
+          className="text-brand-primary hover:text-brand-hover text-sm font-medium transition-colors"
         >
           {copied ? 'Copied' : 'Copy'}
         </button>
       </div>
-      <p className="text-text-tertiary mb-3 text-xs">
+      <p className="text-ink-tertiary mb-3 text-xs">
         Paste this prompt into ChatGPT, Claude, or Perplexity to see how they describe your product
         with the gist.design file as context.
       </p>
-      <pre className="bg-bg-secondary text-text-secondary max-h-32 overflow-y-auto rounded-lg p-3 text-xs">
+      <pre className="bg-background-secondary text-ink-secondary max-h-32 overflow-y-auto rounded-lg p-3 text-xs">
         {prompt.slice(0, 200)}...
       </pre>
     </div>

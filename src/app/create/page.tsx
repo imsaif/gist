@@ -11,7 +11,7 @@ export default function CreateMode() {
 
   return (
     <div className="flex h-screen items-center justify-center">
-      <div className="text-text-tertiary">Redirecting...</div>
+      <div className="text-ink-tertiary">Redirecting...</div>
     </div>
   );
 }

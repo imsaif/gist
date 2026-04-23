@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 function CodeBlock({ children }: { children: string }) {
   return (
-    <pre className="bg-bg-secondary overflow-x-auto rounded-xl p-6 font-mono text-sm leading-relaxed">
+    <pre className="bg-background-secondary overflow-x-auto rounded-xl p-6 font-mono text-sm leading-relaxed">
       <code>{children}</code>
     </pre>
   );
@@ -10,121 +10,121 @@ function CodeBlock({ children }: { children: string }) {
 
 export default function SpecPage() {
   return (
-    <div className="bg-bg-primary min-h-screen">
+    <div className="bg-background-primary min-h-screen">
       <header className="flex h-14 items-center justify-between px-6">
-        <Link href="/" className="text-text-primary text-xl font-semibold">
+        <Link href="/" className="text-ink-primary text-xl font-semibold">
           gistaudit
         </Link>
         <nav className="flex items-center gap-6">
           <Link
             href="/"
-            className="text-text-secondary hover:text-text-primary text-sm font-medium transition-colors"
+            className="text-ink-secondary hover:text-ink-primary text-sm font-medium transition-colors"
           >
             Audit
           </Link>
           <Link
             href="/spec"
-            className="text-accent-primary hover:text-accent-hover text-sm font-medium transition-colors"
+            className="text-brand-primary hover:text-brand-hover text-sm font-medium transition-colors"
           >
             Spec
           </Link>
         </nav>
       </header>
 
-      <div className="mx-auto max-w-7xl px-6 py-16 md:py-20">
-        {/* Intro */}
-        <section className="mb-16 max-w-3xl">
-          <div className="text-text-tertiary mb-3 text-xs font-semibold tracking-wider uppercase">
-            Open specification
+      {/* Hero — grain texture */}
+      <section className="bg-background-grain bg-grain relative">
+        <div className="mx-auto max-w-7xl px-6 pt-16 pb-12 md:pt-20 md:pb-16">
+          <div className="max-w-3xl">
+            <div className="eyebrow mb-3">Open specification</div>
+            <h1 className="text-ink-primary mb-4 text-5xl font-extrabold tracking-tight md:text-6xl">
+              gist.design
+            </h1>
+            <p className="text-ink-secondary mb-6 text-lg leading-relaxed">
+              An open file format for making product design decisions readable to AI tools. Captures
+              positioning, interaction rationale, rejected alternatives, and boundaries — the
+              context AI coding assistants and LLMs cannot infer from your HTML.
+            </p>
+            <p className="text-ink-secondary mb-6 text-base leading-relaxed">
+              Free to use, community-maintained, and tool-agnostic. Works alongside{' '}
+              <a
+                href="https://llmstxt.org"
+                className="text-brand-primary hover:text-brand-hover transition-colors"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                llms.txt
+              </a>
+              . Generate a file yourself with the Claude Code skill below, or produce one as the
+              output of an audit at{' '}
+              <Link
+                href="/"
+                className="text-brand-primary hover:text-brand-hover transition-colors"
+              >
+                gistaudit
+              </Link>
+              .
+            </p>
           </div>
-          <h1 className="text-text-primary mb-4 text-4xl font-extrabold tracking-tight md:text-5xl">
-            gist.design
-          </h1>
-          <p className="text-text-secondary mb-6 text-lg leading-relaxed">
-            An open file format for making product design decisions readable to AI tools. Captures
-            positioning, interaction rationale, rejected alternatives, and boundaries — the context
-            AI coding assistants and LLMs cannot infer from your HTML.
-          </p>
-          <p className="text-text-secondary mb-6 text-base leading-relaxed">
-            Free to use, community-maintained, and tool-agnostic. Works alongside{' '}
-            <a
-              href="https://llmstxt.org"
-              className="text-accent-primary hover:text-accent-hover transition-colors"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              llms.txt
-            </a>
-            . Generate a file yourself with the Claude Code skill below, or produce one as the
-            output of an audit at{' '}
-            <Link
-              href="/"
-              className="text-accent-primary hover:text-accent-hover transition-colors"
-            >
-              gistaudit
-            </Link>
-            .
-          </p>
-        </section>
+        </div>
+      </section>
 
+      <div className="mx-auto max-w-7xl px-6 pt-16 pb-16 md:pt-20 md:pb-20">
         {/* Reference table */}
         <section className="mb-16">
-          <h2 className="text-text-primary mb-4 text-2xl font-bold tracking-tight">
-            Where it fits
-          </h2>
+          <h2 className="text-ink-primary mb-4 text-2xl font-bold tracking-tight">Where it fits</h2>
           <div className="glass-strong overflow-hidden rounded-2xl">
             <table className="w-full text-base">
               <thead>
-                <tr className="border-b border-white/[0.06] bg-white/[0.03]">
-                  <th className="text-text-primary px-5 py-3.5 text-left font-semibold">File</th>
-                  <th className="text-text-primary px-5 py-3.5 text-left font-semibold">
+                <tr className="border-border-primary bg-background-secondary border-b">
+                  <th className="text-ink-primary px-5 py-3.5 text-left font-semibold">File</th>
+                  <th className="text-ink-primary px-5 py-3.5 text-left font-semibold">
                     Audience and purpose
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/[0.06]">
+              <tbody className="divide-border-primary divide-y">
                 <tr>
-                  <td className="text-text-primary px-5 py-3.5 font-medium">robots.txt</td>
-                  <td className="text-text-secondary px-5 py-3.5">
+                  <td className="text-ink-primary px-5 py-3.5 font-medium">robots.txt</td>
+                  <td className="text-ink-secondary px-5 py-3.5">
                     Crawlers — what can you access?
                   </td>
                 </tr>
                 <tr>
-                  <td className="text-text-primary px-5 py-3.5 font-medium">sitemap.xml</td>
-                  <td className="text-text-secondary px-5 py-3.5">
+                  <td className="text-ink-primary px-5 py-3.5 font-medium">sitemap.xml</td>
+                  <td className="text-ink-secondary px-5 py-3.5">
                     Search engines — what pages exist?
                   </td>
                 </tr>
                 <tr>
-                  <td className="text-text-primary px-5 py-3.5 font-medium">
+                  <td className="text-ink-primary px-5 py-3.5 font-medium">
                     <a
                       href="https://llmstxt.org"
-                      className="text-text-primary hover:text-accent-primary transition-colors"
+                      className="text-ink-primary hover:text-brand-primary transition-colors"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
                       llms.txt
                     </a>
                   </td>
-                  <td className="text-text-secondary px-5 py-3.5">
+                  <td className="text-ink-secondary px-5 py-3.5">
                     LLMs — what does this product do?
                   </td>
                 </tr>
-                <tr className="bg-accent-primary/[0.08]">
-                  <td className="text-accent-primary px-5 py-3.5 font-semibold">gist.design</td>
-                  <td className="text-text-primary px-5 py-3.5 font-medium">
+                <tr className="bg-brand-primary/[0.08]">
+                  <td className="text-brand-primary px-5 py-3.5 font-semibold">gist.design</td>
+                  <td className="text-ink-primary px-5 py-3.5 font-medium">
                     LLMs and AI coding tools — how should you talk about this product? Positioning,
                     boundaries, audience, design rationale.
                   </td>
                 </tr>
                 <tr>
-                  <td className="text-text-primary px-5 py-3.5 font-medium">File placement</td>
-                  <td className="text-text-secondary px-5 py-3.5">
-                    <code className="bg-bg-secondary rounded px-1.5 py-0.5 text-sm">
+                  <td className="text-ink-primary px-5 py-3.5 font-medium">File placement</td>
+                  <td className="text-ink-secondary px-5 py-3.5">
+                    <code className="bg-background-secondary rounded px-1.5 py-0.5 text-sm">
                       /gist.design
                     </code>{' '}
                     in the project root, or{' '}
-                    <code className="bg-bg-secondary rounded px-1.5 py-0.5 text-sm">
+                    <code className="bg-background-secondary rounded px-1.5 py-0.5 text-sm">
                       /features/[name]/gist.design
                     </code>{' '}
                     for multi-feature products.
@@ -137,35 +137,35 @@ export default function SpecPage() {
 
         {/* llms.txt comparison */}
         <section className="mb-16">
-          <h2 className="text-text-primary mb-4 text-2xl font-bold tracking-tight">
+          <h2 className="text-ink-primary mb-4 text-2xl font-bold tracking-tight">
             How does this relate to llms.txt?
           </h2>
-          <p className="text-text-secondary mb-6 max-w-3xl text-base leading-relaxed">
+          <p className="text-ink-secondary mb-6 max-w-3xl text-base leading-relaxed">
             They&apos;re complementary. Use both.
           </p>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div className="glass rounded-2xl p-6">
-              <code className="bg-bg-secondary text-text-primary mb-3 inline-block rounded px-2 py-1 text-sm font-semibold">
+            <div className="card-interactive p-6">
+              <code className="bg-background-secondary text-ink-primary mb-3 inline-block rounded px-2 py-1 text-sm font-semibold">
                 llms.txt
               </code>
-              <h3 className="text-text-primary mb-2 text-lg font-semibold">What it does</h3>
-              <p className="text-text-secondary text-base leading-relaxed">
+              <h3 className="text-ink-primary mb-2 text-lg font-semibold">What it does</h3>
+              <p className="text-ink-secondary text-base leading-relaxed">
                 A README for LLMs. Features, links, how to use it.
               </p>
-              <p className="text-text-tertiary mt-4 text-sm italic">
+              <p className="text-ink-tertiary mt-4 text-sm italic">
                 &ldquo;Acme is a project management tool with kanban boards.&rdquo;
               </p>
             </div>
-            <div className="glass rounded-2xl border-white/[0.12] bg-[rgba(26,29,39,0.6)] p-6">
-              <code className="bg-accent-primary/20 text-accent-primary mb-3 inline-block rounded px-2 py-1 text-sm font-semibold">
+            <div className="card-interactive border-brand-primary/40 border-2 p-6">
+              <code className="bg-brand-primary/20 text-brand-primary mb-3 inline-block rounded px-2 py-1 text-sm font-semibold">
                 gist.design
               </code>
-              <h3 className="text-text-primary mb-2 text-lg font-semibold">How to talk about it</h3>
-              <p className="text-text-secondary text-base leading-relaxed">
+              <h3 className="text-ink-primary mb-2 text-lg font-semibold">How to talk about it</h3>
+              <p className="text-ink-secondary text-base leading-relaxed">
                 Positioning, boundaries, and design rationale. Stops LLMs from getting your product
                 wrong.
               </p>
-              <p className="text-text-tertiary mt-4 text-sm italic">
+              <p className="text-ink-tertiary mt-4 text-sm italic">
                 &ldquo;Not for enterprise. No Gantt charts by design. Chose manual scheduling
                 because teams want control.&rdquo;
               </p>
@@ -175,10 +175,10 @@ export default function SpecPage() {
 
         {/* Generate it yourself (skill) */}
         <section className="mb-16">
-          <h2 className="text-text-primary mb-4 text-2xl font-bold tracking-tight">
+          <h2 className="text-ink-primary mb-4 text-2xl font-bold tracking-tight">
             Generate a file yourself
           </h2>
-          <p className="text-text-secondary mb-6 max-w-3xl text-base leading-relaxed">
+          <p className="text-ink-secondary mb-6 max-w-3xl text-base leading-relaxed">
             Install the Claude Code skill. Works in any project.
           </p>
           <CodeBlock>{`curl -fsSL https://raw.githubusercontent.com/imsaif/gist/main/install.sh | bash
@@ -187,11 +187,11 @@ export default function SpecPage() {
 /gist-design          # audit your current project
 /gist-design quick    # generate a starter file in 2-3 turns
 /gist-design create   # full guided conversation`}</CodeBlock>
-          <p className="text-text-tertiary mt-4 text-sm">
+          <p className="text-ink-tertiary mt-4 text-sm">
             Source on{' '}
             <a
               href="https://github.com/imsaif/gist"
-              className="text-text-secondary hover:text-text-primary transition-colors"
+              className="text-ink-secondary hover:text-ink-primary transition-colors"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -203,17 +203,17 @@ export default function SpecPage() {
 
         {/* Format + example */}
         <section>
-          <h2 className="text-text-primary mb-4 text-2xl font-bold tracking-tight">
+          <h2 className="text-ink-primary mb-4 text-2xl font-bold tracking-tight">
             Format and example
           </h2>
-          <p className="text-text-secondary mb-8 max-w-3xl text-base leading-relaxed">
+          <p className="text-ink-secondary mb-8 max-w-3xl text-base leading-relaxed">
             The gist.design file follows a structured markdown format. Below is the template
             alongside a completed example.
           </p>
 
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
             <div>
-              <p className="text-text-tertiary mb-3 text-xs font-semibold tracking-wider uppercase">
+              <p className="text-ink-tertiary mb-3 text-xs font-semibold tracking-wider uppercase">
                 Template
               </p>
               <CodeBlock>{`# Product or Feature Name
@@ -291,7 +291,7 @@ Generated by gist.design · Date
 - Stage: [Beta / launched / mature]`}</CodeBlock>
             </div>
             <div>
-              <p className="text-text-tertiary mb-3 text-xs font-semibold tracking-wider uppercase">
+              <p className="text-ink-tertiary mb-3 text-xs font-semibold tracking-wider uppercase">
                 Example
               </p>
               <CodeBlock>{`# AI Email Composer, Spark Mail
@@ -446,13 +446,10 @@ Generated by gist.design · February 2026
 
       <footer className="py-12">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6">
-          <span className="text-text-tertiary text-sm">gist.design spec · MIT licensed</span>
-          <span className="text-text-tertiary text-sm">
+          <span className="text-ink-tertiary text-sm">gist.design spec · MIT licensed</span>
+          <span className="text-ink-tertiary text-sm">
             Maintained by{' '}
-            <Link
-              href="/"
-              className="text-text-secondary hover:text-text-primary transition-colors"
-            >
+            <Link href="/" className="text-ink-secondary hover:text-ink-primary transition-colors">
               gistaudit
             </Link>
           </span>

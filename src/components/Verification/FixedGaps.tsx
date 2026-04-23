@@ -5,12 +5,12 @@ interface FixedGapsProps {
 
 export function FixedGaps({ fixedGaps, remainingGaps }: FixedGapsProps) {
   return (
-    <div className="border-border-light rounded-xl border bg-white p-5">
-      <h4 className="text-text-primary mb-4 text-sm font-semibold">Verification Results</h4>
+    <div className="border-border-primary rounded-xl border bg-white p-5">
+      <h4 className="text-ink-primary mb-4 text-sm font-semibold">Verification Results</h4>
 
       {fixedGaps.length > 0 && (
         <div className="mb-4">
-          <p className="text-text-tertiary mb-2 text-xs font-medium">Fixed</p>
+          <p className="text-ink-tertiary mb-2 text-xs font-medium">Fixed</p>
           <ul className="space-y-2">
             {fixedGaps.map((gap, i) => (
               <li key={i} className="flex items-start gap-2">
@@ -26,7 +26,7 @@ export function FixedGaps({ fixedGaps, remainingGaps }: FixedGapsProps) {
                     clipRule="evenodd"
                   />
                 </svg>
-                <span className="text-text-secondary text-sm">{gap}</span>
+                <span className="text-ink-secondary text-sm">{gap}</span>
               </li>
             ))}
           </ul>
@@ -35,7 +35,7 @@ export function FixedGaps({ fixedGaps, remainingGaps }: FixedGapsProps) {
 
       {remainingGaps.length > 0 && (
         <div>
-          <p className="text-text-tertiary mb-2 text-xs font-medium">Remaining</p>
+          <p className="text-ink-tertiary mb-2 text-xs font-medium">Remaining</p>
           <ul className="space-y-2">
             {remainingGaps.map((gap, i) => (
               <li key={i} className="flex items-start gap-2">
@@ -47,7 +47,7 @@ export function FixedGaps({ fixedGaps, remainingGaps }: FixedGapsProps) {
                 >
                   <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
                 </svg>
-                <span className="text-text-secondary text-sm">{gap}</span>
+                <span className="text-ink-secondary text-sm">{gap}</span>
               </li>
             ))}
           </ul>

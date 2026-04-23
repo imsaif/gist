@@ -18,18 +18,18 @@ export function GapAnalysis({ analysis }: GapAnalysisProps) {
   return (
     <div className="space-y-8">
       {/* Summary bar */}
-      <div className="border-border-light bg-bg-primary grid grid-cols-2 gap-4 rounded-xl border p-6 sm:grid-cols-4">
+      <div className="border-border-primary bg-background-primary grid grid-cols-2 gap-4 rounded-xl border p-6 sm:grid-cols-4">
         <div>
-          <p className="text-text-tertiary mb-1 text-xs font-medium tracking-wider uppercase">
+          <p className="text-ink-tertiary mb-1 text-xs font-medium tracking-wider uppercase">
             AI Readability
           </p>
           <ReadabilityScore score={summary.readabilityScore} />
         </div>
         <div>
-          <p className="text-text-tertiary mb-1 text-xs font-medium tracking-wider uppercase">
+          <p className="text-ink-tertiary mb-1 text-xs font-medium tracking-wider uppercase">
             Conflicts Found
           </p>
-          <p className="text-text-primary text-2xl font-bold">
+          <p className="text-ink-primary text-2xl font-bold">
             {summary.totalGaps}
             {summary.criticalGaps > 0 && (
               <span className="ml-2 text-sm font-medium text-red-400">
@@ -39,41 +39,39 @@ export function GapAnalysis({ analysis }: GapAnalysisProps) {
           </p>
         </div>
         <div>
-          <p className="text-text-tertiary mb-1 text-xs font-medium tracking-wider uppercase">
+          <p className="text-ink-tertiary mb-1 text-xs font-medium tracking-wider uppercase">
             Most Conflicts
           </p>
-          <p className="text-text-primary text-base font-semibold capitalize">
+          <p className="text-ink-primary text-base font-semibold capitalize">
             {summary.worstModel}
           </p>
         </div>
         <div>
-          <p className="text-text-tertiary mb-1 text-xs font-medium tracking-wider uppercase">
+          <p className="text-ink-tertiary mb-1 text-xs font-medium tracking-wider uppercase">
             Most Accurate
           </p>
-          <p className="text-text-primary text-base font-semibold capitalize">
-            {summary.bestModel}
-          </p>
+          <p className="text-ink-primary text-base font-semibold capitalize">{summary.bestModel}</p>
         </div>
       </div>
 
       {/* Single gap table */}
       {sortedGaps.length > 0 && (
-        <div className="border-border-light overflow-hidden rounded-xl border">
+        <div className="border-border-primary overflow-hidden rounded-xl border">
           <table className="w-full table-fixed">
             <thead>
-              <tr className="bg-bg-secondary">
-                <th className="text-text-tertiary w-[45%] px-6 py-3.5 text-left text-xs font-semibold tracking-wider uppercase">
+              <tr className="bg-background-secondary">
+                <th className="text-ink-tertiary w-[45%] px-6 py-3.5 text-left text-xs font-semibold tracking-wider uppercase">
                   Issue
                 </th>
-                <th className="text-text-tertiary w-[35%] px-6 py-3.5 text-left text-xs font-semibold tracking-wider uppercase">
+                <th className="text-ink-tertiary w-[35%] px-6 py-3.5 text-left text-xs font-semibold tracking-wider uppercase">
                   Fix
                 </th>
-                <th className="text-text-tertiary w-[20%] px-6 py-3.5 text-left text-xs font-semibold tracking-wider uppercase">
+                <th className="text-ink-tertiary w-[20%] px-6 py-3.5 text-left text-xs font-semibold tracking-wider uppercase">
                   Severity
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-bg-primary">
+            <tbody className="bg-background-primary">
               {sortedGaps.map((gap) => (
                 <GapItem key={gap.id} gap={gap} />
               ))}

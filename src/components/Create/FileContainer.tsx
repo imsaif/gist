@@ -61,13 +61,13 @@ export function FileContainer({
   return (
     <div className="flex h-full flex-col">
       {/* Tab bar */}
-      <div className="border-border-light flex items-center gap-4 border-b px-6 py-3">
+      <div className="border-border-primary flex items-center gap-4 border-b px-6 py-3">
         <button
           onClick={() => setActiveTab('preview')}
           className={`text-sm font-medium transition-colors ${
             activeTab === 'preview'
-              ? 'text-accent-primary'
-              : 'text-text-tertiary hover:text-text-secondary'
+              ? 'text-brand-primary'
+              : 'text-ink-tertiary hover:text-ink-secondary'
           }`}
         >
           Preview
@@ -76,8 +76,8 @@ export function FileContainer({
           onClick={() => setActiveTab('export')}
           className={`text-sm font-medium transition-colors ${
             activeTab === 'export'
-              ? 'text-accent-primary'
-              : 'text-text-tertiary hover:text-text-secondary'
+              ? 'text-brand-primary'
+              : 'text-ink-tertiary hover:text-ink-secondary'
           }`}
         >
           Export
@@ -99,12 +99,12 @@ export function FileContainer({
                   key={feature.id}
                   className={`flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${
                     isCurrent
-                      ? 'bg-accent-primary/10 text-accent-primary'
-                      : 'bg-bg-tertiary text-text-secondary'
+                      ? 'bg-brand-primary/10 text-brand-primary'
+                      : 'bg-background-tertiary text-ink-secondary'
                   }`}
                 >
                   <span>{feature.name}</span>
-                  <span className="text-text-tertiary">
+                  <span className="text-ink-tertiary">
                     {completeSections}/{totalSections}
                   </span>
                 </div>
@@ -133,7 +133,7 @@ export function FileContainer({
                 <p className="mb-1 text-xs font-medium tracking-wide text-amber-400 uppercase">
                   Pre-filled from audit
                 </p>
-                <p className="text-text-secondary text-sm">
+                <p className="text-ink-secondary text-sm">
                   Values in <span className="text-amber-300/90">amber</span> are what LLMs currently
                   think about your product. Click any field to correct it, or use the chat to make
                   changes.
@@ -164,7 +164,7 @@ export function FileContainer({
             />
             {file.features.length > 0 ? (
               <div>
-                <h2 className="text-text-secondary mb-3 flex items-center gap-2 text-sm font-semibold tracking-wide uppercase">
+                <h2 className="text-ink-secondary mb-3 flex items-center gap-2 text-sm font-semibold tracking-wide uppercase">
                   <RectangleStackIcon className="h-4 w-4" />
                   Features
                 </h2>
@@ -180,8 +180,8 @@ export function FileContainer({
                 </div>
               </div>
             ) : (
-              <div className="border-border-light rounded-xl border-2 border-dashed p-6">
-                <h2 className="text-text-secondary mb-3 flex items-center gap-2 text-sm font-semibold tracking-wide uppercase">
+              <div className="border-border-primary rounded-xl border-2 border-dashed p-6">
+                <h2 className="text-ink-secondary mb-3 flex items-center gap-2 text-sm font-semibold tracking-wide uppercase">
                   <RectangleStackIcon className="h-4 w-4" />
                   What gets captured
                 </h2>
@@ -209,10 +209,10 @@ export function FileContainer({
                     ] as [ComponentType<SVGProps<SVGSVGElement>>, string, string][]
                   ).map(([Icon, label, desc]) => (
                     <div key={label} className="flex items-start gap-2.5 text-sm">
-                      <Icon className="text-text-tertiary mt-0.5 h-4 w-4 shrink-0" />
+                      <Icon className="text-ink-tertiary mt-0.5 h-4 w-4 shrink-0" />
                       <div>
-                        <span className="text-text-secondary font-medium">{label}</span>
-                        <span className="text-text-tertiary"> — {desc}</span>
+                        <span className="text-ink-secondary font-medium">{label}</span>
+                        <span className="text-ink-tertiary"> — {desc}</span>
                       </div>
                     </div>
                   ))}

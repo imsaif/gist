@@ -27,7 +27,7 @@ export function Toast({ message, isVisible, onClose, duration = 2000 }: ToastPro
 
   return (
     <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 transform transition-all duration-200">
-      <div className="bg-text-primary flex items-center gap-2 rounded-lg px-4 py-3 text-sm font-medium text-white shadow-lg">
+      <div className="bg-ink-primary flex items-center gap-2 rounded-lg px-4 py-3 text-sm font-medium text-white shadow-lg">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="16"

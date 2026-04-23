@@ -19,7 +19,7 @@ const SECTION_LABELS: Record<string, string> = {
 };
 
 const STATUS_COLORS: Record<SectionStatus, string> = {
-  empty: 'bg-border-medium',
+  empty: 'bg-border-secondary',
   partial: 'bg-yellow-500',
   complete: 'bg-green-500',
 };

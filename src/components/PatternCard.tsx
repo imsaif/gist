@@ -56,17 +56,17 @@ export function PatternCard({
       {/* Content */}
       <div className="p-4">
         {/* Pattern name and one-liner */}
-        <h3 className="text-text-primary mb-1 text-lg font-semibold">{pattern.name}</h3>
-        <p className="text-text-secondary mb-3 text-sm">{pattern.oneLiner}</p>
+        <h3 className="text-ink-primary mb-1 text-lg font-semibold">{pattern.name}</h3>
+        <p className="text-ink-secondary mb-3 text-sm">{pattern.oneLiner}</p>
 
         {/* Reason (if provided by AI) */}
-        {reason && <p className="text-text-tertiary mb-3 text-xs italic">&ldquo;{reason}&rdquo;</p>}
+        {reason && <p className="text-ink-tertiary mb-3 text-xs italic">&ldquo;{reason}&rdquo;</p>}
 
         {/* Examples */}
         {topExamples.length > 0 && (
           <div className="mb-4">
-            <p className="text-text-tertiary mb-1 text-xs font-medium uppercase">Used by</p>
-            <p className="text-text-secondary text-sm">
+            <p className="text-ink-tertiary mb-1 text-xs font-medium uppercase">Used by</p>
+            <p className="text-ink-secondary text-sm">
               {topExamples.map((ex) => ex.product).join(', ')}
             </p>
           </div>
@@ -78,7 +78,7 @@ export function PatternCard({
             href={pattern.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-text-secondary hover:text-accent-primary hover:bg-bg-secondary inline-flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition-colors"
+            className="text-ink-secondary hover:text-brand-primary hover:bg-background-secondary inline-flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition-colors"
           >
             See examples
             <svg
@@ -104,7 +104,7 @@ export function PatternCard({
               className={`inline-flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
                 hasBeenAdded
                   ? 'cursor-default bg-green-50 text-green-600'
-                  : 'bg-accent-primary/10 text-accent-primary hover:bg-accent-primary/20'
+                  : 'bg-brand-primary/10 text-brand-primary hover:bg-brand-primary/20'
               }`}
             >
               {hasBeenAdded ? (
@@ -166,11 +166,11 @@ export function PatternCardCompact({ pattern }: { pattern: Pattern }) {
     >
       <div className="mb-1 flex items-center gap-2">
         <div className="h-2 w-2 rounded-full" style={{ backgroundColor: categoryColor }} />
-        <span className="text-text-primary group-hover:text-accent-primary text-sm font-medium">
+        <span className="text-ink-primary group-hover:text-brand-primary text-sm font-medium">
           {pattern.name}
         </span>
       </div>
-      <p className="text-text-tertiary text-xs">{pattern.oneLiner}</p>
+      <p className="text-ink-tertiary text-xs">{pattern.oneLiner}</p>
     </a>
   );
 }

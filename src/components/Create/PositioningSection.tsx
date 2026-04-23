@@ -48,7 +48,7 @@ export function PositioningSection({
 
   return (
     <div className="mb-6">
-      <h2 className="text-text-secondary mb-3 flex items-center gap-2 text-sm font-semibold tracking-wide uppercase">
+      <h2 className="text-ink-secondary mb-3 flex items-center gap-2 text-sm font-semibold tracking-wide uppercase">
         <MapIcon className="h-4 w-4" />
         Positioning
       </h2>
@@ -62,7 +62,7 @@ export function PositioningSection({
       )}
 
       {hasAnyContent || isFromAudit ? (
-        <div className="border-border-light bg-bg-tertiary space-y-3 rounded-xl border p-4 shadow-sm">
+        <div className="border-border-primary bg-background-tertiary space-y-3 rounded-xl border p-4 shadow-sm">
           {onFieldChange ? (
             <>
               <EditableField
@@ -93,12 +93,12 @@ export function PositioningSection({
           )}
           {positioning.comparisons.length > 0 && (
             <div>
-              <dt className="text-text-tertiary text-xs font-medium tracking-wide uppercase">
+              <dt className="text-ink-tertiary text-xs font-medium tracking-wide uppercase">
                 Comparisons
               </dt>
               <dd className="mt-1 space-y-1">
                 {positioning.comparisons.map((c) => (
-                  <div key={c.id} className="text-text-primary text-sm">
+                  <div key={c.id} className="text-ink-primary text-sm">
                     <span className="font-medium">vs {c.vs}:</span> {c.difference}
                   </div>
                 ))}
@@ -107,8 +107,8 @@ export function PositioningSection({
           )}
         </div>
       ) : (
-        <div className="border-border-light rounded-xl border-2 border-dashed p-6 text-center">
-          <p className="text-text-tertiary text-sm">
+        <div className="border-border-primary rounded-xl border-2 border-dashed p-6 text-center">
+          <p className="text-ink-tertiary text-sm">
             Positioning details will appear here as you describe your product
           </p>
         </div>
@@ -120,8 +120,8 @@ export function PositioningSection({
 function Field({ label, value }: { label: string; value: string | null }) {
   return (
     <div>
-      <dt className="text-text-tertiary text-xs font-medium tracking-wide uppercase">{label}</dt>
-      <dd className={`mt-1 text-sm ${value ? 'text-text-primary' : 'text-text-tertiary italic'}`}>
+      <dt className="text-ink-tertiary text-xs font-medium tracking-wide uppercase">{label}</dt>
+      <dd className={`mt-1 text-sm ${value ? 'text-ink-primary' : 'text-ink-tertiary italic'}`}>
         {value || 'Not set yet'}
       </dd>
     </div>

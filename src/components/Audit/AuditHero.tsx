@@ -92,14 +92,6 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
     [onPhaseChange]
   );
 
-  const handleUrlSubmit = useCallback(
-    (auditUrl: string) => {
-      setUrl(auditUrl);
-      updatePhase('email-gate');
-    },
-    [updatePhase]
-  );
-
   const runAudit = useCallback(
     async (auditUrl: string) => {
       updatePhase('fetching');
@@ -197,6 +189,14 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
     [updatePhase]
   );
 
+  const handleUrlSubmit = useCallback(
+    (auditUrl: string) => {
+      setUrl(auditUrl);
+      runAudit(auditUrl);
+    },
+    [runAudit]
+  );
+
   const handleReset = () => {
     setUrl('');
     setResponses({});
@@ -205,17 +205,26 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
     updatePhase('input');
   };
 
-  const handleEmailUnlocked = () => {
-    runAudit(url);
-  };
-
-  const handleFixGaps = () => {
+  const enterFixFlow = useCallback(() => {
     if (!result) return;
     const ctx = buildFileFromAudit(result);
     setFile(ctx.file);
     setInitialFile(ctx.initialFile);
     setAuditGaps(ctx.gaps);
     updatePhase('fixing');
+  }, [result, updatePhase]);
+
+  const handleFixGaps = () => {
+    if (!result) return;
+    if (sessionStorage.getItem('audit_email')) {
+      enterFixFlow();
+    } else {
+      updatePhase('email-gate');
+    }
+  };
+
+  const handleEmailUnlocked = () => {
+    enterFixFlow();
   };
 
   const handleProductFieldChange = useCallback((field: keyof ProductOverview, value: string) => {
@@ -264,7 +273,7 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
     <div className="w-full">
       {/* Input phase — inline URL input */}
       {phase === 'input' && (
-        <div className="flex flex-col items-start">
+        <div className="flex flex-col items-center">
           <AuditInput onSubmit={handleUrlSubmit} isLoading={false} remaining={remaining} />
         </div>
       )}
@@ -274,8 +283,8 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
         <div className="w-full max-w-7xl">
           <div className="mb-8 flex items-center justify-between">
             <div>
-              <h3 className="text-text-primary text-xl font-bold tracking-tight">Auditing {url}</h3>
-              <p className="text-text-tertiary mt-1 text-sm">
+              <h3 className="text-ink-primary text-xl font-bold tracking-tight">Auditing {url}</h3>
+              <p className="text-ink-tertiary mt-1 text-sm">
                 {phase === 'fetching' && 'Fetching your site...'}
                 {phase === 'querying' && 'Asking 2 LLMs about your product...'}
                 {phase === 'analyzing' && 'Analyzing gaps across models...'}
@@ -283,7 +292,7 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
             </div>
             <button
               onClick={handleReset}
-              className="border-border-light text-text-secondary hover:bg-bg-secondary rounded-lg border px-4 py-2 text-sm font-medium transition-colors"
+              className="border-border-primary text-ink-secondary hover:bg-background-secondary rounded-full border px-4 py-2 text-sm font-medium transition-colors"
             >
               New audit
             </button>
@@ -292,19 +301,21 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
         </div>
       )}
 
-      {/* Email gate — after URL, before audit runs */}
+      {/* Email gate — after results, before fix flow */}
       {phase === 'email-gate' && (
         <div className="w-full max-w-7xl">
           <div className="mb-6 flex items-center justify-between">
             <div>
-              <h3 className="text-text-primary text-lg font-semibold">Audit {url}</h3>
-              <p className="text-text-tertiary text-sm">Enter your email to start the audit</p>
+              <h3 className="text-ink-primary text-lg font-semibold">One more step</h3>
+              <p className="text-ink-tertiary text-sm">
+                Enter your email to resolve conflicts and download your fix file
+              </p>
             </div>
             <button
-              onClick={handleReset}
-              className="border-border-light text-text-secondary hover:bg-bg-secondary rounded-lg border px-4 py-2 text-sm font-medium transition-colors"
+              onClick={() => updatePhase('complete')}
+              className="border-border-primary text-ink-secondary hover:bg-background-secondary rounded-full border px-4 py-2 text-sm font-medium transition-colors"
             >
-              Change URL
+              Back to results
             </button>
           </div>
           <AuditEmailGate onUnlocked={handleEmailUnlocked} />
@@ -316,12 +327,12 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
         <div className="w-full max-w-7xl space-y-8 pb-24">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-text-primary text-xl font-bold tracking-tight">Audit Results</h3>
-              <p className="text-text-tertiary mt-1 text-sm">{url}</p>
+              <h3 className="text-ink-primary text-xl font-bold tracking-tight">Audit Results</h3>
+              <p className="text-ink-tertiary mt-1 text-sm">{url}</p>
             </div>
             <button
               onClick={handleReset}
-              className="border-border-light text-text-secondary hover:bg-bg-secondary rounded-lg border px-4 py-2 text-sm font-medium transition-colors"
+              className="border-border-primary text-ink-secondary hover:bg-background-secondary rounded-full border px-4 py-2 text-sm font-medium transition-colors"
             >
               New audit
             </button>
@@ -332,7 +343,7 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
 
       {/* Fixed bottom CTA bar */}
       {phase === 'complete' && result && (
-        <div className="border-border-light bg-bg-primary/80 fixed right-0 bottom-0 left-0 z-50 border-t backdrop-blur-xl">
+        <div className="border-border-primary bg-background-primary/80 fixed right-0 bottom-0 left-0 z-50 border-t backdrop-blur-xl">
           <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
             <div className="text-sm">
               {(result.analysis?.summary.totalGaps || 0) === 0 ? (
@@ -341,7 +352,7 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
                 </span>
               ) : (
                 <>
-                  <span className="text-text-secondary">
+                  <span className="text-ink-secondary">
                     {result.analysis?.summary.totalGaps || 0} conflict
                     {(result.analysis?.summary.totalGaps || 0) !== 1 ? 's' : ''} found
                   </span>
@@ -356,7 +367,7 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
             {(result.analysis?.summary.totalGaps || 0) > 0 && (
               <button
                 onClick={handleFixGaps}
-                className="bg-accent-primary hover:bg-accent-hover inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold text-white transition-colors"
+                className="bg-brand-primary hover:bg-brand-hover inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white transition-colors"
               >
                 Resolve conflicts
                 <svg
@@ -405,7 +416,7 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
       {/* Error phase */}
       {phase === 'error' && (
         <div className="w-full max-w-md">
-          <div className="border-border-light bg-bg-primary rounded-xl border p-8 text-center">
+          <div className="border-border-primary bg-background-primary rounded-xl border p-8 text-center">
             <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-500/15">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -422,11 +433,11 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
                 />
               </svg>
             </div>
-            <h3 className="text-text-primary mb-2 text-lg font-semibold">Audit failed</h3>
-            <p className="text-text-secondary mb-6 text-sm">{errorMessage}</p>
+            <h3 className="text-ink-primary mb-2 text-lg font-semibold">Audit failed</h3>
+            <p className="text-ink-secondary mb-6 text-sm">{errorMessage}</p>
             <button
               onClick={handleReset}
-              className="bg-accent-primary hover:bg-accent-hover rounded-xl px-6 py-3 font-medium text-white transition-colors"
+              className="bg-brand-primary hover:bg-brand-hover rounded-full px-6 py-3 font-medium text-white transition-colors"
             >
               Try again
             </button>

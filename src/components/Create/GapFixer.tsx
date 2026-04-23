@@ -251,10 +251,10 @@ export function GapFixer({
     return (
       <div className="mx-auto max-w-3xl px-6 py-8">
         <CheckCircleIcon className="mb-4 h-10 w-10 text-green-400" />
-        <h2 className="text-text-primary mb-2 text-xl font-semibold">Your file is ready</h2>
-        <p className="text-text-secondary mb-8 max-w-lg text-sm leading-relaxed">
+        <h2 className="text-ink-primary mb-2 text-xl font-semibold">Your file is ready</h2>
+        <p className="text-ink-secondary mb-8 max-w-lg text-sm leading-relaxed">
           Download your{' '}
-          <code className="text-text-primary bg-bg-tertiary rounded px-1.5 py-0.5 font-mono text-xs">
+          <code className="text-ink-primary bg-background-tertiary rounded px-1.5 py-0.5 font-mono text-xs">
             .gist.design
           </code>{' '}
           file and drop it in your project root. AI coding tools will read it automatically.
@@ -263,14 +263,14 @@ export function GapFixer({
         <div className="mb-4 flex gap-3">
           <button
             onClick={onDownload}
-            className="bg-accent-primary hover:bg-accent-hover flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-medium text-white transition-colors"
+            className="bg-brand-primary hover:bg-brand-hover flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-medium text-white transition-colors"
           >
             <ArrowDownTrayIcon className="h-4 w-4" />
             Download file
           </button>
           <button
             onClick={onCopyMarkdown}
-            className="border-border-light text-text-secondary hover:bg-bg-secondary flex items-center gap-2 rounded-xl border px-6 py-3 text-sm font-medium transition-colors"
+            className="border-border-primary text-ink-secondary hover:bg-background-secondary flex items-center gap-2 rounded-xl border px-6 py-3 text-sm font-medium transition-colors"
           >
             <DocumentDuplicateIcon className="h-4 w-4" />
             Copy to clipboard
@@ -278,7 +278,7 @@ export function GapFixer({
         </div>
         <button
           onClick={() => setShowDone(false)}
-          className="text-text-tertiary hover:text-text-primary mb-10 flex items-center gap-1 text-sm transition-colors"
+          className="text-ink-tertiary hover:text-ink-primary mb-10 flex items-center gap-1 text-sm transition-colors"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -294,86 +294,86 @@ export function GapFixer({
         </button>
 
         <div className="mb-8">
-          <h3 className="text-text-primary mb-4 text-sm font-semibold">What this fixes for LLMs</h3>
+          <h3 className="text-ink-primary mb-4 text-sm font-semibold">What this fixes for LLMs</h3>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <div className="border-border-light rounded-xl border p-4">
-              <p className="text-text-primary mb-1 text-sm font-medium">Resolves contradictions</p>
-              <p className="text-text-tertiary text-xs leading-relaxed">
+            <div className="border-border-primary rounded-xl border p-4">
+              <p className="text-ink-primary mb-1 text-sm font-medium">Resolves contradictions</p>
+              <p className="text-ink-tertiary text-xs leading-relaxed">
                 LLMs will give consistent, accurate descriptions instead of contradicting each other
                 about what your product does
               </p>
             </div>
-            <div className="border-border-light rounded-xl border p-4">
-              <p className="text-text-primary mb-1 text-sm font-medium">Prevents fabrication</p>
-              <p className="text-text-tertiary text-xs leading-relaxed">
+            <div className="border-border-primary rounded-xl border p-4">
+              <p className="text-ink-primary mb-1 text-sm font-medium">Prevents fabrication</p>
+              <p className="text-ink-tertiary text-xs leading-relaxed">
                 Clear feature boundaries mean LLMs won&apos;t invent capabilities that don&apos;t
                 exist
               </p>
             </div>
-            <div className="border-border-light rounded-xl border p-4">
-              <p className="text-text-primary mb-1 text-sm font-medium">Clarifies your category</p>
-              <p className="text-text-tertiary text-xs leading-relaxed">
+            <div className="border-border-primary rounded-xl border p-4">
+              <p className="text-ink-primary mb-1 text-sm font-medium">Clarifies your category</p>
+              <p className="text-ink-tertiary text-xs leading-relaxed">
                 LLMs will agree on what type of product you are instead of placing you in different
                 categories
               </p>
             </div>
-            <div className="border-border-light rounded-xl border p-4">
-              <p className="text-text-primary mb-1 text-sm font-medium">Corrects shared errors</p>
-              <p className="text-text-tertiary text-xs leading-relaxed">
+            <div className="border-border-primary rounded-xl border p-4">
+              <p className="text-ink-primary mb-1 text-sm font-medium">Corrects shared errors</p>
+              <p className="text-ink-tertiary text-xs leading-relaxed">
                 When both LLMs get the same thing wrong, the file sets the record straight
               </p>
             </div>
           </div>
         </div>
 
-        <div className="border-border-light rounded-xl border p-6">
-          <h3 className="text-text-primary mb-4 text-sm font-semibold">How to use your file</h3>
+        <div className="border-border-primary rounded-xl border p-6">
+          <h3 className="text-ink-primary mb-4 text-sm font-semibold">How to use your file</h3>
           <ol className="space-y-4 text-sm">
             <li className="flex gap-3">
-              <span className="bg-bg-tertiary text-text-secondary flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold">
+              <span className="bg-background-tertiary text-ink-secondary flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold">
                 1
               </span>
               <div>
-                <p className="text-text-primary font-medium">Place in your project root</p>
-                <p className="text-text-tertiary mt-0.5">
+                <p className="text-ink-primary font-medium">Place in your project root</p>
+                <p className="text-ink-tertiary mt-0.5">
                   Save as{' '}
-                  <code className="bg-bg-tertiary rounded px-1 py-0.5 font-mono text-xs">
+                  <code className="bg-background-tertiary rounded px-1 py-0.5 font-mono text-xs">
                     your-product.gist.design
                   </code>{' '}
                   next to your{' '}
-                  <code className="bg-bg-tertiary rounded px-1 py-0.5 font-mono text-xs">
+                  <code className="bg-background-tertiary rounded px-1 py-0.5 font-mono text-xs">
                     package.json
                   </code>{' '}
                   or{' '}
-                  <code className="bg-bg-tertiary rounded px-1 py-0.5 font-mono text-xs">
+                  <code className="bg-background-tertiary rounded px-1 py-0.5 font-mono text-xs">
                     README.md
                   </code>
                 </p>
               </div>
             </li>
             <li className="flex gap-3">
-              <span className="bg-bg-tertiary text-text-secondary flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold">
+              <span className="bg-background-tertiary text-ink-secondary flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold">
                 2
               </span>
               <div>
-                <p className="text-text-primary font-medium">AI tools read it automatically</p>
-                <p className="text-text-tertiary mt-0.5">
+                <p className="text-ink-primary font-medium">AI tools read it automatically</p>
+                <p className="text-ink-tertiary mt-0.5">
                   Claude Code, Cursor, Copilot, and ChatGPT will pick it up when working in your
                   repo — no configuration needed
                 </p>
               </div>
             </li>
             <li className="flex gap-3">
-              <span className="bg-bg-tertiary text-text-secondary flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold">
+              <span className="bg-background-tertiary text-ink-secondary flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold">
                 3
               </span>
               <div>
-                <p className="text-text-primary font-medium">Run the audit again to verify</p>
-                <p className="text-text-tertiary mt-0.5">
+                <p className="text-ink-primary font-medium">Run the audit again to verify</p>
+                <p className="text-ink-tertiary mt-0.5">
                   After deploying,{' '}
                   <Link
                     href="/"
-                    className="text-accent-primary hover:text-accent-hover transition-colors"
+                    className="text-brand-primary hover:text-brand-hover transition-colors"
                   >
                     run another audit
                   </Link>{' '}
@@ -396,7 +396,7 @@ export function GapFixer({
         {onBackToAudit && (
           <button
             onClick={onBackToAudit}
-            className="text-text-tertiary hover:text-text-primary mb-6 flex items-center gap-1.5 text-sm transition-colors"
+            className="text-ink-tertiary hover:text-ink-primary mb-6 flex items-center gap-1.5 text-sm transition-colors"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -414,7 +414,7 @@ export function GapFixer({
         {/* Progress bar */}
         <div className="mb-8">
           <div className="mb-2 flex items-center justify-between">
-            <span className="text-text-secondary text-sm font-medium">
+            <span className="text-ink-secondary text-sm font-medium">
               {addressedCount} of {totalCount} gaps addressed
             </span>
           </div>
@@ -431,10 +431,10 @@ export function GapFixer({
                     answered
                       ? 'bg-green-500'
                       : skipped
-                        ? 'bg-bg-tertiary'
+                        ? 'bg-background-tertiary'
                         : isCurrent
-                          ? 'bg-accent-primary'
-                          : 'bg-bg-tertiary'
+                          ? 'bg-brand-primary'
+                          : 'bg-background-tertiary'
                   }`}
                 />
               );
@@ -463,7 +463,7 @@ export function GapFixer({
       {/* Right — Gap checklist */}
       <div className="hidden w-72 shrink-0 lg:block">
         <div className="sticky top-8">
-          <p className="text-text-tertiary mb-4 text-xs font-medium tracking-wide uppercase">
+          <p className="text-ink-tertiary mb-4 text-xs font-medium tracking-wide uppercase">
             Gaps to fix
           </p>
           <div className="space-y-1">
@@ -483,20 +483,22 @@ export function GapFixer({
                   key={gap.id}
                   onClick={() => setCurrentIndex(i)}
                   className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-all ${
-                    isCurrent && !answered ? 'bg-bg-secondary' : 'hover:bg-bg-secondary/50'
+                    isCurrent && !answered
+                      ? 'bg-background-secondary'
+                      : 'hover:bg-background-secondary/50'
                   }`}
                 >
                   {/* Status icon */}
                   {answered ? (
                     <CheckCircleSolidIcon className="h-5 w-5 shrink-0 text-green-500" />
                   ) : skipped ? (
-                    <div className="bg-bg-tertiary flex h-5 w-5 shrink-0 items-center justify-center rounded-full">
-                      <span className="text-text-tertiary text-[10px]">—</span>
+                    <div className="bg-background-tertiary flex h-5 w-5 shrink-0 items-center justify-center rounded-full">
+                      <span className="text-ink-tertiary text-[10px]">—</span>
                     </div>
                   ) : (
                     <CategoryIcon
                       className={`h-5 w-5 shrink-0 ${
-                        isCurrent ? config.color : 'text-text-tertiary'
+                        isCurrent ? config.color : 'text-ink-tertiary'
                       }`}
                     />
                   )}
@@ -506,10 +508,10 @@ export function GapFixer({
                     <p
                       className={`truncate text-sm ${
                         answered
-                          ? 'text-text-tertiary line-through'
+                          ? 'text-ink-tertiary line-through'
                           : isCurrent
-                            ? 'text-text-primary font-medium'
-                            : 'text-text-secondary'
+                            ? 'text-ink-primary font-medium'
+                            : 'text-ink-secondary'
                       }`}
                     >
                       {meta.label}
@@ -534,11 +536,11 @@ export function GapFixer({
           </div>
 
           {/* Summary */}
-          <div className="border-border-light mt-6 border-t pt-4">
+          <div className="border-border-primary mt-6 border-t pt-4">
             <div className="flex items-center justify-between text-xs">
-              <span className="text-text-tertiary">{addressedCount} addressed</span>
+              <span className="text-ink-tertiary">{addressedCount} addressed</span>
               {skippedIds.size > 0 && (
-                <span className="text-text-tertiary">{skippedIds.size} skipped</span>
+                <span className="text-ink-tertiary">{skippedIds.size} skipped</span>
               )}
             </div>
           </div>
@@ -595,7 +597,7 @@ function GapStep({
 
   return (
     <div className="flex-1">
-      <p className="text-text-tertiary mb-6 text-xs font-medium tracking-wide uppercase">
+      <p className="text-ink-tertiary mb-6 text-xs font-medium tracking-wide uppercase">
         Gap {stepNumber} of {totalSteps}
       </p>
 
@@ -617,9 +619,9 @@ function GapStep({
             >
               {isAnswered ? 'Addressed' : gap.severity}
             </span>
-            <p className="text-text-primary mt-2 text-sm leading-relaxed">{gap.description}</p>
+            <p className="text-ink-primary mt-2 text-sm leading-relaxed">{gap.description}</p>
             {currentValues && currentValues.length > 0 && !isAnswered && (
-              <p className="text-text-tertiary mt-2 text-xs">
+              <p className="text-ink-tertiary mt-2 text-xs">
                 LLMs currently think: {currentValues.join(', ')}
               </p>
             )}
@@ -630,15 +632,15 @@ function GapStep({
       {/* Question + answer */}
       {isAnswered ? (
         <div className="mb-8">
-          <p className="text-text-secondary mb-3 text-sm font-medium">Your answer:</p>
-          <div className="border-border-light bg-bg-tertiary rounded-xl border p-4">
-            <p className="text-text-primary text-sm leading-relaxed">{answer}</p>
+          <p className="text-ink-secondary mb-3 text-sm font-medium">Your answer:</p>
+          <div className="border-border-primary bg-background-tertiary rounded-xl border p-4">
+            <p className="text-ink-primary text-sm leading-relaxed">{answer}</p>
           </div>
         </div>
       ) : (
         questionConfig && (
           <div className="mb-8">
-            <p className="text-text-primary mb-4 text-base leading-relaxed font-medium">
+            <p className="text-ink-primary mb-4 text-base leading-relaxed font-medium">
               {questionConfig.question}
             </p>
             <textarea
@@ -648,11 +650,11 @@ function GapStep({
               onKeyDown={handleKeyDown}
               placeholder={questionConfig.placeholder}
               rows={4}
-              className="border-border-light focus:border-accent-primary bg-bg-tertiary text-text-primary placeholder:text-text-tertiary/50 w-full resize-none rounded-xl border px-4 py-3 text-sm leading-relaxed transition-colors outline-none"
+              className="border-border-primary focus:border-brand-primary bg-background-tertiary text-ink-primary placeholder:text-ink-tertiary/50 w-full resize-none rounded-xl border px-4 py-3 text-sm leading-relaxed transition-colors outline-none"
             />
-            <p className="text-text-tertiary mt-2 text-xs">
+            <p className="text-ink-tertiary mt-2 text-xs">
               Press{' '}
-              <kbd className="bg-bg-secondary rounded px-1.5 py-0.5 font-mono text-[11px]">
+              <kbd className="bg-background-secondary rounded px-1.5 py-0.5 font-mono text-[11px]">
                 Cmd+Enter
               </kbd>{' '}
               to submit
@@ -666,7 +668,7 @@ function GapStep({
         {onPrev && (
           <button
             onClick={onPrev}
-            className="text-text-tertiary hover:text-text-primary flex items-center gap-1 text-sm transition-colors"
+            className="text-ink-tertiary hover:text-ink-primary flex items-center gap-1 text-sm transition-colors"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -684,7 +686,7 @@ function GapStep({
         {isAnswered ? (
           <button
             onClick={onNext}
-            className="bg-accent-primary hover:bg-accent-hover rounded-xl px-6 py-3 text-sm font-medium text-white transition-colors"
+            className="bg-brand-primary hover:bg-brand-hover rounded-xl px-6 py-3 text-sm font-medium text-white transition-colors"
           >
             Next gap
           </button>
@@ -693,13 +695,13 @@ function GapStep({
             <button
               onClick={() => onSubmit(inputValue)}
               disabled={!inputValue.trim()}
-              className="bg-accent-primary hover:bg-accent-hover disabled:bg-bg-tertiary disabled:text-text-tertiary rounded-xl px-6 py-3 text-sm font-medium text-white transition-colors"
+              className="bg-brand-primary hover:bg-brand-hover disabled:bg-background-tertiary disabled:text-ink-tertiary rounded-xl px-6 py-3 text-sm font-medium text-white transition-colors"
             >
               Submit
             </button>
             <button
               onClick={onSkip}
-              className="text-text-tertiary hover:text-text-secondary text-sm transition-colors"
+              className="text-ink-tertiary hover:text-ink-secondary text-sm transition-colors"
             >
               Skip
             </button>

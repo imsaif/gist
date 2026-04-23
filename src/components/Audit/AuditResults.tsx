@@ -24,10 +24,10 @@ export function AuditResults({ result }: AuditResultsProps) {
   return (
     <div className="space-y-10">
       <section>
-        <h3 className="text-text-primary mb-1 text-xl font-bold tracking-tight">
+        <h3 className="text-ink-primary mb-1 text-xl font-bold tracking-tight">
           What 2 LLMs said about your product
         </h3>
-        <p className="text-text-tertiary mb-5 text-sm">
+        <p className="text-ink-tertiary mb-5 text-sm">
           Each model was given your homepage content and asked to describe your product.
         </p>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">

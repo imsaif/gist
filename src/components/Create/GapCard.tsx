@@ -72,17 +72,17 @@ export function GapCard({ gap, isResolved }: GapCardProps) {
             >
               {isResolved ? 'Addressed' : gap.severity}
             </span>
-            <span className="text-text-secondary text-xs font-medium">
+            <span className="text-ink-secondary text-xs font-medium">
               {categoryLabels[gap.category] || gap.category}
             </span>
           </div>
           <p
-            className={`mt-1 text-xs leading-relaxed ${isResolved ? 'text-text-tertiary' : 'text-text-secondary'}`}
+            className={`mt-1 text-xs leading-relaxed ${isResolved ? 'text-ink-tertiary' : 'text-ink-secondary'}`}
           >
             {gap.description}
           </p>
           {!isResolved && (
-            <p className="text-text-tertiary mt-1.5 text-[11px]">
+            <p className="text-ink-tertiary mt-1.5 text-[11px]">
               <span className="font-medium">Fix:</span> {gap.whatFileNeeds}
             </p>
           )}

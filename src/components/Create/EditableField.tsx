@@ -43,7 +43,7 @@ export function EditableField({ label, value, onChange, isFromAudit }: EditableF
 
   return (
     <div>
-      <dt className="text-text-tertiary text-xs font-medium tracking-wide uppercase">{label}</dt>
+      <dt className="text-ink-tertiary text-xs font-medium tracking-wide uppercase">{label}</dt>
       {isEditing ? (
         <div className="mt-1">
           <textarea
@@ -53,7 +53,7 @@ export function EditableField({ label, value, onChange, isFromAudit }: EditableF
             onBlur={handleSave}
             onKeyDown={handleKeyDown}
             rows={1}
-            className="border-accent-primary bg-bg-primary text-text-primary w-full resize-none rounded-lg border px-2.5 py-1.5 text-sm outline-none"
+            className="border-brand-primary bg-background-primary text-ink-primary w-full resize-none rounded-lg border px-2.5 py-1.5 text-sm outline-none"
           />
         </div>
       ) : (
@@ -66,8 +66,8 @@ export function EditableField({ label, value, onChange, isFromAudit }: EditableF
             value
               ? isFromAudit
                 ? 'text-amber-300/90'
-                : 'text-text-primary'
-              : 'text-text-tertiary italic'
+                : 'text-ink-primary'
+              : 'text-ink-tertiary italic'
           }`}
         >
           <span className="flex-1 text-sm">{value || 'Not set yet'}</span>

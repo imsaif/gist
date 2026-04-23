@@ -88,11 +88,11 @@ export function EmailGate({ onVerified, onClose }: EmailGateProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="bg-bg-primary border-border-light relative mx-4 w-full max-w-md rounded-2xl border p-8 shadow-xl">
+      <div className="bg-background-primary border-border-primary relative mx-4 w-full max-w-md rounded-2xl border p-8 shadow-xl">
         {/* Close button */}
         <button
           onClick={onClose}
-          className="text-text-tertiary hover:text-text-primary absolute top-4 right-4 transition-colors"
+          className="text-ink-tertiary hover:text-ink-primary absolute top-4 right-4 transition-colors"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -107,14 +107,14 @@ export function EmailGate({ onVerified, onClose }: EmailGateProps) {
         </button>
 
         {/* Icon */}
-        <div className="bg-accent-primary/10 mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full">
+        <div className="bg-brand-primary/10 mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="text-accent-primary h-6 w-6"
+            className="text-brand-primary h-6 w-6"
           >
             <path
               strokeLinecap="round"
@@ -124,10 +124,10 @@ export function EmailGate({ onVerified, onClose }: EmailGateProps) {
           </svg>
         </div>
 
-        <h2 className="text-text-primary mb-2 text-center text-lg font-semibold">
+        <h2 className="text-ink-primary mb-2 text-center text-lg font-semibold">
           {step === 'email' ? 'Verify your email to continue' : 'Enter verification code'}
         </h2>
-        <p className="text-text-secondary mb-6 text-center text-sm">
+        <p className="text-ink-secondary mb-6 text-center text-sm">
           {step === 'email'
             ? 'Your first gist file was free. Enter your email to keep creating.'
             : `We sent a 6-digit code to ${email}`}
@@ -154,13 +154,13 @@ export function EmailGate({ onVerified, onClose }: EmailGateProps) {
               }}
               placeholder="you@example.com"
               autoFocus
-              className="border-border-light focus:border-accent-primary mb-3 w-full rounded-xl border px-4 py-3 text-sm transition-colors outline-none"
+              className="border-border-primary focus:border-brand-primary mb-3 w-full rounded-xl border px-4 py-3 text-sm transition-colors outline-none"
             />
             {error && <p className="mb-3 text-sm text-red-500">{error}</p>}
             <button
               type="submit"
               disabled={isLoading || !email.trim()}
-              className="bg-accent-primary hover:bg-accent-hover disabled:bg-bg-tertiary disabled:text-text-tertiary w-full rounded-xl px-4 py-3 text-sm font-medium text-white transition-colors"
+              className="bg-brand-primary hover:bg-brand-hover disabled:bg-background-tertiary disabled:text-ink-tertiary w-full rounded-xl px-4 py-3 text-sm font-medium text-white transition-colors"
             >
               {isLoading ? (
                 <span className="inline-flex items-center gap-2">
@@ -200,13 +200,13 @@ export function EmailGate({ onVerified, onClose }: EmailGateProps) {
               autoFocus
               inputMode="numeric"
               maxLength={6}
-              className="border-border-light focus:border-accent-primary mb-3 w-full rounded-xl border px-4 py-3 text-center font-mono text-lg tracking-widest transition-colors outline-none"
+              className="border-border-primary focus:border-brand-primary mb-3 w-full rounded-xl border px-4 py-3 text-center font-mono text-lg tracking-widest transition-colors outline-none"
             />
             {error && <p className="mb-3 text-sm text-red-500">{error}</p>}
             <button
               type="submit"
               disabled={isLoading || code.length !== 6}
-              className="bg-accent-primary hover:bg-accent-hover disabled:bg-bg-tertiary disabled:text-text-tertiary mb-3 w-full rounded-xl px-4 py-3 text-sm font-medium text-white transition-colors"
+              className="bg-brand-primary hover:bg-brand-hover disabled:bg-background-tertiary disabled:text-ink-tertiary mb-3 w-full rounded-xl px-4 py-3 text-sm font-medium text-white transition-colors"
             >
               {isLoading ? (
                 <span className="inline-flex items-center gap-2">
@@ -239,7 +239,7 @@ export function EmailGate({ onVerified, onClose }: EmailGateProps) {
                 setChallenge('');
                 setError(null);
               }}
-              className="text-text-tertiary hover:text-text-primary w-full text-center text-sm transition-colors"
+              className="text-ink-tertiary hover:text-ink-primary w-full text-center text-sm transition-colors"
             >
               Use a different email
             </button>

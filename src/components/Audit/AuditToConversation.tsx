@@ -15,7 +15,7 @@ export function AuditToConversation({ result }: AuditToConversationProps) {
   return (
     <button
       onClick={handleClick}
-      className="bg-accent-primary hover:bg-accent-hover inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold text-white transition-colors"
+      className="bg-brand-primary hover:bg-brand-hover inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold text-white transition-colors"
     >
       Fix these gaps
       <svg

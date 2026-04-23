@@ -46,7 +46,7 @@ function AuditIllustration() {
             key={llm.name}
             className="flex-1 rounded-lg border border-white/[0.08] bg-white/[0.05] px-3 py-2.5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)] backdrop-blur-sm"
           >
-            <span className="text-text-secondary text-[10px]">{llm.name}</span>
+            <span className="text-ink-secondary text-[10px]">{llm.name}</span>
             <p className={`text-lg font-bold ${llm.color}`}>{llm.score}</p>
           </div>
         ))}
@@ -54,7 +54,7 @@ function AuditIllustration() {
 
       {/* Gap list */}
       <div className="rounded-lg border border-white/[0.08] bg-white/[0.05] px-4 py-3 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)] backdrop-blur-sm">
-        <p className="text-text-secondary mb-2 text-[10px] font-semibold tracking-wider uppercase">
+        <p className="text-ink-secondary mb-2 text-[10px] font-semibold tracking-wider uppercase">
           Gaps found
         </p>
         {[
@@ -63,7 +63,7 @@ function AuditIllustration() {
           { label: 'Audience targeting', severity: 'med' },
         ].map((gap) => (
           <div key={gap.label} className="flex items-center justify-between py-1">
-            <span className="text-text-primary text-xs">{gap.label}</span>
+            <span className="text-ink-primary text-xs">{gap.label}</span>
             <span
               className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${
                 gap.severity === 'high'
@@ -92,47 +92,43 @@ function FillGapsIllustration() {
     <div className="flex h-full w-full flex-col gap-3 p-5">
       {/* Chat messages */}
       <div className="flex flex-col gap-2">
-        <div className="bg-msg-user-bg self-end rounded-2xl rounded-br-sm px-3.5 py-2">
-          <span className="text-msg-user-text text-[11px]">
-            We chose manual approval over auto-execute
-          </span>
+        <div className="bg-brand-primary self-end rounded-2xl rounded-br-sm px-3.5 py-2">
+          <span className="text-[11px] text-white">We chose manual approval over auto-execute</span>
         </div>
         <div className="self-start rounded-2xl rounded-bl-sm border border-white/[0.08] bg-white/[0.05] px-3.5 py-2 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)] backdrop-blur-sm">
-          <span className="text-text-primary text-[11px]">Why did you make that choice?</span>
+          <span className="text-ink-primary text-[11px]">Why did you make that choice?</span>
         </div>
-        <div className="bg-msg-user-bg self-end rounded-2xl rounded-br-sm px-3.5 py-2">
-          <span className="text-msg-user-text text-[11px]">
-            Users need to trust the system first
-          </span>
+        <div className="bg-brand-primary self-end rounded-2xl rounded-br-sm px-3.5 py-2">
+          <span className="text-[11px] text-white">Users need to trust the system first</span>
         </div>
       </div>
 
       {/* Generated file preview */}
       <div className="flex-1 rounded-lg border border-white/[0.08] bg-white/[0.05] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)] backdrop-blur-sm">
         <div className="flex items-center gap-2 border-b border-white/[0.06] px-3 py-2">
-          <div className="bg-accent-primary/20 h-2 w-2 rounded-full" />
-          <span className="text-accent-primary text-[10px] font-semibold">product.gist.design</span>
+          <div className="bg-brand-primary/20 h-2 w-2 rounded-full" />
+          <span className="text-brand-primary text-[10px] font-semibold">product.gist.design</span>
         </div>
         <div className="space-y-1.5 px-3 py-2.5">
           <div className="flex gap-2">
-            <span className="text-text-tertiary w-4 text-right font-mono text-[9px]">1</span>
-            <span className="text-accent-primary font-mono text-[9px]">## Design Decisions</span>
+            <span className="text-ink-tertiary w-4 text-right font-mono text-[9px]">1</span>
+            <span className="text-brand-primary font-mono text-[9px]">## Design Decisions</span>
           </div>
           <div className="flex gap-2">
-            <span className="text-text-tertiary w-4 text-right font-mono text-[9px]">2</span>
-            <span className="text-text-secondary font-mono text-[9px]">
+            <span className="text-ink-tertiary w-4 text-right font-mono text-[9px]">2</span>
+            <span className="text-ink-secondary font-mono text-[9px]">
               - Chose manual approval over auto-execute
             </span>
           </div>
           <div className="flex gap-2">
-            <span className="text-text-tertiary w-4 text-right font-mono text-[9px]">3</span>
-            <span className="text-text-secondary font-mono text-[9px]">
+            <span className="text-ink-tertiary w-4 text-right font-mono text-[9px]">3</span>
+            <span className="text-ink-secondary font-mono text-[9px]">
               &nbsp;&nbsp;Because: trust-first onboarding
             </span>
           </div>
           <div className="flex gap-2">
-            <span className="text-text-tertiary w-4 text-right font-mono text-[9px]">4</span>
-            <span className="text-text-tertiary font-mono text-[9px]">│</span>
+            <span className="text-ink-tertiary w-4 text-right font-mono text-[9px]">4</span>
+            <span className="text-ink-tertiary font-mono text-[9px]">│</span>
           </div>
         </div>
       </div>
@@ -146,13 +142,13 @@ function VerifyIllustration() {
       {/* Before / After header */}
       <div className="flex gap-2.5">
         <div className="flex-1 rounded-lg border border-white/[0.08] bg-white/[0.05] px-3 py-2.5 text-center shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)] backdrop-blur-sm">
-          <span className="text-text-tertiary text-[10px] font-semibold tracking-wider uppercase">
+          <span className="text-ink-tertiary text-[10px] font-semibold tracking-wider uppercase">
             Before
           </span>
           <p className="text-xl font-bold text-red-400">52%</p>
         </div>
         <div className="flex-1 rounded-lg border border-white/[0.08] bg-white/[0.05] px-3 py-2.5 text-center shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)] backdrop-blur-sm">
-          <span className="text-text-tertiary text-[10px] font-semibold tracking-wider uppercase">
+          <span className="text-ink-tertiary text-[10px] font-semibold tracking-wider uppercase">
             After
           </span>
           <p className="text-xl font-bold text-emerald-400">94%</p>
@@ -161,7 +157,7 @@ function VerifyIllustration() {
 
       {/* Improvement bars */}
       <div className="rounded-lg border border-white/[0.08] bg-white/[0.05] px-4 py-3 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)] backdrop-blur-sm">
-        <p className="text-text-secondary mb-2 text-[10px] font-semibold tracking-wider uppercase">
+        <p className="text-ink-secondary mb-2 text-[10px] font-semibold tracking-wider uppercase">
           Accuracy by category
         </p>
         {[
@@ -171,7 +167,7 @@ function VerifyIllustration() {
         ].map((row) => (
           <div key={row.label} className="mb-2 last:mb-0">
             <div className="flex items-center justify-between">
-              <span className="text-text-primary text-[11px]">{row.label}</span>
+              <span className="text-ink-primary text-[11px]">{row.label}</span>
               <span className="text-[10px] font-medium text-emerald-400">
                 {row.before}% → {row.after}%
               </span>
@@ -200,8 +196,8 @@ function VerifyIllustration() {
           </svg>
         </div>
         <div>
-          <span className="text-text-primary text-[11px] font-medium">Drop in repo root</span>
-          <p className="text-text-tertiary font-mono text-[9px]">/gist.design</p>
+          <span className="text-ink-primary text-[11px] font-medium">Drop in repo root</span>
+          <p className="text-ink-tertiary font-mono text-[9px]">/gist.design</p>
         </div>
       </div>
     </div>
@@ -233,13 +229,11 @@ export default function HowItWorks() {
   return (
     <div className="relative overflow-hidden">
       {/* Ambient orbs */}
-      <div className="ambient-orb top-1/3 -left-24 h-80 w-80 bg-indigo-500/[0.06]" />
-      <div className="ambient-orb -right-20 bottom-1/4 h-72 w-72 bg-purple-500/[0.05]" />
       <div className="mx-auto max-w-6xl px-6 py-16 md:py-20">
-        <h2 className="text-text-primary mb-3 text-center text-3xl font-bold tracking-tight">
+        <h2 className="text-ink-primary mb-3 text-center text-3xl font-bold tracking-tight">
           How it works
         </h2>
-        <p className="text-text-secondary mx-auto mb-10 max-w-lg text-center text-lg leading-relaxed">
+        <p className="text-ink-secondary mx-auto mb-10 max-w-lg text-center text-lg leading-relaxed">
           Three steps. One file that fixes how AI understands your product.
         </p>
 
@@ -257,8 +251,8 @@ export default function HowItWorks() {
                 onClick={() => setActive(i)}
                 className={`flex-1 rounded-xl py-3 text-base font-semibold transition-all duration-300 ${
                   i === active
-                    ? 'text-text-primary bg-white/[0.08] shadow-sm'
-                    : 'text-text-tertiary hover:text-text-secondary'
+                    ? 'text-ink-primary bg-white/[0.08] shadow-sm'
+                    : 'text-ink-tertiary hover:text-ink-secondary'
                 }`}
               >
                 {step.label}
@@ -270,7 +264,7 @@ export default function HowItWorks() {
           <div className="bg-white/[0.03] px-3 pb-3">
             <div className="h-0.5 overflow-hidden rounded-full bg-white/[0.03]">
               <div
-                className="bg-accent-primary h-full rounded-full"
+                className="bg-brand-primary h-full rounded-full"
                 style={{
                   width: `${((active + 1) / steps.length) * 100}%`,
                   transition: 'width 0.5s ease',
@@ -300,11 +294,11 @@ export default function HowItWorks() {
             {/* Text — right */}
             <div className="flex flex-1 flex-col justify-center px-8 py-10 md:px-12">
               <div key={active} className="animate-[fadeSlideIn_0.4s_ease-out]">
-                <span className="text-text-tertiary mb-3 block font-mono text-base">
+                <span className="text-ink-tertiary mb-3 block font-mono text-base">
                   {steps[active].number}
                 </span>
-                <h3 className="text-text-primary mb-4 text-3xl font-bold">{steps[active].title}</h3>
-                <p className="text-text-secondary text-lg leading-relaxed">
+                <h3 className="text-ink-primary mb-4 text-3xl font-bold">{steps[active].title}</h3>
+                <p className="text-ink-secondary text-lg leading-relaxed">
                   {steps[active].description}
                 </p>
               </div>
