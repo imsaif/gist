@@ -60,6 +60,15 @@ export function LandingWithAudit({ marketingSections }: LandingWithAuditProps) {
               <AuditHero onPhaseChange={handlePhaseChange} />
             </div>
             {!auditActive && <HeroResultPreview />}
+            {!auditActive && (
+              <p className="text-ink-secondary mt-6 text-center text-sm">
+                Or{' '}
+                <Link href="/audited" className="text-brand-primary font-medium underline">
+                  see 25 founder tools we&apos;ve already audited
+                </Link>{' '}
+                — Linear, Notion, Figma, Vercel and more.
+              </p>
+            )}
           </section>
         </div>
       </div>

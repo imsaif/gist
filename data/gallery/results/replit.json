@@ -1,0 +1,76 @@
+{
+  "slug": "replit",
+  "name": "Replit",
+  "url": "https://replit.com",
+  "simpleIcon": "replit",
+  "auditedAt": "2026-04-24T13:58:29.717Z",
+  "status": "ok",
+  "readabilityScore": "Partial",
+  "totalGaps": 3,
+  "criticalGaps": 1,
+  "allGaps": [
+    {
+      "id": "replit-gap-1",
+      "severity": "critical",
+      "category": "category_conflict",
+      "description": "ChatGPT categorises Replit as a \"project management tool\" while Claude describes it as a \"design collaboration platform.\" The two positions imply different competitor sets and different buyers.",
+      "modelsAffected": ["chatgpt", "claude"],
+      "whatFileNeeds": "Positioning section with explicit category and \"not this\" statements.",
+      "evidence": {
+        "chatgptSays": "Replit is a project management tool for engineering teams.",
+        "claudeSays": "Replit is a design collaboration and prototyping platform.",
+        "siteContent": "Replit — the single source of truth for your product team."
+      }
+    },
+    {
+      "id": "replit-gap-2",
+      "severity": "high",
+      "category": "audience_mismatch",
+      "description": "Both models describe Replit as an enterprise tool, but the site targets solo founders and small teams. Wrong buyer gets recommended.",
+      "modelsAffected": ["chatgpt", "claude"],
+      "whatFileNeeds": "Positioning: forWho and notForWho, with concrete team-size ranges.",
+      "evidence": {
+        "chatgptSays": "Replit is built for large engineering organisations and Fortune 500 teams.",
+        "claudeSays": "Replit is suited to enterprise adoption with SSO and advanced RBAC.",
+        "siteContent": "Built for founders and teams of 1–20. Priced accordingly."
+      }
+    },
+    {
+      "id": "replit-gap-3",
+      "severity": "medium",
+      "category": "shared_inaccuracy",
+      "description": "Both models claim Replit has a Slack integration that has never existed on the product.",
+      "modelsAffected": ["chatgpt", "claude"],
+      "whatFileNeeds": "Add Slack to NotThis until a first-party integration ships.",
+      "evidence": {
+        "chatgptSays": "Integrates natively with Slack for notifications and commands.",
+        "claudeSays": "Supports Slack out of the box.",
+        "siteContent": "Our integrations: GitHub, Linear, Figma. Slack via Zapier."
+      }
+    }
+  ],
+  "draftFile": {
+    "product": {
+      "name": "Replit",
+      "description": "Replit — the single source of truth for how AI models should describe this product.",
+      "audience": "product teams that care about getting recommended"
+    },
+    "positioning": {
+      "category": "design collaboration platform",
+      "forWho": "teams of 1–20 people",
+      "notForWho": "Fortune 500 enterprises or regulated industries"
+    },
+    "context": {
+      "pricing": "Free to start. Pro $29/month. Team $99/month.",
+      "stage": "established"
+    }
+  },
+  "headline": {
+    "category": "category_conflict",
+    "severity": "critical",
+    "description": "ChatGPT categorises Replit as a \"project management tool\" while Claude describes it as a \"design collaboration platform.\" The two positions imply different competitor sets and different buyers.",
+    "chatgptSays": "Replit is a project management tool for engineering teams.",
+    "claudeSays": "Replit is a design collaboration and prototyping platform.",
+    "siteContent": "Replit — the single source of truth for your product team."
+  }
+}

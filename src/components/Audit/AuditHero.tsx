@@ -364,28 +364,36 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
                 </>
               )}
             </div>
-            {(result.analysis?.summary.totalGaps || 0) > 0 && (
-              <button
-                onClick={handleFixGaps}
-                className="bg-brand-primary hover:bg-brand-hover inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white transition-colors"
-              >
-                Resolve conflicts
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  stroke="currentColor"
-                  className="h-4 w-4"
+            <div className="flex flex-wrap items-center gap-3">
+              {(result.analysis?.summary.totalGaps || 0) > 0 && (
+                <button
+                  onClick={handleFixGaps}
+                  className="bg-brand-primary hover:bg-brand-hover inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white transition-colors"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
-                  />
-                </svg>
-              </button>
-            )}
+                  Resolve conflicts
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                    stroke="currentColor"
+                    className="h-4 w-4"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+                    />
+                  </svg>
+                </button>
+              )}
+              <a
+                href="/login?next=/onboarding"
+                className="text-ink-primary border-border-primary hover:bg-background-secondary inline-flex items-center gap-2 rounded-full border px-6 py-3 text-sm font-semibold transition-colors"
+              >
+                Track weekly
+              </a>
+            </div>
           </div>
         </div>
       )}

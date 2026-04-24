@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "updatedAt": "2026-04-24",
+  "note": "Edit this file to change the 25 gallery targets. Re-run `npm run build-gallery` to regenerate. Slugs must be URL-safe and stable (they become the gallery page path /audited/<slug>).",
+  "companies": [
+    { "slug": "linear", "name": "Linear", "url": "https://linear.app", "simpleIcon": "linear" },
+    { "slug": "notion", "name": "Notion", "url": "https://www.notion.so", "simpleIcon": "notion" },
+    { "slug": "figma", "name": "Figma", "url": "https://www.figma.com", "simpleIcon": "figma" },
+    { "slug": "vercel", "name": "Vercel", "url": "https://vercel.com", "simpleIcon": "vercel" },
+    {
+      "slug": "supabase",
+      "name": "Supabase",
+      "url": "https://supabase.com",
+      "simpleIcon": "supabase"
+    },
+    { "slug": "stripe", "name": "Stripe", "url": "https://stripe.com", "simpleIcon": "stripe" },
+    { "slug": "github", "name": "GitHub", "url": "https://github.com", "simpleIcon": "github" },
+    { "slug": "cursor", "name": "Cursor", "url": "https://cursor.com", "simpleIcon": null },
+    {
+      "slug": "raycast",
+      "name": "Raycast",
+      "url": "https://www.raycast.com",
+      "simpleIcon": "raycast"
+    },
+    { "slug": "posthog", "name": "PostHog", "url": "https://posthog.com", "simpleIcon": "posthog" },
+    {
+      "slug": "plausible",
+      "name": "Plausible",
+      "url": "https://plausible.io",
+      "simpleIcon": "plausibleanalytics"
+    },
+    { "slug": "resend", "name": "Resend", "url": "https://resend.com", "simpleIcon": "resend" },
+    { "slug": "turso", "name": "Turso", "url": "https://turso.tech", "simpleIcon": null },
+    { "slug": "railway", "name": "Railway", "url": "https://railway.app", "simpleIcon": "railway" },
+    { "slug": "flyio", "name": "Fly.io", "url": "https://fly.io", "simpleIcon": null },
+    { "slug": "framer", "name": "Framer", "url": "https://www.framer.com", "simpleIcon": "framer" },
+    { "slug": "webflow", "name": "Webflow", "url": "https://webflow.com", "simpleIcon": "webflow" },
+    { "slug": "replit", "name": "Replit", "url": "https://replit.com", "simpleIcon": "replit" },
+    { "slug": "v0", "name": "v0", "url": "https://v0.app", "simpleIcon": null },
+    { "slug": "bolt", "name": "Bolt", "url": "https://bolt.new", "simpleIcon": null },
+    { "slug": "lovable", "name": "Lovable", "url": "https://lovable.dev", "simpleIcon": null },
+    { "slug": "gumroad", "name": "Gumroad", "url": "https://gumroad.com", "simpleIcon": "gumroad" },
+    { "slug": "beehiiv", "name": "Beehiiv", "url": "https://www.beehiiv.com", "simpleIcon": null },
+    {
+      "slug": "tailwindcss",
+      "name": "Tailwind CSS",
+      "url": "https://tailwindcss.com",
+      "simpleIcon": "tailwindcss"
+    },
+    {
+      "slug": "shadcn",
+      "name": "shadcn/ui",
+      "url": "https://ui.shadcn.com",
+      "simpleIcon": "shadcnui"
+    }
+  ]
+}

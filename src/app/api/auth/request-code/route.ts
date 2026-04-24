@@ -31,9 +31,24 @@ export async function POST(request: Request) {
     const code = generateCode();
     const challenge = createChallenge(normalizedEmail, code);
 
+    // Dev convenience: in MOCK_MODE skip Resend entirely; log the code to
+    // console AND /tmp so it's retrievable without seeing the dev terminal.
+    if (process.env.MOCK_MODE === 'true') {
+      console.log(`\n[MOCK_MODE] verification code for ${normalizedEmail}: ${code}\n`);
+      try {
+        const { writeFileSync } = await import('node:fs');
+        writeFileSync(
+          '/tmp/gist-dev-last-code.txt',
+          `${new Date().toISOString()}  ${normalizedEmail}  ${code}\n`,
+          { flag: 'a' }
+        );
+      } catch {}
+      return NextResponse.json({ success: true, challenge });
+    }
+
     // Send email via Resend
     const fromEmail = process.env.RESEND_FROM_EMAIL || 'noreply@gist.design';
-    await resend.emails.send({
+    const { error: resendError } = await resend.emails.send({
       from: `Gist <${fromEmail}>`,
       to: normalizedEmail,
       subject: 'Your verification code',
@@ -48,6 +63,14 @@ export async function POST(request: Request) {
         </div>
       `,
     });
+
+    if (resendError) {
+      console.error('Resend send failed:', resendError);
+      return NextResponse.json(
+        { error: `Email send failed: ${resendError.message}` },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({ success: true, challenge });
   } catch (error) {

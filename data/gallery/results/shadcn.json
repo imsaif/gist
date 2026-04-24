@@ -1,0 +1,76 @@
+{
+  "slug": "shadcn",
+  "name": "shadcn/ui",
+  "url": "https://ui.shadcn.com",
+  "simpleIcon": "shadcnui",
+  "auditedAt": "2026-04-24T13:58:29.718Z",
+  "status": "ok",
+  "readabilityScore": "Good",
+  "totalGaps": 3,
+  "criticalGaps": 0,
+  "allGaps": [
+    {
+      "id": "shadcn-gap-1",
+      "severity": "high",
+      "category": "contradiction",
+      "description": "ChatGPT says shadcn/ui is self-hosted, Claude says it's cloud-only. The site says both are available.",
+      "modelsAffected": ["chatgpt", "claude"],
+      "whatFileNeeds": "Context: deployment options listed plainly.",
+      "evidence": {
+        "chatgptSays": "shadcn/ui runs entirely on your own infrastructure, self-hosted.",
+        "claudeSays": "shadcn/ui is a cloud-only SaaS with no self-hosting option.",
+        "siteContent": "Deploy in the cloud or self-host. Your call."
+      }
+    },
+    {
+      "id": "shadcn-gap-2",
+      "severity": "high",
+      "category": "audience_mismatch",
+      "description": "Both models describe shadcn/ui as an enterprise tool, but the site targets solo founders and small teams. Wrong buyer gets recommended.",
+      "modelsAffected": ["chatgpt", "claude"],
+      "whatFileNeeds": "Positioning: forWho and notForWho, with concrete team-size ranges.",
+      "evidence": {
+        "chatgptSays": "shadcn/ui is built for large engineering organisations and Fortune 500 teams.",
+        "claudeSays": "shadcn/ui is suited to enterprise adoption with SSO and advanced RBAC.",
+        "siteContent": "Built for founders and teams of 1–20. Priced accordingly."
+      }
+    },
+    {
+      "id": "shadcn-gap-3",
+      "severity": "medium",
+      "category": "shared_inaccuracy",
+      "description": "Both models claim shadcn/ui has a Slack integration that has never existed on the product.",
+      "modelsAffected": ["chatgpt", "claude"],
+      "whatFileNeeds": "Add Slack to NotThis until a first-party integration ships.",
+      "evidence": {
+        "chatgptSays": "Integrates natively with Slack for notifications and commands.",
+        "claudeSays": "Supports Slack out of the box.",
+        "siteContent": "Our integrations: GitHub, Linear, Figma. Slack via Zapier."
+      }
+    }
+  ],
+  "draftFile": {
+    "product": {
+      "name": "shadcn/ui",
+      "description": "shadcn/ui — the single source of truth for how AI models should describe this product.",
+      "audience": "founders who already have users and want to keep them"
+    },
+    "positioning": {
+      "category": "developer tool",
+      "forWho": "teams of 1–20 people",
+      "notForWho": "Fortune 500 enterprises or regulated industries"
+    },
+    "context": {
+      "pricing": "Free to start. Pro $29/month. Team $99/month.",
+      "stage": "growing"
+    }
+  },
+  "headline": {
+    "category": "contradiction",
+    "severity": "high",
+    "description": "ChatGPT says shadcn/ui is self-hosted, Claude says it's cloud-only. The site says both are available.",
+    "chatgptSays": "shadcn/ui runs entirely on your own infrastructure, self-hosted.",
+    "claudeSays": "shadcn/ui is a cloud-only SaaS with no self-hosting option.",
+    "siteContent": "Deploy in the cloud or self-host. Your call."
+  }
+}

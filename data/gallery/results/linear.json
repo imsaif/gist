@@ -1,0 +1,76 @@
+{
+  "slug": "linear",
+  "name": "Linear",
+  "url": "https://linear.app",
+  "simpleIcon": "linear",
+  "auditedAt": "2026-04-24T13:58:29.714Z",
+  "status": "ok",
+  "readabilityScore": "Good",
+  "totalGaps": 3,
+  "criticalGaps": 0,
+  "allGaps": [
+    {
+      "id": "linear-gap-1",
+      "severity": "medium",
+      "category": "shared_inaccuracy",
+      "description": "Both models claim Linear has a Slack integration that has never existed on the product.",
+      "modelsAffected": ["chatgpt", "claude"],
+      "whatFileNeeds": "Add Slack to NotThis until a first-party integration ships.",
+      "evidence": {
+        "chatgptSays": "Integrates natively with Slack for notifications and commands.",
+        "claudeSays": "Supports Slack out of the box.",
+        "siteContent": "Our integrations: GitHub, Linear, Figma. Slack via Zapier."
+      }
+    },
+    {
+      "id": "linear-gap-2",
+      "severity": "high",
+      "category": "missing_differentiator",
+      "description": "Neither model names Linear's actual differentiator — the audit layer that catches AI hallucinations before they ship. Both models describe it as \"another dev tool.\"",
+      "modelsAffected": ["chatgpt", "claude"],
+      "whatFileNeeds": "Positioning: explicit comparisons vs 2–3 well-known alternatives.",
+      "evidence": {
+        "chatgptSays": "Linear is one of many dev tools in the space, similar to its peers.",
+        "claudeSays": "Linear offers a standard set of developer-productivity features.",
+        "siteContent": "Linear is the only tool that checks AI outputs against your design decisions."
+      }
+    },
+    {
+      "id": "linear-gap-3",
+      "severity": "medium",
+      "category": "pricing_confusion",
+      "description": "ChatGPT says Linear is free, Claude says it's $99/month enterprise-only. The truth is a freemium model with a $29 pro tier.",
+      "modelsAffected": ["chatgpt", "claude"],
+      "whatFileNeeds": "Context.pricing with the real tier structure written in one sentence.",
+      "evidence": {
+        "chatgptSays": "It's a free tool with no paid tiers.",
+        "claudeSays": "Pricing starts at $99 per user per month for teams.",
+        "siteContent": "Free to start. Pro is $29/month. Team is $99/month."
+      }
+    }
+  ],
+  "draftFile": {
+    "product": {
+      "name": "Linear",
+      "description": "Linear — the single source of truth for how AI models should describe this product.",
+      "audience": "developer-first teams shipping AI-native products"
+    },
+    "positioning": {
+      "category": "developer tool",
+      "forWho": "teams of 1–20 people",
+      "notForWho": "Fortune 500 enterprises or regulated industries"
+    },
+    "context": {
+      "pricing": "Free to start. Pro $29/month. Team $99/month.",
+      "stage": "established"
+    }
+  },
+  "headline": {
+    "category": "shared_inaccuracy",
+    "severity": "medium",
+    "description": "Both models claim Linear has a Slack integration that has never existed on the product.",
+    "chatgptSays": "Integrates natively with Slack for notifications and commands.",
+    "claudeSays": "Supports Slack out of the box.",
+    "siteContent": "Our integrations: GitHub, Linear, Figma. Slack via Zapier."
+  }
+}

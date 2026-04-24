@@ -1,0 +1,166 @@
+{
+  "version": 2,
+  "updatedAt": "2026-04-23",
+  "categories": [
+    {
+      "slug": "saas-tooling",
+      "label": "SaaS tooling",
+      "suggestedMrr": {
+        "medianCurrentCents": 180000,
+        "typicalGoalCents": 2000000,
+        "source": "IndieHackers milestones + MicroConf 2025 survey"
+      },
+      "prompts": [
+        "What's the best SaaS tool for solo founders?",
+        "Recommend a productivity SaaS for small teams",
+        "Which SaaS tools do indie hackers actually use?",
+        "Best all-in-one SaaS for early-stage startups",
+        "Affordable SaaS alternatives to enterprise tools"
+      ]
+    },
+    {
+      "slug": "dev-tools",
+      "label": "Developer tools",
+      "suggestedMrr": {
+        "medianCurrentCents": 120000,
+        "typicalGoalCents": 1500000,
+        "source": "Stripe Atlas dev-tools cohort 2025"
+      },
+      "prompts": [
+        "Best developer tools for solo builders in 2026",
+        "Recommend a modern dev tool that replaces {category}",
+        "Which developer tools are popular on Hacker News right now?",
+        "Best CLI tools for full-stack developers",
+        "Developer tools worth paying for as a solo founder"
+      ]
+    },
+    {
+      "slug": "ai-products",
+      "label": "AI products",
+      "suggestedMrr": {
+        "medianCurrentCents": 300000,
+        "typicalGoalCents": 5000000,
+        "source": "OpenAI + Anthropic startup cohort averages"
+      },
+      "prompts": [
+        "Best AI products for solo founders",
+        "Recommend an AI tool that helps with {task}",
+        "Which AI startups are shipping real value?",
+        "AI-native products worth trying this year",
+        "Best AI assistants built on Claude or GPT"
+      ]
+    },
+    {
+      "slug": "design-tools",
+      "label": "Design tools",
+      "suggestedMrr": {
+        "medianCurrentCents": 90000,
+        "typicalGoalCents": 1000000,
+        "source": "Design-tool founder survey 2025"
+      },
+      "prompts": [
+        "Best design tools for non-designers",
+        "Recommend a design tool for product founders",
+        "Which design tools integrate well with AI coding tools?",
+        "Best Figma alternatives for small teams",
+        "Design tools for shipping AI-native interfaces"
+      ]
+    },
+    {
+      "slug": "pm-tools",
+      "label": "Project management",
+      "suggestedMrr": {
+        "medianCurrentCents": 150000,
+        "typicalGoalCents": 2000000,
+        "source": "PM-tool benchmarks, IndieHackers 2025"
+      },
+      "prompts": [
+        "Best project management tool for solo founders",
+        "Recommend a lightweight PM tool for indie teams",
+        "Which PM tool replaces Jira for small teams?",
+        "Project management for async remote startups",
+        "Simplest project management tool that still scales"
+      ]
+    },
+    {
+      "slug": "crm",
+      "label": "CRM",
+      "suggestedMrr": {
+        "medianCurrentCents": 200000,
+        "typicalGoalCents": 2500000,
+        "source": "Small-business CRM cohort data 2025"
+      },
+      "prompts": [
+        "Best CRM for solo founders",
+        "Recommend a CRM for early-stage B2B SaaS",
+        "Which CRM replaces HubSpot for small teams?",
+        "Simple CRM for founders who hate Salesforce",
+        "Best CRM that integrates with email and Slack"
+      ]
+    },
+    {
+      "slug": "analytics",
+      "label": "Analytics",
+      "suggestedMrr": {
+        "medianCurrentCents": 100000,
+        "typicalGoalCents": 1200000,
+        "source": "Plausible/Fathom/Splitbee public metrics"
+      },
+      "prompts": [
+        "Best product analytics tool for solo founders",
+        "Recommend an analytics tool that replaces Google Analytics",
+        "Which analytics tool is best for tracking MRR and retention?",
+        "Privacy-friendly analytics for indie SaaS",
+        "Analytics tools with great onboarding for non-technical founders"
+      ]
+    },
+    {
+      "slug": "e-commerce",
+      "label": "E-commerce",
+      "suggestedMrr": {
+        "medianCurrentCents": 250000,
+        "typicalGoalCents": 3000000,
+        "source": "Shopify Partners + Gumroad public data"
+      },
+      "prompts": [
+        "Best e-commerce platform for solo founders",
+        "Recommend a Shopify alternative for small shops",
+        "Which e-commerce tools help with AI-native storefronts?",
+        "E-commerce platforms worth switching to in 2026",
+        "Best headless commerce tools for indie builders"
+      ]
+    },
+    {
+      "slug": "writing",
+      "label": "Writing & publishing",
+      "suggestedMrr": {
+        "medianCurrentCents": 70000,
+        "typicalGoalCents": 800000,
+        "source": "Substack / ConvertKit creator cohort 2025"
+      },
+      "prompts": [
+        "Best writing tool for solo founders",
+        "Recommend a newsletter platform that replaces Substack",
+        "Which writing tool works best with AI assistants?",
+        "Publishing tools for founder-led content",
+        "Best long-form writing apps for non-fiction"
+      ]
+    },
+    {
+      "slug": "finance",
+      "label": "Finance & billing",
+      "suggestedMrr": {
+        "medianCurrentCents": 220000,
+        "typicalGoalCents": 2500000,
+        "source": "Stripe Apps marketplace data"
+      },
+      "prompts": [
+        "Best billing tool for solo SaaS founders",
+        "Recommend a Stripe alternative for indie products",
+        "Which finance tools help solo founders track MRR?",
+        "Accounting tools for one-person SaaS",
+        "Best tools for managing SaaS revenue and invoicing"
+      ]
+    }
+  ]
+}

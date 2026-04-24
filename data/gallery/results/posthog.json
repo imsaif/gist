@@ -1,0 +1,89 @@
+{
+  "slug": "posthog",
+  "name": "PostHog",
+  "url": "https://posthog.com",
+  "simpleIcon": "posthog",
+  "auditedAt": "2026-04-24T13:58:29.716Z",
+  "status": "ok",
+  "readabilityScore": "Partial",
+  "totalGaps": 4,
+  "criticalGaps": 1,
+  "allGaps": [
+    {
+      "id": "posthog-gap-1",
+      "severity": "medium",
+      "category": "pricing_confusion",
+      "description": "ChatGPT says PostHog is free, Claude says it's $99/month enterprise-only. The truth is a freemium model with a $29 pro tier.",
+      "modelsAffected": ["chatgpt", "claude"],
+      "whatFileNeeds": "Context.pricing with the real tier structure written in one sentence.",
+      "evidence": {
+        "chatgptSays": "It's a free tool with no paid tiers.",
+        "claudeSays": "Pricing starts at $99 per user per month for teams.",
+        "siteContent": "Free to start. Pro is $29/month. Team is $99/month."
+      }
+    },
+    {
+      "id": "posthog-gap-2",
+      "severity": "medium",
+      "category": "shared_inaccuracy",
+      "description": "Both models claim PostHog has a Slack integration that has never existed on the product.",
+      "modelsAffected": ["chatgpt", "claude"],
+      "whatFileNeeds": "Add Slack to NotThis until a first-party integration ships.",
+      "evidence": {
+        "chatgptSays": "Integrates natively with Slack for notifications and commands.",
+        "claudeSays": "Supports Slack out of the box.",
+        "siteContent": "Our integrations: GitHub, Linear, Figma. Slack via Zapier."
+      }
+    },
+    {
+      "id": "posthog-gap-3",
+      "severity": "high",
+      "category": "missing_differentiator",
+      "description": "Neither model names PostHog's actual differentiator — the audit layer that catches AI hallucinations before they ship. Both models describe it as \"another dev tool.\"",
+      "modelsAffected": ["chatgpt", "claude"],
+      "whatFileNeeds": "Positioning: explicit comparisons vs 2–3 well-known alternatives.",
+      "evidence": {
+        "chatgptSays": "PostHog is one of many dev tools in the space, similar to its peers.",
+        "claudeSays": "PostHog offers a standard set of developer-productivity features.",
+        "siteContent": "PostHog is the only tool that checks AI outputs against your design decisions."
+      }
+    },
+    {
+      "id": "posthog-gap-4",
+      "severity": "critical",
+      "category": "fabrication",
+      "description": "ChatGPT invents a feature PostHog doesn't ship — claiming built-in video chat and AI meeting summaries that aren't on the product.",
+      "modelsAffected": ["chatgpt"],
+      "whatFileNeeds": "Add a NotThis section listing features the product deliberately does not ship.",
+      "evidence": {
+        "chatgptSays": "PostHog includes built-in video chat, AI-generated meeting summaries, and a native calendar sync out of the box.",
+        "claudeSays": "PostHog is focused on structured work; video and calendar are handled via integrations.",
+        "siteContent": "We focus on one thing. Integrations available via our API."
+      }
+    }
+  ],
+  "draftFile": {
+    "product": {
+      "name": "PostHog",
+      "description": "PostHog — the single source of truth for how AI models should describe this product.",
+      "audience": "solo founders and small teams"
+    },
+    "positioning": {
+      "category": "workflow automation",
+      "forWho": "teams of 1–20 people",
+      "notForWho": "Fortune 500 enterprises or regulated industries"
+    },
+    "context": {
+      "pricing": "Free to start. Pro $29/month. Team $99/month.",
+      "stage": "established"
+    }
+  },
+  "headline": {
+    "category": "fabrication",
+    "severity": "critical",
+    "description": "ChatGPT invents a feature PostHog doesn't ship — claiming built-in video chat and AI meeting summaries that aren't on the product.",
+    "chatgptSays": "PostHog includes built-in video chat, AI-generated meeting summaries, and a native calendar sync out of the box.",
+    "claudeSays": "PostHog is focused on structured work; video and calendar are handled via integrations.",
+    "siteContent": "We focus on one thing. Integrations available via our API."
+  }
+}

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { validateEmail, isHoneypotTriggered } from '@/lib/email-validation';
 import { verifyChallenge, createVerifiedToken } from '@/lib/auth';
+import { setSession, upsertUser } from '@/lib/session';
 
 export async function POST(request: Request) {
   try {
@@ -35,7 +36,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: result.error }, { status: 400 });
     }
 
-    // Issue a long-lived verified token
+    // Establish dashboard session (httpOnly cookie) + persist user row
+    await upsertUser(normalizedEmail);
+    await setSession(normalizedEmail);
+
+    // Keep existing verifiedToken response for callers that still read it client-side
     const verifiedToken = createVerifiedToken(normalizedEmail);
 
     return NextResponse.json({ verified: true, verifiedToken });

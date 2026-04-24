@@ -1,0 +1,76 @@
+{
+  "slug": "cursor",
+  "name": "Cursor",
+  "url": "https://cursor.com",
+  "simpleIcon": null,
+  "auditedAt": "2026-04-24T13:58:29.716Z",
+  "status": "ok",
+  "readabilityScore": "Partial",
+  "totalGaps": 3,
+  "criticalGaps": 1,
+  "allGaps": [
+    {
+      "id": "cursor-gap-1",
+      "severity": "critical",
+      "category": "category_conflict",
+      "description": "ChatGPT categorises Cursor as a \"project management tool\" while Claude describes it as a \"design collaboration platform.\" The two positions imply different competitor sets and different buyers.",
+      "modelsAffected": ["chatgpt", "claude"],
+      "whatFileNeeds": "Positioning section with explicit category and \"not this\" statements.",
+      "evidence": {
+        "chatgptSays": "Cursor is a project management tool for engineering teams.",
+        "claudeSays": "Cursor is a design collaboration and prototyping platform.",
+        "siteContent": "Cursor — the single source of truth for your product team."
+      }
+    },
+    {
+      "id": "cursor-gap-2",
+      "severity": "high",
+      "category": "missing_differentiator",
+      "description": "Neither model names Cursor's actual differentiator — the audit layer that catches AI hallucinations before they ship. Both models describe it as \"another dev tool.\"",
+      "modelsAffected": ["chatgpt", "claude"],
+      "whatFileNeeds": "Positioning: explicit comparisons vs 2–3 well-known alternatives.",
+      "evidence": {
+        "chatgptSays": "Cursor is one of many dev tools in the space, similar to its peers.",
+        "claudeSays": "Cursor offers a standard set of developer-productivity features.",
+        "siteContent": "Cursor is the only tool that checks AI outputs against your design decisions."
+      }
+    },
+    {
+      "id": "cursor-gap-3",
+      "severity": "high",
+      "category": "contradiction",
+      "description": "ChatGPT says Cursor is self-hosted, Claude says it's cloud-only. The site says both are available.",
+      "modelsAffected": ["chatgpt", "claude"],
+      "whatFileNeeds": "Context: deployment options listed plainly.",
+      "evidence": {
+        "chatgptSays": "Cursor runs entirely on your own infrastructure, self-hosted.",
+        "claudeSays": "Cursor is a cloud-only SaaS with no self-hosting option.",
+        "siteContent": "Deploy in the cloud or self-host. Your call."
+      }
+    }
+  ],
+  "draftFile": {
+    "product": {
+      "name": "Cursor",
+      "description": "Cursor — the single source of truth for how AI models should describe this product.",
+      "audience": "product teams that care about getting recommended"
+    },
+    "positioning": {
+      "category": "developer tool",
+      "forWho": "teams of 1–20 people",
+      "notForWho": "Fortune 500 enterprises or regulated industries"
+    },
+    "context": {
+      "pricing": "Free to start. Pro $29/month. Team $99/month.",
+      "stage": "growing"
+    }
+  },
+  "headline": {
+    "category": "category_conflict",
+    "severity": "critical",
+    "description": "ChatGPT categorises Cursor as a \"project management tool\" while Claude describes it as a \"design collaboration platform.\" The two positions imply different competitor sets and different buyers.",
+    "chatgptSays": "Cursor is a project management tool for engineering teams.",
+    "claudeSays": "Cursor is a design collaboration and prototyping platform.",
+    "siteContent": "Cursor — the single source of truth for your product team."
+  }
+}

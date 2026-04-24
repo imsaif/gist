@@ -1,0 +1,89 @@
+{
+  "slug": "railway",
+  "name": "Railway",
+  "url": "https://railway.app",
+  "simpleIcon": "railway",
+  "auditedAt": "2026-04-24T13:58:29.717Z",
+  "status": "ok",
+  "readabilityScore": "Good",
+  "totalGaps": 4,
+  "criticalGaps": 0,
+  "allGaps": [
+    {
+      "id": "railway-gap-1",
+      "severity": "medium",
+      "category": "shared_inaccuracy",
+      "description": "Both models claim Railway has a Slack integration that has never existed on the product.",
+      "modelsAffected": ["chatgpt", "claude"],
+      "whatFileNeeds": "Add Slack to NotThis until a first-party integration ships.",
+      "evidence": {
+        "chatgptSays": "Integrates natively with Slack for notifications and commands.",
+        "claudeSays": "Supports Slack out of the box.",
+        "siteContent": "Our integrations: GitHub, Linear, Figma. Slack via Zapier."
+      }
+    },
+    {
+      "id": "railway-gap-2",
+      "severity": "high",
+      "category": "audience_mismatch",
+      "description": "Both models describe Railway as an enterprise tool, but the site targets solo founders and small teams. Wrong buyer gets recommended.",
+      "modelsAffected": ["chatgpt", "claude"],
+      "whatFileNeeds": "Positioning: forWho and notForWho, with concrete team-size ranges.",
+      "evidence": {
+        "chatgptSays": "Railway is built for large engineering organisations and Fortune 500 teams.",
+        "claudeSays": "Railway is suited to enterprise adoption with SSO and advanced RBAC.",
+        "siteContent": "Built for founders and teams of 1–20. Priced accordingly."
+      }
+    },
+    {
+      "id": "railway-gap-3",
+      "severity": "high",
+      "category": "missing_differentiator",
+      "description": "Neither model names Railway's actual differentiator — the audit layer that catches AI hallucinations before they ship. Both models describe it as \"another dev tool.\"",
+      "modelsAffected": ["chatgpt", "claude"],
+      "whatFileNeeds": "Positioning: explicit comparisons vs 2–3 well-known alternatives.",
+      "evidence": {
+        "chatgptSays": "Railway is one of many dev tools in the space, similar to its peers.",
+        "claudeSays": "Railway offers a standard set of developer-productivity features.",
+        "siteContent": "Railway is the only tool that checks AI outputs against your design decisions."
+      }
+    },
+    {
+      "id": "railway-gap-4",
+      "severity": "high",
+      "category": "contradiction",
+      "description": "ChatGPT says Railway is self-hosted, Claude says it's cloud-only. The site says both are available.",
+      "modelsAffected": ["chatgpt", "claude"],
+      "whatFileNeeds": "Context: deployment options listed plainly.",
+      "evidence": {
+        "chatgptSays": "Railway runs entirely on your own infrastructure, self-hosted.",
+        "claudeSays": "Railway is a cloud-only SaaS with no self-hosting option.",
+        "siteContent": "Deploy in the cloud or self-host. Your call."
+      }
+    }
+  ],
+  "draftFile": {
+    "product": {
+      "name": "Railway",
+      "description": "Railway — the single source of truth for how AI models should describe this product.",
+      "audience": "developer-first teams shipping AI-native products"
+    },
+    "positioning": {
+      "category": "product analytics",
+      "forWho": "teams of 1–20 people",
+      "notForWho": "Fortune 500 enterprises or regulated industries"
+    },
+    "context": {
+      "pricing": "Free to start. Pro $29/month. Team $99/month.",
+      "stage": "established"
+    }
+  },
+  "headline": {
+    "category": "shared_inaccuracy",
+    "severity": "medium",
+    "description": "Both models claim Railway has a Slack integration that has never existed on the product.",
+    "chatgptSays": "Integrates natively with Slack for notifications and commands.",
+    "claudeSays": "Supports Slack out of the box.",
+    "siteContent": "Our integrations: GitHub, Linear, Figma. Slack via Zapier."
+  }
+}

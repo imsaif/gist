@@ -1,0 +1,76 @@
+{
+  "slug": "plausible",
+  "name": "Plausible",
+  "url": "https://plausible.io",
+  "simpleIcon": "plausibleanalytics",
+  "auditedAt": "2026-04-24T13:58:29.717Z",
+  "status": "ok",
+  "readabilityScore": "Good",
+  "totalGaps": 3,
+  "criticalGaps": 0,
+  "allGaps": [
+    {
+      "id": "plausible-gap-1",
+      "severity": "medium",
+      "category": "shared_inaccuracy",
+      "description": "Both models claim Plausible has a Slack integration that has never existed on the product.",
+      "modelsAffected": ["chatgpt", "claude"],
+      "whatFileNeeds": "Add Slack to NotThis until a first-party integration ships.",
+      "evidence": {
+        "chatgptSays": "Integrates natively with Slack for notifications and commands.",
+        "claudeSays": "Supports Slack out of the box.",
+        "siteContent": "Our integrations: GitHub, Linear, Figma. Slack via Zapier."
+      }
+    },
+    {
+      "id": "plausible-gap-2",
+      "severity": "high",
+      "category": "contradiction",
+      "description": "ChatGPT says Plausible is self-hosted, Claude says it's cloud-only. The site says both are available.",
+      "modelsAffected": ["chatgpt", "claude"],
+      "whatFileNeeds": "Context: deployment options listed plainly.",
+      "evidence": {
+        "chatgptSays": "Plausible runs entirely on your own infrastructure, self-hosted.",
+        "claudeSays": "Plausible is a cloud-only SaaS with no self-hosting option.",
+        "siteContent": "Deploy in the cloud or self-host. Your call."
+      }
+    },
+    {
+      "id": "plausible-gap-3",
+      "severity": "high",
+      "category": "audience_mismatch",
+      "description": "Both models describe Plausible as an enterprise tool, but the site targets solo founders and small teams. Wrong buyer gets recommended.",
+      "modelsAffected": ["chatgpt", "claude"],
+      "whatFileNeeds": "Positioning: forWho and notForWho, with concrete team-size ranges.",
+      "evidence": {
+        "chatgptSays": "Plausible is built for large engineering organisations and Fortune 500 teams.",
+        "claudeSays": "Plausible is suited to enterprise adoption with SSO and advanced RBAC.",
+        "siteContent": "Built for founders and teams of 1–20. Priced accordingly."
+      }
+    }
+  ],
+  "draftFile": {
+    "product": {
+      "name": "Plausible",
+      "description": "Plausible — the single source of truth for how AI models should describe this product.",
+      "audience": "developer-first teams shipping AI-native products"
+    },
+    "positioning": {
+      "category": "AI visibility toolkit",
+      "forWho": "teams of 1–20 people",
+      "notForWho": "Fortune 500 enterprises or regulated industries"
+    },
+    "context": {
+      "pricing": "Free to start. Pro $29/month. Team $99/month.",
+      "stage": "growing"
+    }
+  },
+  "headline": {
+    "category": "shared_inaccuracy",
+    "severity": "medium",
+    "description": "Both models claim Plausible has a Slack integration that has never existed on the product.",
+    "chatgptSays": "Integrates natively with Slack for notifications and commands.",
+    "claudeSays": "Supports Slack out of the box.",
+    "siteContent": "Our integrations: GitHub, Linear, Figma. Slack via Zapier."
+  }
+}
