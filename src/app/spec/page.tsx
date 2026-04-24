@@ -23,6 +23,12 @@ export default function SpecPage() {
             Audit
           </Link>
           <Link
+            href="/audited"
+            className="text-ink-secondary hover:text-ink-primary text-sm font-medium transition-colors"
+          >
+            Audited
+          </Link>
+          <Link
             href="/spec"
             className="text-brand-primary hover:text-brand-hover text-sm font-medium transition-colors"
           >

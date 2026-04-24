@@ -48,6 +48,14 @@ npm run build    # Build for production
 
 ## Recent Sessions
 
+### Session 2026-04-24 19:52 (MacBook)
+
+- **Pattern:** Unified site nav across landing, /audited, /spec, /about
+- **Status:** Complete
+- **Files Changed:** 6
+- **Tests Added/Modified:** 0
+- **Notes:** Extracted a shared `SiteHeader` component at `src/components/Layout/SiteHeader.tsx` with `active` prop that highlights the current section in brand colour. Wired it onto every public surface so navigation is consistent: landing (`LandingWithAudit.tsx`), `/audited` index + `/audited/[slug]` detail, `/spec`, `/about`. Nav shows Audit (→ `/`), Audited (→ `/audited`), Spec (→ `/spec`). Removed the bespoke `<header>` markup that was hand-duplicated in each page in favour of the shared component — future nav changes are one-file edits. Typecheck clean, all 5 routes return HTTP 200 after the refactor. (Metric note: `Tests Added/Modified: 1` in the auto-generated block is a false positive from the memory script — no new tests were written.)
+
 ### Session 2026-04-24 19:29 (MacBook)
 
 - **Pattern:** Submit→Track→Improve loop + /audited gallery (post-AEO repositioning)
@@ -129,32 +137,3 @@ npm run build    # Build for production
 - **Notes:** Made gist-design skill distributable and useful for others. Renamed skill/ → skills/gist-design/ for Agent Skills convention. Added quick mode (/gist-design quick for 2-3 turn generation), default-to-audit behavior, argument-hint, and developer-natural trigger phrases to SKILL.md. Wrote 3 new example .gist.design files (Linear, v0, Raycast) with before/after showcase. Created install.sh one-liner installer with sparse clone. Rewrote README with quick-start at top, collapsible before/after preview, and 3 install methods.
 
 ### Session 2026-03-02 16:35 (MacBook)
-
-- **Pattern:** General updates
-- **Status:** Work in progress
-- **Files Changed:** 25
-- **Tests Added/Modified:** 10
-- **Notes:** Audit-first landing page rework. Moved audit flow from /audit into the homepage hero. New flow: Enter URL → email gate (before API calls) → audit runs → results + "Create gist.design" CTA. Created AuditHero (state machine), AuditEmailGate, LandingWithAudit (client wrapper). /audit now redirects to /. Marketing sections hide when audit is active. Removed Audit nav link, updated bottom CTA to "Create your gist.design file".
-
-- **2026-02-25 12:54** | MacBook | Files: 4 | Tests: 0
-  - **Notes:** Added Heroicons to file preview section headings (Product Overview, Positioning, Context, Features). Replaced empty features placeholder with "What gets captured" section showing the 6 feature dimensions (Intent, Interaction model, Design decisions, Patterns, Constraints, States) with icons and descriptions.
-- **2026-02-25 12:27** | MacBook | Files: 20 | Tests: 0
-  - **Notes:** Added email-gated usage limit to prevent API abuse. Stateless HMAC approach (no database): 1 free gist file, then email verification via Resend 6-digit code to continue. Added PRD paste entry state, open questions, constraints, and design decisions to file format. EmailGate modal component, auth API routes, email validation with disposable domain blocking and honeypot. Set up HMAC_SECRET, RESEND_API_KEY, RESEND_FROM_EMAIL env vars locally and on Vercel.
-- **2026-02-25 01:14** | MacBook | Files: 1 | Tests: 0
-  - **Notes:** Changed hero CTA from "Run free audit" to "Create your gist.design" as the primary button. Verified Vercel production has ANTHROPIC_API_KEY set and MOCK_MODE off so live Claude API works for users.
-- **2026-02-23 11:04** | MacBook | Files: 4 | Tests: 0
-  - **Notes:** Deployed gist to Vercel at www.gist.design. Set Anthropic and OpenAI API keys. Optimized audit API to avoid 60s timeout: switched analysis model from Sonnet to Haiku, truncated inputs to analysis prompt, reduced max_tokens, made Perplexity gracefully optional.
-- **2026-02-18 12:09** | MacBook | Files: 1 | Tests: 0
-  - **Notes:** Rewrote README.md from scratch. Old version referenced removed Brief/Map/Rationale modes. New version reflects gist.design positioning, dual distribution (Claude Code skill + web app), file format overview, tool integration table, and 36 AI UX patterns.
-- **2026-02-18 12:01** | MacBook | Files: 6 | Tests: 0
-  - **Notes:** Added Claude Code skill to repo (SKILL.md + references/). Three entry states: create, fix, and audit (reads project files, describes product as AI would, scores readability, highlights gaps). Includes verify flow for before/after comparison and role-adaptive conversation. Updated all GitHub skill links from gist-design-skill to imsaif/gist. Added MIT LICENSE.
-- **2026-02-18 11:36** | MacBook | Files: 3 | Tests: 0
-  - **Notes:** Added dual-channel distribution to landing page: "Generate your gist.design file" section with Claude Code skill (editor) and web app (browser) cards, "Works with Figma MCP" callout, updated Integrations Claude Code entry with skill link, added GitHub icon CTA in hero alongside audit. Created /about page.
-- **2026-02-17 19:20** | MacBook | Files: 3 | Tests: 0
-  - **Notes:** Added full glassmorphism treatment to landing page. Created glass CSS variables and utility classes (.glass, .glass-strong, .glass-subtle, .glass-nav, .ambient-orb). Applied frosted glass surfaces with luminous borders to all cards, tables, nav, bento grid, CTA, and HowItWorks illustrations. Added ambient glow orbs behind each section. Increased hero section height for breathing room.
-- **2026-02-17 18:00** | MacBook | Files: 30 | Tests: 0
-  - **Notes:** Redesigned landing page with Landio-style tall cards for "How it works" and "Who this is for" sections. Added audit feature with LLM verification flow, export panel updates, and prompt enhancements.
-- **2026-02-11 22:38** | MacBook | Files: 4 | Tests: 0
-  - **Notes:** Updated landing page copy for dual audience (AI coding tools + LLMs). Added AEO (AI Engine Optimization) framing throughout Background, Proposal, llms.txt, Format, and Generate sections. Added "What this file solves" failure-mode table. Removed all em dashes from page copy.
-- **2026-02-11 22:04** | MacBook | Files: 77 | Tests: 0
-  - **Notes:** Major refactor: removed all old skills (Brief, Map, Critique, etc.), updated .gist.design file format with Positioning, Context, Goal, and Core Anxiety fields across types/parser/prompt/export/components. Rebuilt landing page as long-form documentation/spec page. Improved text accessibility (WCAG AAA contrast) and restored hero gradient background.

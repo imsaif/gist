@@ -17,6 +17,18 @@ export default function AboutPage() {
         </Link>
         <nav className="flex items-center gap-6">
           <Link
+            href="/"
+            className="text-ink-secondary hover:text-ink-primary text-sm font-medium transition-colors"
+          >
+            Audit
+          </Link>
+          <Link
+            href="/audited"
+            className="text-ink-secondary hover:text-ink-primary text-sm font-medium transition-colors"
+          >
+            Audited
+          </Link>
+          <Link
             href="/spec"
             className="text-ink-secondary hover:text-ink-primary text-sm font-medium transition-colors"
           >

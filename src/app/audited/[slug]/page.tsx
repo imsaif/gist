@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { loadAllSlugs, loadResult } from '@/lib/gallery/loadResults';
 import { resolveLogo, stripIconTitle } from '@/lib/gallery/logo';
+import { SiteHeader } from '@/components/Layout/SiteHeader';
 import type { GapCategory } from '@/types/audit';
 
 interface Props {
@@ -42,122 +43,129 @@ export default async function AuditedDetail({ params }: Props) {
   });
 
   return (
-    <main className="mx-auto max-w-5xl px-6 py-12">
-      <nav className="mb-8">
-        <Link href="/audited" className="text-ink-secondary hover:text-ink-primary text-sm">
-          ← All 25 audits
-        </Link>
-      </nav>
+    <div className="bg-background-primary min-h-screen">
+      <SiteHeader active="audited" />
+      <main className="mx-auto max-w-5xl px-6 py-12">
+        <nav className="mb-8">
+          <Link href="/audited" className="text-ink-secondary hover:text-ink-primary text-sm">
+            ← All 25 audits
+          </Link>
+        </nav>
 
-      <header className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div className="flex items-center gap-4">
-          <div
-            className="flex h-14 w-14 items-center justify-center rounded-2xl"
-            style={{ background: `${logo.hex}1A`, color: logo.hex }}
-            dangerouslySetInnerHTML={{
-              __html: stripIconTitle(logo.svg).replace('<svg', '<svg width="32" height="32"'),
-            }}
-          />
+        <header className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div className="flex items-center gap-4">
+            <div
+              className="flex h-14 w-14 items-center justify-center rounded-2xl"
+              style={{ background: `${logo.hex}1A`, color: logo.hex }}
+              dangerouslySetInnerHTML={{
+                __html: stripIconTitle(logo.svg).replace('<svg', '<svg width="32" height="32"'),
+              }}
+            />
+            <div>
+              <h1 className="text-ink-primary text-3xl font-bold md:text-4xl">{entry.name}</h1>
+              <a
+                href={entry.url}
+                target="_blank"
+                rel="noreferrer"
+                className="text-ink-secondary hover:text-brand-primary text-sm"
+              >
+                {host} ↗
+              </a>
+            </div>
+          </div>
+          <div className="flex flex-col text-right text-xs">
+            <span className="text-ink-tertiary">Audited</span>
+            <span className="text-ink-secondary">{auditedDate}</span>
+          </div>
+        </header>
+
+        {headline && (
+          <section className="card-interactive mb-12 rounded-3xl p-8 md:p-10">
+            <p className="eyebrow text-ink-secondary mb-3">{headlineEyebrow(headline.category)}</p>
+            <h2 className="text-ink-primary mb-6 text-2xl leading-tight font-bold md:text-3xl">
+              {headline.description}
+            </h2>
+            {headline.chatgptSays && (
+              <blockquote className="border-brand-primary bg-background-secondary text-ink-secondary rounded-r-xl border-l-4 px-5 py-3 text-base italic">
+                &ldquo;{headline.chatgptSays}&rdquo;
+                <footer className="text-ink-tertiary mt-2 text-xs not-italic">
+                  — what ChatGPT told a founder asking about {entry.name}
+                </footer>
+              </blockquote>
+            )}
+          </section>
+        )}
+
+        {headline && (headline.chatgptSays || headline.claudeSays || headline.siteContent) && (
+          <section className="mb-12">
+            <h3 className="text-ink-primary mb-4 text-lg font-semibold">Evidence</h3>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+              <EvidenceCol label="ChatGPT says" text={headline.chatgptSays} />
+              <EvidenceCol label="Claude says" text={headline.claudeSays} />
+              <EvidenceCol label="Site says" text={headline.siteContent} />
+            </div>
+          </section>
+        )}
+
+        <section className="mb-12 grid grid-cols-1 gap-8 md:grid-cols-[1fr_360px]">
           <div>
-            <h1 className="text-ink-primary text-3xl font-bold md:text-4xl">{entry.name}</h1>
-            <a
-              href={entry.url}
-              target="_blank"
-              rel="noreferrer"
-              className="text-ink-secondary hover:text-brand-primary text-sm"
-            >
-              {host} ↗
-            </a>
-          </div>
-        </div>
-        <div className="flex flex-col text-right text-xs">
-          <span className="text-ink-tertiary">Audited</span>
-          <span className="text-ink-secondary">{auditedDate}</span>
-        </div>
-      </header>
-
-      {headline && (
-        <section className="card-interactive mb-12 rounded-3xl p-8 md:p-10">
-          <p className="eyebrow text-ink-secondary mb-3">{headlineEyebrow(headline.category)}</p>
-          <h2 className="text-ink-primary mb-6 text-2xl leading-tight font-bold md:text-3xl">
-            {headline.description}
-          </h2>
-          {headline.chatgptSays && (
-            <blockquote className="border-brand-primary bg-background-secondary text-ink-secondary rounded-r-xl border-l-4 px-5 py-3 text-base italic">
-              &ldquo;{headline.chatgptSays}&rdquo;
-              <footer className="text-ink-tertiary mt-2 text-xs not-italic">
-                — what ChatGPT told a founder asking about {entry.name}
-              </footer>
-            </blockquote>
-          )}
-        </section>
-      )}
-
-      {headline && (headline.chatgptSays || headline.claudeSays || headline.siteContent) && (
-        <section className="mb-12">
-          <h3 className="text-ink-primary mb-4 text-lg font-semibold">Evidence</h3>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-            <EvidenceCol label="ChatGPT says" text={headline.chatgptSays} />
-            <EvidenceCol label="Claude says" text={headline.claudeSays} />
-            <EvidenceCol label="Site says" text={headline.siteContent} />
-          </div>
-        </section>
-      )}
-
-      <section className="mb-12 grid grid-cols-1 gap-8 md:grid-cols-[1fr_360px]">
-        <div>
-          <h3 className="text-ink-primary mb-4 text-lg font-semibold">
-            All {entry.totalGaps ?? 0} issues
-          </h3>
-          <ul className="border-border-primary divide-border-primary divide-y overflow-hidden rounded-2xl border">
-            {entry.allGaps?.map((g) => (
-              <li key={g.id} className="p-4">
-                <div className="mb-1 flex flex-wrap items-center gap-2">
-                  <SeverityChip severity={g.severity} />
-                  <span className="text-ink-tertiary text-xs">{g.category.replace(/_/g, ' ')}</span>
-                  <span className="text-ink-tertiary text-xs">· {g.modelsAffected.join(', ')}</span>
-                </div>
-                <p className="text-ink-primary text-sm">{g.description}</p>
-                {g.whatFileNeeds && (
-                  <p className="text-ink-secondary mt-1 text-xs">
-                    <strong>Patch:</strong> {g.whatFileNeeds}
-                  </p>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <aside className="border-border-primary bg-background-secondary rounded-2xl border p-6">
-          <div className="mb-4 flex items-center justify-between">
-            <h3 className="text-ink-primary text-sm font-semibold">
-              The <code className="text-brand-primary">.gist.design</code> patch
+            <h3 className="text-ink-primary mb-4 text-lg font-semibold">
+              All {entry.totalGaps ?? 0} issues
             </h3>
+            <ul className="border-border-primary divide-border-primary divide-y overflow-hidden rounded-2xl border">
+              {entry.allGaps?.map((g) => (
+                <li key={g.id} className="p-4">
+                  <div className="mb-1 flex flex-wrap items-center gap-2">
+                    <SeverityChip severity={g.severity} />
+                    <span className="text-ink-tertiary text-xs">
+                      {g.category.replace(/_/g, ' ')}
+                    </span>
+                    <span className="text-ink-tertiary text-xs">
+                      · {g.modelsAffected.join(', ')}
+                    </span>
+                  </div>
+                  <p className="text-ink-primary text-sm">{g.description}</p>
+                  {g.whatFileNeeds && (
+                    <p className="text-ink-secondary mt-1 text-xs">
+                      <strong>Patch:</strong> {g.whatFileNeeds}
+                    </p>
+                  )}
+                </li>
+              ))}
+            </ul>
           </div>
-          <DraftFilePreview draftFile={entry.draftFile} />
-          <div className="mt-6 grid grid-cols-3 gap-2 text-center">
-            <ScoreMetric label="Readability" value={entry.readabilityScore ?? '—'} />
-            <ScoreMetric label="Issues" value={`${entry.totalGaps ?? 0}`} />
-            <ScoreMetric label="Critical" value={`${entry.criticalGaps ?? 0}`} />
-          </div>
-        </aside>
-      </section>
 
-      <section className="border-border-primary mt-16 rounded-3xl border p-10 text-center">
-        <h3 className="text-ink-primary mb-3 text-2xl font-bold">
-          Run this audit on your own product.
-        </h3>
-        <p className="text-ink-secondary mb-6">
-          Free. One URL, 60 seconds, and you&apos;ll know what ChatGPT invented about you.
-        </p>
-        <Link
-          href="/"
-          className="bg-brand-primary hover:bg-brand-hover inline-block rounded-full px-6 py-3 font-medium text-white"
-        >
-          Audit my product →
-        </Link>
-      </section>
-    </main>
+          <aside className="border-border-primary bg-background-secondary rounded-2xl border p-6">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="text-ink-primary text-sm font-semibold">
+                The <code className="text-brand-primary">.gist.design</code> patch
+              </h3>
+            </div>
+            <DraftFilePreview draftFile={entry.draftFile} />
+            <div className="mt-6 grid grid-cols-3 gap-2 text-center">
+              <ScoreMetric label="Readability" value={entry.readabilityScore ?? '—'} />
+              <ScoreMetric label="Issues" value={`${entry.totalGaps ?? 0}`} />
+              <ScoreMetric label="Critical" value={`${entry.criticalGaps ?? 0}`} />
+            </div>
+          </aside>
+        </section>
+
+        <section className="border-border-primary mt-16 rounded-3xl border p-10 text-center">
+          <h3 className="text-ink-primary mb-3 text-2xl font-bold">
+            Run this audit on your own product.
+          </h3>
+          <p className="text-ink-secondary mb-6">
+            Free. One URL, 60 seconds, and you&apos;ll know what ChatGPT invented about you.
+          </p>
+          <Link
+            href="/"
+            className="bg-brand-primary hover:bg-brand-hover inline-block rounded-full px-6 py-3 font-medium text-white"
+          >
+            Audit my product →
+          </Link>
+        </section>
+      </main>
+    </div>
   );
 }
 
