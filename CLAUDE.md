@@ -48,6 +48,14 @@ npm run build    # Build for production
 
 ## Recent Sessions
 
+### Session 2026-04-27 13:14 (MacBook)
+
+- **Pattern:** Strategy / next-steps planning (no code)
+- **Status:** Complete
+- **Files Changed:** 0
+- **Tests Added/Modified:** 0
+- **Notes:** Strategy session, no code changes. Confirmed status against the 04-24 repositioning plan: `/audited` gallery shipped (`77c269e`), unified nav shipped (`afdca54`), and the `.gist.design` spec is now public at github.com/imsaif/gist (MIT) — marked item 1 of the post-gallery roadmap done in `~/.claude/projects/.../memory/project_gist_repositioning.md`. Discussed `npx gist-audit <url>` (CLI wrapper around `src/lib/audit/runAudit.ts`, BYO keys, terminal report + optional `.gist.design` patch output) but recommended deferring it. **Recommended next step:** run the gallery audit for real before any distribution push — `data/gallery/results/*.json` are still mock (e.g. linear.json claims "Slack integration that has never existed", which is false), so any outreach now would burn credibility. Proposed order: real gallery run → spot-check + fix false positives → outreach to 3 sharpest audits to start moving 30-day gate metrics → CLI in week 3/4. Open follow-up: 30-day gate (25 indexed pages, 1k impressions, 500+ sessions, 50+ inbound audits, 1 audited company engaging) due ~2026-05-24.
+
 ### Session 2026-04-24 19:52 (MacBook)
 
 - **Pattern:** Unified site nav across landing, /audited, /spec, /about
@@ -129,11 +137,3 @@ npm run build    # Build for production
 - **Notes:** Tech debt cleanup: deleted stale TODO.md, dead /audit route, unused simple-icons dep, dead queryPerplexity code, legacy PatternCard props, dead nav links. Polished Claude Code skill (SKILL.md): added detailed audit scoring rubric, quality checklist (11 checks), common mistakes section, product type guidance (SaaS/CLI/API/mobile/AI-native/plugins), better quick mode (reads repo first, generates 2-3 features), fixed file writing to use Write tool. Upgraded Spark Mail example with Positioning and Context sections.
 
 ### Session 2026-03-04 17:45 (MacBook)
-
-- **Pattern:** General updates
-- **Status:** Work in progress
-- **Files Changed:** 15
-- **Tests Added/Modified:** 0
-- **Notes:** Made gist-design skill distributable and useful for others. Renamed skill/ → skills/gist-design/ for Agent Skills convention. Added quick mode (/gist-design quick for 2-3 turn generation), default-to-audit behavior, argument-hint, and developer-natural trigger phrases to SKILL.md. Wrote 3 new example .gist.design files (Linear, v0, Raycast) with before/after showcase. Created install.sh one-liner installer with sparse clone. Rewrote README with quick-start at top, collapsible before/after preview, and 3 install methods.
-
-### Session 2026-03-02 16:35 (MacBook)
