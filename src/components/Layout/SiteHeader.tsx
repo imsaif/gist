@@ -25,9 +25,6 @@ export function SiteHeader({ active, sticky = true }: SiteHeaderProps) {
         <Link href="/" className={cls('audit')}>
           Audit
         </Link>
-        <Link href="/audited" className={cls('audited')}>
-          Audited
-        </Link>
         <Link href="/spec" className={cls('spec')}>
           Spec
         </Link>

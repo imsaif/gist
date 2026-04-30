@@ -48,6 +48,14 @@ npm run build    # Build for production
 
 ## Recent Sessions
 
+### Session 2026-04-30 14:42 (MacBook)
+
+- **Pattern:** Audit pipeline validation + /audited gallery hidden
+- **Status:** Complete
+- **Files Changed:** 5
+- **Tests Added/Modified:** 0
+- **Notes:** Verified the audit pipeline runs end-to-end. First confirmed mock-mode SSE flow (fetched → 2× llm_response → analysis → done) via `curl /api/audit`, then added user-supplied `OPENAI_API_KEY` to `.env.local`, flipped `MOCK_MODE=false`, and ran a real audit against `https://linear.app`: site fetched (8520 chars), GPT-4o (~6s) and Claude (~22s) responses streamed in parallel, Haiku analysis returned valid JSON (`gaps: []`, `readabilityScore: "Good"`, populated `draftFile`). Notable: real audit returned 0 gaps for Linear, contradicting the existing mock `data/gallery/results/linear.json` that claims fabricated Slack integrations — confirms the 04-27 false-positive concern. Then **hid (not deleted) the `/audited` gallery** per user request: removed nav links from `SiteHeader.tsx` (kept `'audited'` in active type union so gallery pages still typecheck), removed "Audited" link + "see 25 founder tools we've already audited" CTA from `LandingWithAudit.tsx`, removed Audited links from `/about` and `/spec` headers, and removed `/audited` + 25 slug entries from `sitemap.ts` (dropped the `loadAllSlugs` import). All gallery files preserved intact: `src/app/audited/`, `src/lib/gallery/`, `data/gallery/`, `scripts/build-gallery.ts`, `scripts/mockAnalysis.ts`, `simple-icons` dep, and the `build-gallery` npm script — restoring later = re-add nav links + sitemap entries. Route still reachable by direct URL. Typecheck clean, all 4 public routes (`/`, `/spec`, `/about`, `/audited`) return 200, sitemap.xml contains 0 audited references. Discussed (didn't execute) the experiment design for validating that a `.gist.design` file actually closes audit gaps: 3-condition A/B/C (cold / site-only / site+gist), held-out generalization check, written-first answer key for aiex, and cross-product replication on a site where LLMs have strong priors (e.g. Linear). Open question for next session: who writes the gist file (Claude from audit vs. user by hand) and whether to test on aiex only or aiex + one mainstream site.
+
 ### Session 2026-04-27 13:14 (MacBook)
 
 - **Pattern:** Strategy / next-steps planning (no code)
@@ -129,11 +137,3 @@ npm run build    # Build for production
 - **Notes:** Fixed audit false positives: scraper was stripping nav/header/svg/aria-hidden elements which removed real interactive features (search, filters). Analysis prompt now warns that scraped content is partial and won't flag plausible features as fabricated. LLM errors (like ChatGPT 429) now passed as explicit exclusion markers to analysis instead of empty strings.
 
 ### Session 2026-03-09 16:42 (MacBook)
-
-- **Pattern:** General updates
-- **Status:** Work in progress
-- **Files Changed:** 11
-- **Tests Added/Modified:** 0
-- **Notes:** Tech debt cleanup: deleted stale TODO.md, dead /audit route, unused simple-icons dep, dead queryPerplexity code, legacy PatternCard props, dead nav links. Polished Claude Code skill (SKILL.md): added detailed audit scoring rubric, quality checklist (11 checks), common mistakes section, product type guidance (SaaS/CLI/API/mobile/AI-native/plugins), better quick mode (reads repo first, generates 2-3 features), fixed file writing to use Write tool. Upgraded Spark Mail example with Positioning and Context sections.
-
-### Session 2026-03-04 17:45 (MacBook)
