@@ -138,7 +138,7 @@ export default async function AuditedDetail({ params }: Props) {
           <aside className="border-border-primary bg-background-secondary rounded-2xl border p-6">
             <div className="mb-4 flex items-center justify-between">
               <h3 className="text-ink-primary text-sm font-semibold">
-                The <code className="text-brand-primary">.gist.design</code> patch
+                The <code className="text-brand-primary">.gist</code> patch
               </h3>
             </div>
             <DraftFilePreview draftFile={entry.draftFile} />

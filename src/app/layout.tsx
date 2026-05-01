@@ -16,33 +16,33 @@ const satoshi = localFont({
   adjustFontFallback: 'Arial',
 });
 
-const baseUrl = 'https://www.gist.design';
+const baseUrl = 'https://llmsgist.org';
 
 export const metadata: Metadata = {
   title: {
-    default: 'gistaudit — See how AI describes your product',
-    template: '%s | gistaudit',
+    default: 'llms.gist — See how AI describes your product',
+    template: '%s | llms.gist',
   },
   description:
-    'Audit what ChatGPT, Claude, and Perplexity say about your product. Fix the gaps. Track drift over time.',
+    'Audit what ChatGPT and Claude say about your product. Fix the gaps with an llms.gist file.',
   metadataBase: new URL(baseUrl),
   alternates: {
     canonical: baseUrl,
   },
   openGraph: {
-    title: 'gistaudit — See how AI describes your product',
+    title: 'llms.gist — See how AI describes your product',
     description:
-      'Audit what ChatGPT, Claude, and Perplexity say about your product. Fix the gaps. Track drift over time.',
+      'Audit what ChatGPT and Claude say about your product. Fix the gaps with an llms.gist file.',
     url: baseUrl,
-    siteName: 'gistaudit',
+    siteName: 'llms.gist',
     locale: 'en_US',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'gistaudit — See how AI describes your product',
+    title: 'llms.gist — See how AI describes your product',
     description:
-      'Audit what ChatGPT, Claude, and Perplexity say about your product. Fix the gaps. Track drift over time.',
+      'Audit what ChatGPT and Claude say about your product. Fix the gaps with an llms.gist file.',
   },
   robots: {
     index: true,

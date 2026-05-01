@@ -47,7 +47,7 @@ export async function POST(request: Request) {
     }
 
     // Send email via Resend
-    const fromEmail = process.env.RESEND_FROM_EMAIL || 'noreply@gist.design';
+    const fromEmail = process.env.RESEND_FROM_EMAIL || 'noreply@llmsgist.org';
     const { error: resendError } = await resend.emails.send({
       from: `Gist <${fromEmail}>`,
       to: normalizedEmail,

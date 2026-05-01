@@ -17,14 +17,14 @@ const steps = [
     number: '02',
     title: 'Generate your file',
     description:
-      'Answer guided questions about your design decisions, positioning, and boundaries. The conversation tool turns your thinking into a structured gist.design file.',
+      'Answer guided questions about your design decisions, positioning, and boundaries. The conversation tool turns your thinking into a structured .gist file.',
   },
   {
     label: 'Verify',
     number: '03',
     title: 'Verify and deploy',
     description:
-      'Re-run the audit with your gist.design file attached. See the before/after improvement, then drop the file in your repo root.',
+      'Re-run the audit with your .gist file attached. See the before/after improvement, then drop the file in your repo root.',
   },
 ];
 
@@ -107,7 +107,7 @@ function FillGapsIllustration() {
       <div className="flex-1 rounded-lg border border-white/[0.08] bg-white/[0.05] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)] backdrop-blur-sm">
         <div className="flex items-center gap-2 border-b border-white/[0.06] px-3 py-2">
           <div className="bg-brand-primary/20 h-2 w-2 rounded-full" />
-          <span className="text-brand-primary text-[10px] font-semibold">product.gist.design</span>
+          <span className="text-brand-primary text-[10px] font-semibold">product.gist</span>
         </div>
         <div className="space-y-1.5 px-3 py-2.5">
           <div className="flex gap-2">
@@ -197,7 +197,7 @@ function VerifyIllustration() {
         </div>
         <div>
           <span className="text-ink-primary text-[11px] font-medium">Drop in repo root</span>
-          <p className="text-ink-tertiary font-mono text-[9px]">/gist.design</p>
+          <p className="text-ink-tertiary font-mono text-[9px]">/.gist</p>
         </div>
       </div>
     </div>

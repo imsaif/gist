@@ -1,5 +1,5 @@
 // ============================================
-// gist.design File Types
+// .gist File Types
 // ============================================
 
 export type SectionStatus = 'empty' | 'partial' | 'complete';
@@ -91,7 +91,7 @@ export interface FeatureExecution {
   visualReferences: string[];
 }
 
-// A single Feature in the gist.design file
+// A single Feature in the .gist file
 export interface Feature {
   id: string;
   name: string;
@@ -106,7 +106,7 @@ export interface Feature {
   execution?: FeatureExecution;
 }
 
-// The full gist.design file
+// The full .gist file
 export interface GistDesignFile {
   product: ProductOverview;
   positioning: Positioning;

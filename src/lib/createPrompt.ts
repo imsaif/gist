@@ -34,7 +34,7 @@ export const CREATE_INITIAL_MESSAGES_NEW: Message[] = [
     id: '1',
     role: 'assistant',
     content:
-      "Let's create a gist.design file for your product. This will capture your design decisions in a format that AI coding tools can read.\n\nWhat are you building? Give me the elevator pitch.",
+      "Let's create a .gist file for your product. This will capture your design decisions in a format that AI coding tools can read.\n\nWhat are you building? Give me the elevator pitch.",
     timestamp: new Date(),
   },
 ];
@@ -44,7 +44,7 @@ export const CREATE_INITIAL_MESSAGES_EXISTING: Message[] = [
     id: '1',
     role: 'assistant',
     content:
-      "Let's create a gist.design file for your existing product. We'll document the design decisions that are already in your head so AI tools stop guessing.\n\nWhat's the product, and what's the feature that causes the most confusion when other people (or AI tools) try to build on it?",
+      "Let's create a .gist file for your existing product. We'll document the design decisions that are already in your head so AI tools stop guessing.\n\nWhat's the product, and what's the feature that causes the most confusion when other people (or AI tools) try to build on it?",
     timestamp: new Date(),
   },
 ];
@@ -54,7 +54,7 @@ export const CREATE_INITIAL_MESSAGES_PRD: Message[] = [
     id: '1',
     role: 'assistant',
     content:
-      "Paste your PRD below. I'll read through it and build your gist.design file, asking clarifying questions about design decisions that aren't covered.",
+      "Paste your PRD below. I'll read through it and build your .gist file, asking clarifying questions about design decisions that aren't covered.",
     timestamp: new Date(),
   },
 ];
@@ -68,7 +68,7 @@ export function getAuditInitialMessages(gapCount: number): Message[] {
     {
       id: '1',
       role: 'assistant',
-      content: `I've reviewed your AI readability audit. ${gapCount} gap${gapCount !== 1 ? 's were' : ' was'} found in how LLMs describe your product. Let's build a gist.design file that fixes ${gapCount === 1 ? 'this' : 'these'}.
+      content: `I've reviewed your AI readability audit. ${gapCount} gap${gapCount !== 1 ? 's were' : ' was'} found in how LLMs describe your product. Let's build a .gist file that fixes ${gapCount === 1 ? 'this' : 'these'}.
 
 I'll focus on the critical gaps first. To start: tell me what your product actually does, in your own words. I want to compare your description with what the LLMs said.`,
       timestamp: new Date(),
@@ -109,7 +109,7 @@ export function buildAuditContextBlock(analysis: GapAnalysis): string {
 const AUDIT_CONTEXT_PROMPT = `
 ## Audit Context
 
-This conversation started from an AI readability audit. The user's product was described by 2 LLMs (ChatGPT and Claude) and gaps were identified. Your job is to help create a gist.design file that fixes these gaps.
+This conversation started from an AI readability audit. The user's product was described by 2 LLMs (ChatGPT and Claude) and gaps were identified. Your job is to help create a .gist file that fixes these gaps.
 
 ### How to use the audit findings:
 
@@ -256,11 +256,11 @@ export function getCreateSystemPrompt(auditContext?: string): string {
   const patternList = getPatternsForAIContext();
   const auditSection = auditContext ? `\n${AUDIT_CONTEXT_PROMPT}\n\n${auditContext}\n` : '';
 
-  return `You are Gist, a design consultant who helps product teams create gist.design files — structured documents that make design decisions readable to AI coding tools and LLMs.
+  return `You are Gist, a design consultant who helps product teams create .gist files — structured documents that make design decisions readable to AI coding tools and LLMs.
 
 ## Your Purpose
 
-You guide a conversation that produces a gist.design file. This file captures:
+You guide a conversation that produces a .gist file. This file captures:
 - **Product overview**: What it is, who it's for, how AI fits in
 - **Positioning**: Category, who it's for, who it's NOT for, competitor comparisons
 - **Context**: Pricing, integrations, requirements, stage
@@ -297,7 +297,7 @@ ${patternList}
 
 **Existing product**: User has a product already. Start with the feature that causes the most confusion, then work outward.
 
-**Have a PRD**: User pastes a PRD or spec. Read it thoroughly, extract product info and design decisions into the gist.design file, then ask clarifying questions about design decisions that aren't covered in the document.
+**Have a PRD**: User pastes a PRD or spec. Read it thoroughly, extract product info and design decisions into the .gist file, then ask clarifying questions about design decisions that aren't covered in the document.
 
 ### Conversation Flow
 
@@ -333,7 +333,7 @@ Then move to the next feature.
 
 After each response, include updates in these XML tags:
 
-### File Update (for building the gist.design file)
+### File Update (for building the .gist file)
 
 <file_update>
 {
@@ -428,7 +428,7 @@ When you identify a concrete before/after example, include:
       "id": "ba-1",
       "featureId": "feature-id",
       "without": "AI guesses modal for every action",
-      "with": "gist.design says: inline editing, modals only for destructive actions",
+      "with": ".gist says: inline editing, modals only for destructive actions",
       "source": "design-decision"
     }
   ]
@@ -446,7 +446,7 @@ When you identify a concrete before/after example, include:
 - Execution: scalars overwrite, keyCopy and visualReferences append
 - States and Execution are optional — only include when the user provides implementation-level detail
 - Use stable kebab-case IDs for features (e.g., "ai-suggestions", "user-onboarding")
-- Include before_after_update when you discover a clear contrast between "without" and "with" the gist.design guidance
+- Include before_after_update when you discover a clear contrast between "without" and "with" the .gist guidance
 
 ## Pattern Identification
 

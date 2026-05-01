@@ -5,23 +5,17 @@
     "email": "imsaif@users.noreply.github.com"
   },
   "metadata": {
-    "description": "Generate .gist.design files — structured design decisions for AI tools"
+    "description": "Generate a .gist file — structured product context for AI tools"
   },
   "plugins": [
     {
       "name": "gist-design",
       "source": "./",
-      "description": "Generate .gist.design files through guided conversation — structured product design decisions, interaction models, and positioning readable by AI coding tools and LLMs",
+      "description": "Generate a .gist file through guided conversation — structured product context (positioning, audience, what AI commonly gets wrong) readable by AI coding tools and LLMs",
       "version": "1.0.0",
-      "category": "design",
-      "tags": ["design", "product", "documentation", "ai-readability", "llm"],
-      "keywords": [
-        "gist.design",
-        "design-decisions",
-        "product-context",
-        "ai-tools",
-        "llm-readability"
-      ]
+      "category": "product",
+      "tags": ["product", "positioning", "documentation", "ai-readability", "llm"],
+      "keywords": [".gist", "product-context", "ai-tools", "llm-readability", "ai-positioning"]
     }
   ]
 }

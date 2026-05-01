@@ -2,7 +2,7 @@
 
 Source: [aiuxdesign.guide](https://aiuxdesign.guide) — 36 patterns from 50+ shipped products
 
-When a user describes behavior that matches a pattern below, name it naturally in conversation, explain what makes their implementation specific, and include the pattern URL in the gist.design file.
+When a user describes behavior that matches a pattern below, name it naturally in conversation, explain what makes their implementation specific, and include the pattern URL in the .gist file.
 
 Only reference patterns when the user's description genuinely matches. Don't force patterns where none exist.
 

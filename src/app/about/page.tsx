@@ -2,9 +2,9 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'About — gistaudit',
+  title: 'About — llms.gist',
   description:
-    'gistaudit tracks how ChatGPT, Claude, and Perplexity describe your product, and helps you fix what they get wrong.',
+    'llms.gist shows how ChatGPT and Claude describe your product, and helps you fix what they get wrong with an llms.gist file.',
 };
 
 export default function AboutPage() {
@@ -13,7 +13,7 @@ export default function AboutPage() {
       {/* Header */}
       <header className="glass-nav sticky top-0 z-50 flex h-14 items-center justify-between px-6">
         <Link href="/" className="text-ink-primary text-xl font-semibold">
-          gistaudit
+          llms.gist
         </Link>
         <nav className="flex items-center gap-6">
           <Link
@@ -38,7 +38,7 @@ export default function AboutPage() {
       <section className="bg-background-grain bg-grain relative">
         <div className="mx-auto max-w-2xl px-6 pt-16 pb-12 md:pt-24 md:pb-16">
           <h1 className="text-ink-primary text-5xl font-extrabold tracking-tight md:text-6xl">
-            About gistaudit
+            About llms.gist
           </h1>
         </div>
       </section>
@@ -48,9 +48,9 @@ export default function AboutPage() {
           <section>
             <h2 className="text-ink-primary mb-3 text-xl font-semibold">What this is</h2>
             <p className="text-ink-secondary text-base leading-relaxed">
-              gistaudit shows you how AI tools describe your product — and tracks it over time.
-              Audit your URL, see what ChatGPT, Claude, and Perplexity say, and get a downloadable
-              fix file that patches the context LLMs are missing.
+              llms.gist shows you how AI tools describe your product. Audit your URL, see what
+              ChatGPT and Claude say, and get a downloadable fix file that patches the context LLMs
+              are missing.
             </p>
           </section>
 
@@ -78,7 +78,7 @@ export default function AboutPage() {
               across positioning, category accuracy, feature claims, and audience fit. Gaps become a
               downloadable{' '}
               <code className="bg-background-secondary rounded px-1.5 py-0.5 text-sm">
-                .gist.design
+                llms.gist
               </code>{' '}
               file you can drop into your repo or paste into Cursor, Claude Code, or ChatGPT.
             </p>
@@ -93,15 +93,15 @@ export default function AboutPage() {
               Built on an open standard
             </h2>
             <p className="text-ink-secondary text-base leading-relaxed">
-              The fix file is{' '}
+              The fix file is a{' '}
               <Link
                 href="/spec"
                 className="text-brand-primary hover:text-brand-hover transition-colors"
               >
-                gist.design
+                .gist
               </Link>
               , an open format for AI-readable product context. Anyone can author one by hand or
-              with the Claude Code skill. gistaudit produces one as the output of every audit. The
+              with the Claude Code skill. llms.gist produces one as the output of every audit. The
               spec is MIT-licensed and tool-agnostic.
             </p>
           </section>
@@ -161,14 +161,14 @@ export default function AboutPage() {
 
       <footer className="py-12">
         <div className="mx-auto flex max-w-2xl items-center justify-between px-6">
-          <span className="text-ink-tertiary text-sm">gistaudit · 2026</span>
+          <span className="text-ink-tertiary text-sm">llms.gist · 2026</span>
           <span className="text-ink-tertiary text-sm">
             Built on the open{' '}
             <Link
               href="/spec"
               className="text-ink-secondary hover:text-ink-primary transition-colors"
             >
-              gist.design
+              .gist
             </Link>{' '}
             spec
           </span>

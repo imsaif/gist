@@ -1,11 +1,11 @@
 {
   "name": "gist-design",
-  "description": "Generate .gist.design files through guided conversation — structured product design decisions, interaction models, and positioning readable by AI coding tools and LLMs",
+  "description": "Generate a .gist file through guided conversation — structured product context (positioning, audience, what AI commonly gets wrong) readable by AI coding tools and LLMs",
   "version": "1.0.0",
   "author": {
     "name": "imsaif"
   },
-  "homepage": "https://www.gist.design",
+  "homepage": "https://llmsgist.org",
   "repository": "https://github.com/imsaif/gist",
   "license": "MIT"
 }

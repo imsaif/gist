@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 
-const baseUrl = 'https://www.gist.design';
+const baseUrl = 'https://llmsgist.org';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [

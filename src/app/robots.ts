@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/api/', '/create'],
       },
     ],
-    sitemap: 'https://www.gist.design/sitemap.xml',
+    sitemap: 'https://llmsgist.org/sitemap.xml',
   };
 }

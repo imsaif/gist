@@ -66,7 +66,7 @@ export function createBeforeAfterItem(overrides: Partial<BeforeAfterItem> = {}):
     id: 'ba-1',
     featureId: 'test-feature',
     without: 'AI guesses everything',
-    with: 'gist.design provides guidance',
+    with: '.gist provides guidance',
     source: 'design-decision',
     ...overrides,
   };

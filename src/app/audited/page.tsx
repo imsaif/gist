@@ -24,9 +24,7 @@ export default function AuditedIndex() {
           </h1>
           <p className="text-ink-secondary text-xl">
             One click per tool. What the models invented, what they got confused about, and the{' '}
-            <code className="bg-background-secondary rounded px-1.5 py-0.5 text-base">
-              .gist.design
-            </code>{' '}
+            <code className="bg-background-secondary rounded px-1.5 py-0.5 text-base">.gist</code>{' '}
             patch that would fix it.
           </p>
         </header>

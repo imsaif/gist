@@ -18,17 +18,17 @@ export async function POST(request: Request) {
       await new Promise((r) => setTimeout(r, 2000));
       const mockResult: VerificationResult = {
         before: originalResponse,
-        after: `This product is a design decision documentation tool that generates structured .gist.design files. It helps product teams capture their design rationale, interaction models, and product positioning in a format readable by AI coding tools and LLMs.
+        after: `This product audits how AI tools describe your product and outputs a .gist file — structured product context that LLMs read so they stop guessing or fabricating.
 
 Key features:
-- Guided conversation to extract design decisions
-- Structured output covering intent, interaction model, design decisions, patterns, constraints, and boundaries
-- Explicit positioning section for AI engine optimization (AEO)
-- Export to .gist.design markdown format
+- Audit ChatGPT and Claude to surface fabrications, category drift, and audience mismatches
+- Generate a .gist file capturing positioning, audience, "not for", and before/after corrections
+- Re-run anytime when you ship features or change positioning
+- Open standard — drop in your repo, paste into ChatGPT, point Cursor or Claude Code at it
 
-The product is for product designers, PMs, and founders who want AI tools to build features that match their design intent. It is NOT a prototyping tool, design system, or project management solution.
+The product is for founders, PMs, and engineering teams who want AI tools to describe their product accurately instead of inventing features it doesn't have.
 
-It differentiates from llms.txt by capturing information that doesn't exist in written form: the reasoning behind design decisions.`,
+It complements llms.txt: llms.txt tells LLMs what exists, .gist tells them how to talk about it.`,
         fixedGaps: [
           'Product category correctly identified',
           'No competitor blending detected',
@@ -42,16 +42,16 @@ It differentiates from llms.txt by capturing information that doesn't exist in w
 
     const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-    const verifyPrompt = `You are verifying whether a gist.design file improves how an LLM describes a product.
+    const verifyPrompt = `You are verifying whether a .gist file improves how an LLM describes a product.
 
-## Original LLM response (without gist.design):
+## Original LLM response (without .gist):
 ${originalResponse}
 
-## The gist.design file that was created:
+## The .gist file that was created:
 ${gistDesignMarkdown}
 
 ## Your task:
-Now, describe the product at ${url} as if you had the gist.design file as context. Give a fresh, accurate description based on the structured design decisions in the file.
+Now, describe the product at ${url} as if you had the .gist file as context. Give a fresh, accurate description based on the structured design decisions in the file.
 
 Then analyze what improved and what gaps remain.
 

@@ -256,7 +256,7 @@ describe('getCreateSystemPrompt', () => {
   it('contains core instructions', () => {
     const prompt = getCreateSystemPrompt();
     expect(prompt).toContain('You are Gist');
-    expect(prompt).toContain('gist.design');
+    expect(prompt).toContain('.gist file');
     expect(prompt).toContain('<file_update>');
   });
 

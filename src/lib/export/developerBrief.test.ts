@@ -44,12 +44,12 @@ describe('generateDeveloperBrief', () => {
     expect(brief).toContain('### Copilot');
   });
 
-  it('embeds the full gist.design markdown', () => {
+  it('embeds the full .gist markdown', () => {
     const file = createGistDesignFile({
       product: { name: 'TestApp', description: 'A test app', audience: null, aiApproach: null },
     });
     const brief = generateDeveloperBrief(file, []);
-    expect(brief).toContain('## Full gist.design File');
+    expect(brief).toContain('## Full .gist File');
     expect(brief).toContain('# TestApp');
     expect(brief).toContain('A test app');
   });

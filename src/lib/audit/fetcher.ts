@@ -12,7 +12,7 @@ export async function fetchSiteContent(url: string): Promise<FetchedContent> {
     const response = await fetch(url, {
       signal: controller.signal,
       headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; GistDesignBot/1.0; +https://gist.design)',
+        'User-Agent': 'Mozilla/5.0 (compatible; GistBot/1.0; +https://llmsgist.org)',
         Accept: 'text/html,application/xhtml+xml',
       },
     });

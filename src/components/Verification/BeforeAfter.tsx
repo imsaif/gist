@@ -11,7 +11,7 @@ export function BeforeAfter({ before, after }: BeforeAfterProps) {
           <span className="rounded-full bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-700">
             Before
           </span>
-          <span className="text-ink-tertiary text-xs">Without gist.design</span>
+          <span className="text-ink-tertiary text-xs">Without .gist</span>
         </div>
         <p className="text-ink-secondary text-sm leading-relaxed whitespace-pre-wrap">{before}</p>
       </div>
@@ -21,7 +21,7 @@ export function BeforeAfter({ before, after }: BeforeAfterProps) {
           <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-700">
             After
           </span>
-          <span className="text-ink-tertiary text-xs">With gist.design</span>
+          <span className="text-ink-tertiary text-xs">With .gist</span>
         </div>
         <p className="text-ink-secondary text-sm leading-relaxed whitespace-pre-wrap">{after}</p>
       </div>

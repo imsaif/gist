@@ -1,11 +1,7 @@
 export { AuditInput } from './AuditInput';
-export { AuditLoading } from './AuditLoading';
-export { AuditResults } from './AuditResults';
-export { LLMResponseCard } from './LLMResponseCard';
-export { GapAnalysis } from './GapAnalysis';
+export { ConflictChips } from './ConflictChips';
+export { InlineProgress } from './InlineProgress';
 export { GapItem } from './GapItem';
-export { ReadabilityScore } from './ReadabilityScore';
-export { AuditToConversation } from './AuditToConversation';
-export { VerifyPrompt } from './VerifyPrompt';
 export { AuditEmailGate } from './AuditEmailGate';
 export { AuditHero } from './AuditHero';
+export { VerifyPrompt } from './VerifyPrompt';

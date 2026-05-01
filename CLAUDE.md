@@ -6,7 +6,7 @@
 
 - **Domain:** gist.design
 - **Stack:** Next.js 14+, TypeScript, Tailwind CSS, Claude API
-- **Purpose:** Generate structured `.gist.design` files from conversational design decisions
+- **Purpose:** Audit how AI tools describe your product and generate a `.gist` file (open format) that fixes the gaps
 - **Distribution:** Two channels — Claude Code skill (primary for developers) + web app at /create (for non-developers)
 - **Claude Code skill:** `skills/gist-design/` subfolder (SKILL.md + references/) — isolated from web app
 
@@ -21,7 +21,7 @@
 - `src/types/patterns.ts` - Pattern type definitions
 - `src/lib/createPrompt.ts` - System prompt, initial state, initial messages
 - `src/lib/fileParser.ts` - Parses `<file_update>`, `<before_after_update>`, `<pattern_identified>`
-- `src/lib/export/markdown.ts` - Generates .gist.design markdown
+- `src/lib/export/markdown.ts` - Generates .gist markdown
 - `src/lib/export/developerBrief.ts` - Generates developer brief
 - `src/lib/patterns/` - Pattern data loader and matcher
 - `src/data/patterns.json` - All 28 AI UX patterns
@@ -31,7 +31,7 @@
 
 ## Architecture Notes
 
-- Single tool: Create (generates `.gist.design` files)
+- Single tool: Create (generates `.gist` files)
 - Two-panel layout: Chat (left 40%), File Preview (right 60%)
 - AI responses contain XML tags: `<file_update>`, `<before_after_update>`, `<pattern_identified>`
 - PatternCard appears inline in chat when AI identifies relevant patterns
@@ -47,6 +47,14 @@ npm run build    # Build for production
 ```
 
 ## Recent Sessions
+
+### Session 2026-04-30 21:19 (MacBook)
+
+- **Pattern:** Full rebrand to llms.gist + dwc-style landing + chip-based audit + dedicated /fix and /audit pages
+- **Status:** Complete (code); domain migration pending Vercel/DNS
+- **Files Changed:** 58
+- **Tests Added/Modified:** 5
+- **Notes:** Massive multi-track rebrand session. **Track 1 — file extension `.gist.design` → `.gist`** (38+ files): hardcoded download filename in `AuditHero.tsx`, AI prompts in `createPrompt.ts` + `audit/prompts.ts`, all marketing copy across `LandingWithAudit.tsx`, `page.tsx`, `about/page.tsx`, `layout.tsx` (3 metadata spots), all Audit/Create/Verification components, `developerBrief.ts` reframe from "design decisions" to "product context", `examples/*.gist.design` × 4 + `skills/gist-design/references/example-*.gist.design` × 4 renamed via `git mv` (history preserved), README + `.claude-plugin/{plugin,marketplace}.json` descriptions updated; skill name `gist-design` deliberately kept to avoid breaking installed plugin. **Track 2 — `/spec` page reframe** from "design decisions for AI tools" to "product context for AI"; H1 changed to `.gist`, file placement convention now `/llms.gist` mirroring `/llms.txt`. **Track 3 — naming convention locked to `llms.txt` mirror**: file = `.gist` (extension/format), canonical filename at project root = `llms.gist`, spec domain = `llmsgist.org`, brand = `gist`/`llms.gist`. Domain swapped in code: `layout.tsx`, `sitemap.ts`, `robots.ts`, `fetcher.ts` (User-Agent + `GistDesignBot` → `GistBot`), `request-code/route.ts` Resend From, `plugin.json` homepage, README — all now `llmsgist.org`. **Track 4 — brand text** `gistaudit` → `llms.gist` everywhere (header, page titles, OG/Twitter meta, footer, body copy on /about). **Track 5 — landing redesign** dwc-style: removed glass-nav + grain texture, flat header, big tracking-tight H1 ("AI doesn't know your product. llms.gist makes sure it knows."), narrow subtitle, URL input + bullet-separator trust line ("Free · No signup · 60 seconds"), 4 minimal feature cards (Audit / Generate / Open standard / Re-run), single-screen layout with no scroll on desktop. Cut Linear example audit section, "Built on open standard" callout, final CTA bottom card, `HeroResultPreview` from above-fold. **Track 6 — audit UX rework**: hero now stays visible through ALL audit phases. New `ConflictChips.tsx` groups gaps by category with severity-coloured chips ("2 Fabrications", "1 Audience drift") and Fix button; new `InlineProgress.tsx` replaces full-screen `AuditLoading` with compact streaming dots (●● ChatGPT/Claude). After audit completes, chips appear below input + "Fix conflicts →" button + "Check the full audit →" link + "Audit a different URL". 0-conflict state shows celebratory "✓ No conflicts — ChatGPT and Claude agree on your product" with the report link still available (but no Fix button). **Track 7 — split into two new pages**: `src/app/fix/page.tsx` reads audit_result from sessionStorage, renders `<GapFixer>` with download/copy handlers (writes `llms.gist` filename); `src/app/audit/page.tsx` is the full-proof report page with both LLMResponseCards (restored from git) + conflict table + sticky bottom Fix CTA. Refresh on either page redirects to `/` if no audit data. Extracted `buildFileFromAudit` to `src/lib/audit/buildFile.ts`. **Track 8 — dead code purge**: deleted `AuditResults.tsx`, `GapAnalysis.tsx`, `ReadabilityScore.tsx`, `AuditLoading.tsx`, `AuditToConversation.tsx`, `Section`/`PillarCard`/`AuditMock`/`FixMock`/`TrackMock` from `page.tsx`. **Track 9 — /audited gallery hidden** (separate sub-task): removed nav links from SiteHeader/LandingWithAudit/about/spec, removed sitemap entries; gallery files preserved in repo. **Verified end-to-end**: real audit against `linear.app` (0 gaps, honest result) and `aiuxdesign.guide` (3 conflicts including 2 fabrications); 221 tests passing throughout; routes `/`, `/audit`, `/fix`, `/spec`, `/about` all return 200; landing HTML has 0 stale `gist.design` file-ext refs. **Plan file** at `/Users/imranmohammed/.claude/plans/how-does-gist-sound-distributed-breeze.md` — went through three iterations (rename, file/domain mirror, UX refactor). **Domain migration still pending** (see follow-up below).
 
 ### Session 2026-04-30 14:42 (MacBook)
 
@@ -129,11 +137,3 @@ npm run build    # Build for production
 - **Notes:** Redesigned audit results UI: gaps now display as a single sorted table (Issue/Fix/Severity columns) instead of grouped card lists. Removed hero title/description and gradient background when audit is active for clean transition. Widened audit layout to max-w-7xl. Improved summary bar with 4-column grid metrics, larger font sizes, and more padding throughout all audit components.
 
 ### Session 2026-03-09 16:58 (MacBook)
-
-- **Pattern:** General updates
-- **Status:** Work in progress
-- **Files Changed:** 3
-- **Tests Added/Modified:** 0
-- **Notes:** Fixed audit false positives: scraper was stripping nav/header/svg/aria-hidden elements which removed real interactive features (search, filters). Analysis prompt now warns that scraped content is partial and won't flag plausible features as fabricated. LLM errors (like ChatGPT 429) now passed as explicit exclusion markers to analysis instead of empty strings.
-
-### Session 2026-03-09 16:42 (MacBook)

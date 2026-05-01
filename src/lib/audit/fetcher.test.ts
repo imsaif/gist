@@ -164,7 +164,7 @@ describe('fetchSiteContent', () => {
       'https://example.com',
       expect.objectContaining({
         headers: expect.objectContaining({
-          'User-Agent': expect.stringContaining('GistDesignBot'),
+          'User-Agent': expect.stringContaining('GistBot'),
         }),
       })
     );

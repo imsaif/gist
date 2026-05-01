@@ -1,4 +1,4 @@
-# gist.design
+# gist
 
 > One file that makes your product readable to every AI tool.
 
@@ -14,27 +14,27 @@ Then in Claude Code:
 /gist-design
 ```
 
-It audits how AI tools see your project and generates a `.gist.design` file to fix the gaps.
+It audits how AI tools see your project and generates a `.gist` file to fix the gaps.
 
 ---
 
 ## Why
 
-AI tools — coding assistants like Cursor and Claude Code, agents like ChatGPT and Perplexity — can read your product's HTML and docs. They can't read your design decisions, interaction rationale, rejected alternatives, or what your product is NOT. So they guess.
+AI tools — coding assistants like Cursor and Claude Code, agents like ChatGPT and Claude — can read your product's HTML and docs. They can't read your positioning, audience, "not for", or what AI tools commonly get wrong about you. So they guess.
 
-gist.design fixes that. A single structured file at your project root that captures how your product actually works and why — readable by any AI tool.
+A `.gist` file fixes that. A single structured file at your project root that captures what your product is, who it's for, and what AI tools commonly get wrong — readable by any AI tool.
 
 ```
 robots.txt    → for crawlers      → "What can you access?"
 sitemap.xml   → for search engines → "What pages exist?"
 llms.txt      → for AI tools       → "What content matters?"
-gist.design   → for AI tools       → "How does it actually work, and why?"
+.gist         → for AI tools       → "How should you talk about this product?"
 ```
 
 <details>
-<summary><strong>See the difference: Linear without vs. with gist.design</strong></summary>
+<summary><strong>See the difference: Linear without vs. with .gist</strong></summary>
 
-### Before (without gist.design)
+### Before (without .gist)
 
 > Linear is a fast, modern project management tool similar to Jira. It offers sprint planning, issue tracking, and team collaboration features. It's designed to be faster and more streamlined than traditional project management tools, with a clean interface and keyboard shortcuts.
 
@@ -44,7 +44,7 @@ gist.design   → for AI tools       → "How does it actually work, and why?"
 - "Sprint planning" — Linear uses Cycles, not Sprints. Cycles auto-schedule, don't require ceremonies, and unfinished issues roll forward.
 - "Keyboard shortcuts" — Undersells it. Linear is keyboard-_first_. Triage is designed around single-keypress actions.
 
-### After (with gist.design)
+### After (with .gist)
 
 > Linear is a keyboard-first issue tracker with an opinionated workflow. Issues flow through a fixed pipeline: Triage → Backlog → Active (via Cycles) → Done. There are no customizable workflows or configurable issue types. Cycles auto-schedule and roll unfinished work forward — there are no sprint ceremonies. The triage flow is designed around single-keypress actions: press `1` to move to backlog, `2` to assign a cycle, `D` to dismiss. This is not Jira with a faster UI. It's a different philosophy: fewer options, stronger opinions, faster execution.
 
@@ -93,7 +93,7 @@ Three modes in Claude Code:
 ```
 
 - **Audit** — reads your repo, describes your product as AI tools would, scores readability, highlights gaps
-- **Quick** — one question, then generates a starter `.gist.design` file you can refine later
+- **Quick** — one question, then generates a starter `.gist` file you can refine later
 - **Create** — guided conversation that documents features, decisions, and boundaries in depth
 
 ## What the file captures
@@ -112,11 +112,11 @@ See [skills/gist-design/references/file-format.md](skills/gist-design/references
 
 ## Examples
 
-- [linear.gist.design](examples/linear.gist.design) — opinionated project management
-- [v0.gist.design](examples/v0.gist.design) — iterative AI UI generation
-- [raycast.gist.design](examples/raycast.gist.design) — extensible desktop launcher with AI
-- [spark-mail.gist.design](examples/spark-mail.gist.design) — AI email composition
-- [BEFORE-AFTER.md](examples/BEFORE-AFTER.md) — what AI gets wrong without vs. with gist.design
+- [linear.gist](examples/linear.gist) — opinionated project management
+- [v0.gist](examples/v0.gist) — iterative AI UI generation
+- [raycast.gist](examples/raycast.gist) — extensible desktop launcher with AI
+- [spark-mail.gist](examples/spark-mail.gist) — AI email composition
+- [BEFORE-AFTER.md](examples/BEFORE-AFTER.md) — what AI gets wrong without vs. with .gist
 
 ## Using the file with your tools
 
@@ -130,7 +130,7 @@ See [skills/gist-design/references/file-format.md](skills/gist-design/references
 
 ## Web app
 
-Also available at [www.gist.design](https://www.gist.design) — no installation needed.
+Also available at [llmsgist.org](https://llmsgist.org) — no installation needed.
 
 ## Development (web app)
 
@@ -153,7 +153,6 @@ cp .env.example .env.local
 ```env
 ANTHROPIC_API_KEY=your_api_key_here   # Required for /create and /audit
 OPENAI_API_KEY=your_api_key_here      # Required for /audit (ChatGPT queries)
-PERPLEXITY_API_KEY=your_api_key_here  # Optional for /audit (Perplexity queries)
 MOCK_MODE=true                        # Set to use mock responses without API keys
 ```
 
@@ -170,7 +169,7 @@ npm start        # Start production server
 - **Framework:** Next.js 14+ (App Router)
 - **Language:** TypeScript
 - **Styling:** Tailwind CSS
-- **AI:** Claude API (Anthropic), OpenAI API, Perplexity API
+- **AI:** Claude API (Anthropic), OpenAI API
 - **Deployment:** Vercel
 
 ## Pattern Library

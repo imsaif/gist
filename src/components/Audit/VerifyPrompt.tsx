@@ -10,9 +10,9 @@ interface VerifyPromptProps {
 export function VerifyPrompt({ url, gistDesignMarkdown }: VerifyPromptProps) {
   const [copied, setCopied] = useState(false);
 
-  const prompt = `I have a gist.design file for the product at ${url}. Using this context, describe what the product does, how it works, what makes it different, and who it's for.
+  const prompt = `I have a .gist file for the product at ${url}. Using this context, describe what the product does, how it works, what makes it different, and who it's for.
 
-Here is the gist.design file:
+Here is the .gist file:
 
 ${gistDesignMarkdown}`;
 
@@ -34,8 +34,8 @@ ${gistDesignMarkdown}`;
         </button>
       </div>
       <p className="text-ink-tertiary mb-3 text-xs">
-        Paste this prompt into ChatGPT, Claude, or Perplexity to see how they describe your product
-        with the gist.design file as context.
+        Paste this prompt into ChatGPT or Claude to see how they describe your product with the
+        .gist file as context.
       </p>
       <pre className="bg-background-secondary text-ink-secondary max-h-32 overflow-y-auto rounded-lg p-3 text-xs">
         {prompt.slice(0, 200)}...

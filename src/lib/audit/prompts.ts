@@ -101,7 +101,7 @@ ${JSON.stringify(
         category: 'contradiction',
         description: 'Clear description of the conflict',
         modelsAffected: ['chatgpt', 'claude'],
-        whatFileNeeds: 'What a gist.design file should include to fix this',
+        whatFileNeeds: 'What a .gist file should include to fix this',
         evidence: {
           chatgptSays: 'Direct quote from ChatGPT response',
           claudeSays: 'Direct quote from Claude response',

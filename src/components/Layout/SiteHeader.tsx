@@ -19,7 +19,7 @@ export function SiteHeader({ active, sticky = true }: SiteHeaderProps) {
     >
       <Link href="/" className="text-ink-primary flex items-center gap-2 text-xl font-semibold">
         <GistIcon className="h-6 w-6" />
-        gistaudit
+        llms.gist
       </Link>
       <nav className="flex items-center gap-6">
         <Link href="/" className={cls('audit')}>

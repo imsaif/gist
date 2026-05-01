@@ -46,16 +46,12 @@ export function BeforeAfterPreview({ items, file }: BeforeAfterPreviewProps) {
                   >
                     {/* Without */}
                     <div className="border-border-primary border-r p-3">
-                      <div className="mb-1 text-xs font-medium text-red-500">
-                        Without gist.design
-                      </div>
+                      <div className="mb-1 text-xs font-medium text-red-500">Without .gist</div>
                       <p className="text-ink-secondary text-sm">{item.without}</p>
                     </div>
                     {/* With */}
                     <div className="p-3">
-                      <div className="mb-1 text-xs font-medium text-green-600">
-                        With gist.design
-                      </div>
+                      <div className="mb-1 text-xs font-medium text-green-600">With .gist</div>
                       <p className="text-ink-secondary text-sm">{item.with}</p>
                     </div>
                     {/* Source indicator */}

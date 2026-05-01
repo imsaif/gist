@@ -13,7 +13,7 @@ export default function SpecPage() {
     <div className="bg-background-primary min-h-screen">
       <header className="flex h-14 items-center justify-between px-6">
         <Link href="/" className="text-ink-primary text-xl font-semibold">
-          gistaudit
+          llms.gist
         </Link>
         <nav className="flex items-center gap-6">
           <Link
@@ -37,12 +37,13 @@ export default function SpecPage() {
           <div className="max-w-3xl">
             <div className="eyebrow mb-3">Open specification</div>
             <h1 className="text-ink-primary mb-4 text-5xl font-extrabold tracking-tight md:text-6xl">
-              gist.design
+              .gist
             </h1>
             <p className="text-ink-secondary mb-6 text-lg leading-relaxed">
-              An open file format for making product design decisions readable to AI tools. Captures
-              positioning, interaction rationale, rejected alternatives, and boundaries — the
-              context AI coding assistants and LLMs cannot infer from your HTML.
+              An open file format that tells AI tools what your product is, who it&apos;s for, and
+              what they commonly get wrong. Positioning, audience, &ldquo;not for&rdquo;, and
+              before/after corrections — the context LLMs and AI coding assistants can&apos;t infer
+              from your HTML.
             </p>
             <p className="text-ink-secondary mb-6 text-base leading-relaxed">
               Free to use, community-maintained, and tool-agnostic. Works alongside{' '}
@@ -54,13 +55,13 @@ export default function SpecPage() {
               >
                 llms.txt
               </a>
-              . Generate a file yourself with the Claude Code skill below, or produce one as the
-              output of an audit at{' '}
+              . Generate one yourself with the Claude Code skill below, or produce one as the output
+              of an audit at{' '}
               <Link
                 href="/"
                 className="text-brand-primary hover:text-brand-hover transition-colors"
               >
-                gistaudit
+                llms.gist
               </Link>
               .
             </p>
@@ -111,23 +112,27 @@ export default function SpecPage() {
                   </td>
                 </tr>
                 <tr className="bg-brand-primary/[0.08]">
-                  <td className="text-brand-primary px-5 py-3.5 font-semibold">gist.design</td>
+                  <td className="text-brand-primary px-5 py-3.5 font-semibold">.gist</td>
                   <td className="text-ink-primary px-5 py-3.5 font-medium">
                     LLMs and AI coding tools — how should you talk about this product? Positioning,
-                    boundaries, audience, design rationale.
+                    audience, boundaries, and corrections.
                   </td>
                 </tr>
                 <tr>
                   <td className="text-ink-primary px-5 py-3.5 font-medium">File placement</td>
                   <td className="text-ink-secondary px-5 py-3.5">
                     <code className="bg-background-secondary rounded px-1.5 py-0.5 text-sm">
-                      /gist.design
+                      /llms.gist
                     </code>{' '}
-                    in the project root, or{' '}
+                    at the project root (mirrors{' '}
                     <code className="bg-background-secondary rounded px-1.5 py-0.5 text-sm">
-                      /features/[name]/gist.design
+                      /llms.txt
+                    </code>
+                    ), or{' '}
+                    <code className="bg-background-secondary rounded px-1.5 py-0.5 text-sm">
+                      /features/[name].gist
                     </code>{' '}
-                    for multi-feature products.
+                    for per-feature variants.
                   </td>
                 </tr>
               </tbody>
@@ -158,16 +163,15 @@ export default function SpecPage() {
             </div>
             <div className="card-interactive border-brand-primary/40 border-2 p-6">
               <code className="bg-brand-primary/20 text-brand-primary mb-3 inline-block rounded px-2 py-1 text-sm font-semibold">
-                gist.design
+                .gist
               </code>
               <h3 className="text-ink-primary mb-2 text-lg font-semibold">How to talk about it</h3>
               <p className="text-ink-secondary text-base leading-relaxed">
-                Positioning, boundaries, and design rationale. Stops LLMs from getting your product
-                wrong.
+                Positioning, audience, and corrections. Stops LLMs from getting your product wrong.
               </p>
               <p className="text-ink-tertiary mt-4 text-sm italic">
-                &ldquo;Not for enterprise. No Gantt charts by design. Chose manual scheduling
-                because teams want control.&rdquo;
+                &ldquo;Not for enterprise. No Gantt charts. ChatGPT often calls this a project
+                manager — it&apos;s an issue tracker.&rdquo;
               </p>
             </div>
           </div>
@@ -207,8 +211,8 @@ export default function SpecPage() {
             Format and example
           </h2>
           <p className="text-ink-secondary mb-8 max-w-3xl text-base leading-relaxed">
-            The gist.design file follows a structured markdown format. Below is the template
-            alongside a completed example.
+            A .gist file is structured markdown. Below is the template alongside a completed
+            example.
           </p>
 
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
@@ -220,7 +224,7 @@ export default function SpecPage() {
 
 > One line: what this is and who it's for.
 
-Generated by gist.design · Date
+Generated by gist · Date
 
 
 ## Intent
@@ -300,7 +304,7 @@ Generated by gist.design · Date
 > users draft, refine, and reply to emails. For busy
 > professionals who write 30+ emails a day.
 
-Generated by gist.design · February 2026
+Generated by gist · February 2026
 
 
 ## Intent
@@ -446,11 +450,11 @@ Generated by gist.design · February 2026
 
       <footer className="py-12">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6">
-          <span className="text-ink-tertiary text-sm">gist.design spec · MIT licensed</span>
+          <span className="text-ink-tertiary text-sm">.gist spec · MIT licensed</span>
           <span className="text-ink-tertiary text-sm">
             Maintained by{' '}
             <Link href="/" className="text-ink-secondary hover:text-ink-primary transition-colors">
-              gistaudit
+              llms.gist
             </Link>
           </span>
         </div>

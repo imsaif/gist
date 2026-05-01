@@ -28,7 +28,6 @@ export function HeroResultPreview() {
             {[
               { name: 'ChatGPT', score: 78 },
               { name: 'Claude', score: 81 },
-              { name: 'Perplexity', score: 58 },
             ].map((m) => (
               <div
                 key={m.name}
@@ -55,15 +54,15 @@ export function HeroResultPreview() {
               severity: 'warning' as const,
               type: 'Audience drift',
               issue:
-                'Perplexity recommends Linear to "enterprise project managers" — Linear positions exclusively for product engineering teams.',
-              source: 'Perplexity',
+                'Claude describes Linear as a tool for "professional teams" — broader than Linear\'s explicit product engineering focus.',
+              source: 'Claude',
             },
             {
               severity: 'good' as const,
               type: 'Positioning',
               issue:
-                'All three models correctly identify Linear as a tool for fast-moving software teams, not a generic project tracker.',
-              source: 'All models',
+                'Both models correctly identify Linear as a tool for software teams, not a generic project tracker.',
+              source: 'Both models',
             },
           ].map((row, i) => (
             <div

@@ -1,88 +1,34 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { AuditResult, LLMProvider, LLMResponse, GapAnalysis, Gap } from '@/types/audit';
-import { GistDesignFile, ProductOverview } from '@/types/file';
-import { INITIAL_GIST_FILE } from '@/lib/createPrompt';
-import { generateGistDesignMarkdown } from '@/lib/export/markdown';
+import { useRouter } from 'next/navigation';
+import { AuditResult, LLMProvider, LLMResponse, GapAnalysis } from '@/types/audit';
 import { parseSSEEvents } from '@/lib/audit/sseParser';
 import { AuditInput } from './AuditInput';
-import { AuditLoading } from './AuditLoading';
-import { AuditResults } from './AuditResults';
+import { ConflictChips } from './ConflictChips';
+import { InlineProgress } from './InlineProgress';
 import { AuditEmailGate } from './AuditEmailGate';
-import { GapFixer } from '@/components/Create/GapFixer';
-import { Toast } from '@/components/Toast';
 
 type AuditPhase =
   | 'input'
-  | 'email-gate'
   | 'fetching'
   | 'querying'
   | 'analyzing'
   | 'complete'
-  | 'fixing'
+  | 'email-gate'
   | 'error';
 
 interface AuditHeroProps {
   onPhaseChange?: (phase: string) => void;
 }
 
-function buildFileFromAudit(result: AuditResult): {
-  file: GistDesignFile;
-  initialFile: GistDesignFile | null;
-  gaps: Gap[];
-} {
-  const analysis = result.analysis;
-  if (!analysis) return { file: INITIAL_GIST_FILE, initialFile: null, gaps: [] };
-
-  const draft = analysis.draftFile;
-  const gaps = analysis.gaps ?? [];
-
-  if (draft?.product && draft?.positioning && draft?.context) {
-    const prefilledFile: GistDesignFile = {
-      product: {
-        name: draft.product.name || '',
-        description: draft.product.description || '',
-        audience: draft.product.audience || '',
-        aiApproach: null,
-      },
-      positioning: {
-        category: draft.positioning.category || '',
-        forWho: draft.positioning.forWho || '',
-        notForWho: draft.positioning.notForWho || '',
-        comparisons: [],
-      },
-      context: {
-        pricing: draft.context.pricing || '',
-        integratesWith: [],
-        requires: [],
-        stage: draft.context.stage || '',
-      },
-      features: [],
-    };
-    return {
-      file: prefilledFile,
-      initialFile: structuredClone(prefilledFile),
-      gaps,
-    };
-  }
-
-  return { file: INITIAL_GIST_FILE, initialFile: null, gaps };
-}
-
 export function AuditHero({ onPhaseChange }: AuditHeroProps) {
+  const router = useRouter();
   const [phase, setPhase] = useState<AuditPhase>('input');
   const [url, setUrl] = useState('');
   const [responses, setResponses] = useState<Partial<Record<LLMProvider, LLMResponse>>>({});
   const [result, setResult] = useState<AuditResult | null>(null);
   const [errorMessage, setErrorMessage] = useState('');
-  const [remaining] = useState<number | undefined>(undefined);
-
-  // Gap fixer state
-  const [file, setFile] = useState<GistDesignFile>(INITIAL_GIST_FILE);
-  const [initialFile, setInitialFile] = useState<GistDesignFile | null>(null);
-  const [auditGaps, setAuditGaps] = useState<Gap[]>([]);
-  const [toast, setToast] = useState({ isVisible: false, message: '' });
 
   const updatePhase = useCallback(
     (newPhase: AuditPhase) => {
@@ -111,9 +57,7 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
           throw new Error(errorData.error || `HTTP ${response.status}`);
         }
 
-        if (!response.body) {
-          throw new Error('No response stream');
-        }
+        if (!response.body) throw new Error('No response stream');
 
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
@@ -205,251 +149,106 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
     updatePhase('input');
   };
 
-  const enterFixFlow = useCallback(() => {
+  const goToFixPage = useCallback(() => {
     if (!result) return;
-    const ctx = buildFileFromAudit(result);
-    setFile(ctx.file);
-    setInitialFile(ctx.initialFile);
-    setAuditGaps(ctx.gaps);
-    updatePhase('fixing');
-  }, [result, updatePhase]);
+    try {
+      sessionStorage.setItem('audit_result', JSON.stringify(result));
+    } catch {
+      // sessionStorage may be unavailable; navigation still proceeds
+    }
+    router.push('/fix');
+  }, [result, router]);
 
   const handleFixGaps = () => {
     if (!result) return;
     if (sessionStorage.getItem('audit_email')) {
-      enterFixFlow();
+      goToFixPage();
     } else {
       updatePhase('email-gate');
     }
   };
 
   const handleEmailUnlocked = () => {
-    enterFixFlow();
+    goToFixPage();
   };
 
-  const handleProductFieldChange = useCallback((field: keyof ProductOverview, value: string) => {
-    setFile((prev) => ({
-      ...prev,
-      product: { ...prev.product, [field]: value },
-    }));
-  }, []);
-
-  const handlePositioningFieldChange = useCallback(
-    (field: 'category' | 'forWho' | 'notForWho', value: string) => {
-      setFile((prev) => ({
-        ...prev,
-        positioning: { ...prev.positioning, [field]: value },
-      }));
-    },
-    []
-  );
-
-  const handleContextFieldChange = useCallback((field: 'pricing' | 'stage', value: string) => {
-    setFile((prev) => ({
-      ...prev,
-      context: { ...prev.context, [field]: value },
-    }));
-  }, []);
-
-  const handleDownload = useCallback(() => {
-    const markdown = generateGistDesignMarkdown(file);
-    const blob = new Blob([markdown], { type: 'text/markdown' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${(file.product.name || 'untitled').toLowerCase().replace(/\s+/g, '-')}.gist.design`;
-    a.click();
-    URL.revokeObjectURL(url);
-    setToast({ isVisible: true, message: 'File downloaded' });
-  }, [file]);
-
-  const handleCopyMarkdown = useCallback(() => {
-    const markdown = generateGistDesignMarkdown(file);
-    navigator.clipboard.writeText(markdown);
-    setToast({ isVisible: true, message: 'Copied to clipboard' });
-  }, [file]);
+  const isRunning = phase === 'fetching' || phase === 'querying' || phase === 'analyzing';
 
   return (
-    <div className="w-full">
-      {/* Input phase — inline URL input */}
+    <div className="flex w-full flex-col items-center">
+      {/* URL input — always visible except during email-gate / error */}
+      {phase !== 'email-gate' && phase !== 'error' && (
+        <AuditInput onSubmit={handleUrlSubmit} isLoading={isRunning} />
+      )}
+
+      {/* State-dependent row below the input */}
       {phase === 'input' && (
-        <div className="flex flex-col items-center">
-          <AuditInput onSubmit={handleUrlSubmit} isLoading={false} remaining={remaining} />
+        <div className="text-ink-tertiary mt-5 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-sm">
+          <span>Free</span>
+          <span>·</span>
+          <span>No signup</span>
+          <span>·</span>
+          <span>60 seconds</span>
         </div>
       )}
 
-      {/* Loading phases */}
-      {(phase === 'fetching' || phase === 'querying' || phase === 'analyzing') && (
-        <div className="w-full max-w-7xl">
-          <div className="mb-8 flex items-center justify-between">
-            <div>
-              <h3 className="text-ink-primary text-xl font-bold tracking-tight">Auditing {url}</h3>
-              <p className="text-ink-tertiary mt-1 text-sm">
-                {phase === 'fetching' && 'Fetching your site...'}
-                {phase === 'querying' && 'Asking 2 LLMs about your product...'}
-                {phase === 'analyzing' && 'Analyzing gaps across models...'}
-              </p>
-            </div>
+      {isRunning && (
+        <div className="mt-6">
+          <InlineProgress url={url} phase={phase} responses={responses} />
+        </div>
+      )}
+
+      {phase === 'complete' && result && (
+        <div className="mt-8 w-full max-w-2xl">
+          <ConflictChips gaps={result.analysis?.gaps ?? []} onFix={handleFixGaps} />
+          <div className="mt-4 flex justify-center">
             <button
-              onClick={handleReset}
-              className="border-border-primary text-ink-secondary hover:bg-background-secondary rounded-full border px-4 py-2 text-sm font-medium transition-colors"
+              onClick={() => {
+                try {
+                  sessionStorage.setItem('audit_result', JSON.stringify(result));
+                } catch {}
+                router.push('/audit');
+              }}
+              className="text-ink-secondary hover:text-ink-primary text-sm font-medium underline underline-offset-2 transition-colors"
             >
-              New audit
+              Check the full audit →
             </button>
           </div>
-          <AuditLoading responses={responses} isFetching={phase === 'fetching'} />
+          <div className="mt-6 flex justify-center">
+            <button
+              onClick={handleReset}
+              className="text-ink-tertiary hover:text-ink-primary text-xs font-medium transition-colors"
+            >
+              Audit a different URL
+            </button>
+          </div>
         </div>
       )}
 
-      {/* Email gate — after results, before fix flow */}
       {phase === 'email-gate' && (
-        <div className="w-full max-w-7xl">
-          <div className="mb-6 flex items-center justify-between">
-            <div>
-              <h3 className="text-ink-primary text-lg font-semibold">One more step</h3>
-              <p className="text-ink-tertiary text-sm">
-                Enter your email to resolve conflicts and download your fix file
-              </p>
-            </div>
+        <div className="mt-6 w-full max-w-md">
+          <AuditEmailGate onUnlocked={handleEmailUnlocked} />
+          <div className="mt-3 text-center">
             <button
               onClick={() => updatePhase('complete')}
-              className="border-border-primary text-ink-secondary hover:bg-background-secondary rounded-full border px-4 py-2 text-sm font-medium transition-colors"
+              className="text-ink-tertiary hover:text-ink-primary text-xs font-medium transition-colors"
             >
               Back to results
             </button>
           </div>
-          <AuditEmailGate onUnlocked={handleEmailUnlocked} />
         </div>
       )}
 
-      {/* Complete phase — results */}
-      {phase === 'complete' && result && (
-        <div className="w-full max-w-7xl space-y-8 pb-24">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-ink-primary text-xl font-bold tracking-tight">Audit Results</h3>
-              <p className="text-ink-tertiary mt-1 text-sm">{url}</p>
-            </div>
-            <button
-              onClick={handleReset}
-              className="border-border-primary text-ink-secondary hover:bg-background-secondary rounded-full border px-4 py-2 text-sm font-medium transition-colors"
-            >
-              New audit
-            </button>
-          </div>
-          <AuditResults result={result} />
-        </div>
-      )}
-
-      {/* Fixed bottom CTA bar */}
-      {phase === 'complete' && result && (
-        <div className="border-border-primary bg-background-primary/80 fixed right-0 bottom-0 left-0 z-50 border-t backdrop-blur-xl">
-          <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-            <div className="text-sm">
-              {(result.analysis?.summary.totalGaps || 0) === 0 ? (
-                <span className="font-medium text-green-400">
-                  No conflicts found — LLMs agree on your product
-                </span>
-              ) : (
-                <>
-                  <span className="text-ink-secondary">
-                    {result.analysis?.summary.totalGaps || 0} conflict
-                    {(result.analysis?.summary.totalGaps || 0) !== 1 ? 's' : ''} found
-                  </span>
-                  {(result.analysis?.summary.criticalGaps || 0) > 0 && (
-                    <span className="ml-2 font-semibold text-red-400">
-                      {result.analysis?.summary.criticalGaps} critical
-                    </span>
-                  )}
-                </>
-              )}
-            </div>
-            <div className="flex flex-wrap items-center gap-3">
-              {(result.analysis?.summary.totalGaps || 0) > 0 && (
-                <button
-                  onClick={handleFixGaps}
-                  className="bg-brand-primary hover:bg-brand-hover inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white transition-colors"
-                >
-                  Resolve conflicts
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={2}
-                    stroke="currentColor"
-                    className="h-4 w-4"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
-                    />
-                  </svg>
-                </button>
-              )}
-              <a
-                href="/login?next=/onboarding"
-                className="text-ink-primary border-border-primary hover:bg-background-secondary inline-flex items-center gap-2 rounded-full border px-6 py-3 text-sm font-semibold transition-colors"
-              >
-                Track weekly
-              </a>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Fixing phase — gap fixer inline */}
-      {phase === 'fixing' && (
-        <div className="w-full max-w-7xl">
-          <GapFixer
-            gaps={auditGaps}
-            file={file}
-            initialFile={initialFile}
-            onBackToAudit={() => updatePhase('complete')}
-            onProductFieldChange={handleProductFieldChange}
-            onPositioningFieldChange={handlePositioningFieldChange}
-            onContextFieldChange={handleContextFieldChange}
-            onDownload={handleDownload}
-            onCopyMarkdown={handleCopyMarkdown}
-          />
-
-          <Toast
-            message={toast.message}
-            isVisible={toast.isVisible}
-            onClose={() => setToast({ isVisible: false, message: '' })}
-          />
-        </div>
-      )}
-
-      {/* Error phase */}
       {phase === 'error' && (
-        <div className="w-full max-w-md">
-          <div className="border-border-primary bg-background-primary rounded-xl border p-8 text-center">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-500/15">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="h-6 w-6 text-red-500"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
-                />
-              </svg>
-            </div>
-            <h3 className="text-ink-primary mb-2 text-lg font-semibold">Audit failed</h3>
-            <p className="text-ink-secondary mb-6 text-sm">{errorMessage}</p>
-            <button
-              onClick={handleReset}
-              className="bg-brand-primary hover:bg-brand-hover rounded-full px-6 py-3 font-medium text-white transition-colors"
-            >
-              Try again
-            </button>
-          </div>
+        <div className="mt-6 w-full max-w-md text-center">
+          <p className="text-ink-primary mb-2 text-base font-semibold">Audit failed</p>
+          <p className="text-ink-secondary mb-5 text-sm">{errorMessage}</p>
+          <button
+            onClick={handleReset}
+            className="bg-brand-primary hover:bg-brand-hover rounded-full px-5 py-2.5 text-sm font-semibold text-white transition-colors"
+          >
+            Try again
+          </button>
         </div>
       )}
     </div>

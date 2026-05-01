@@ -35,8 +35,8 @@ export function AuditEmailGate({ onUnlocked }: AuditEmailGateProps) {
         Enter your email to download your fix file
       </h3>
       <p className="text-ink-secondary mb-4 text-sm">
-        We&apos;ll send you the .gist.design file and notify you when ChatGPT or Claude change how
-        they describe your product.
+        We&apos;ll send you the llms.gist file and notify you when ChatGPT or Claude change how they
+        describe your product.
       </p>
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <input

@@ -255,7 +255,7 @@ export function GapFixer({
         <p className="text-ink-secondary mb-8 max-w-lg text-sm leading-relaxed">
           Download your{' '}
           <code className="text-ink-primary bg-background-tertiary rounded px-1.5 py-0.5 font-mono text-xs">
-            .gist.design
+            llms.gist
           </code>{' '}
           file and drop it in your project root. AI coding tools will read it automatically.
         </p>
@@ -338,7 +338,7 @@ export function GapFixer({
                 <p className="text-ink-tertiary mt-0.5">
                   Save as{' '}
                   <code className="bg-background-tertiary rounded px-1 py-0.5 font-mono text-xs">
-                    your-product.gist.design
+                    llms.gist
                   </code>{' '}
                   next to your{' '}
                   <code className="bg-background-tertiary rounded px-1 py-0.5 font-mono text-xs">

@@ -125,7 +125,7 @@ function getCreateMockResponse(messages: Message[]): string {
       "id": "ba-1",
       "featureId": "core-feature",
       "without": "AI tool assumes every action should auto-execute",
-      "with": "gist.design says: require user confirmation before executing actions",
+      "with": ".gist says: require user confirmation before executing actions",
       "source": "not-this"
     }
   ]
@@ -190,7 +190,7 @@ Any constraints on this feature? Technical limits, performance budgets, accessib
       "id": "ba-2",
       "featureId": "core-feature",
       "without": "AI tool builds auto-accept for AI suggestions",
-      "with": "gist.design says: chose approval flow over auto-execute because trust is earned",
+      "with": ".gist says: chose approval flow over auto-execute because trust is earned",
       "source": "design-decision"
     }
   ]
@@ -199,7 +199,7 @@ Any constraints on this feature? Technical limits, performance budgets, accessib
   }
 
   if (messageCount >= 10) {
-    return `Your gist.design file is taking shape. We've covered the core feature with intent, interaction model, design decisions, and patterns.
+    return `Your .gist file is taking shape. We've covered the core feature with intent, interaction model, design decisions, and patterns.
 
 Want to add another feature, or are you ready to export what we have? You can always come back and add more later.
 
