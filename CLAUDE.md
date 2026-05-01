@@ -48,6 +48,14 @@ npm run build    # Build for production
 
 ## Recent Sessions
 
+### Session 2026-05-01 17:31 (MacBook)
+
+- **Pattern:** Robot brand icon swap + domain migration (Vercel/DNS guidance)
+- **Status:** Complete
+- **Files Changed:** 2
+- **Tests Added/Modified:** 0
+- **Notes:** Swapped the brand icon to a Material Design robot SVG (24dp, viewBox `0 -960 960 960`) replacing the previous globe+sparkle composition. Updated both surfaces: `src/components/GistIcon.tsx` (header logo, uses `currentColor` so it inherits text color next to the wordmark) and `src/app/icon.svg` (Next.js auto-generated favicon, with `prefers-color-scheme` light/dark fill switching `#1f1f1f` → `#ffffff`). **Out-of-band (dashboard work, no commits)**: walked through the `gist.design` → `llmsgist.org` domain migration on Vercel + Porkbun. User added two DNS records at Porkbun (A `@` → `76.76.21.21`, CNAME `www` → `6b04c54487a094d8.vercel-dns-017.com`) after deleting Porkbun's default parking records. Both `llmsgist.org` and `www.llmsgist.org` now show Valid Configuration in Vercel; user landed on **www-canonical** setup (`llmsgist.org` 307→ `www.llmsgist.org`). Remaining Vercel work for next session: (1) flip 307→301 on the apex redirect (or fully switch to apex-canonical with primary swap), (2) update `gist.design` redirect target from `www.gist.design` → `llmsgist.org` with 301, (3) configure `www.gist.design` as 301 → `llmsgist.org` for old-bookmark catch, (4) optionally update the A record at Porkbun from `76.76.21.21` → `216.198.79.1` per Vercel's "DNS Change Recommended" warning (old IP keeps working, purely cosmetic). Resend domain verification for `llmsgist.org` also still pending (separate from DNS migration). Open question: user hasn't decided apex vs www canonical — current state is www-canonical, my recommendation was apex.
+
 ### Session 2026-04-30 21:19 (MacBook)
 
 - **Pattern:** Full rebrand to llms.gist + dwc-style landing + chip-based audit + dedicated /fix and /audit pages
@@ -129,11 +137,3 @@ npm run build    # Build for production
 - **Notes:** Built audit-to-fix flow: after audit completes, floating CTA bar leads to progressive gap-fixer (one question per gap, sorted by severity). Removed standalone /create flow and chat drawer — audit-only MVP. Added draftFile pre-fill from audit analysis, editable fields with gap highlights, download + copy-to-clipboard + setup instructions on done screen, and LLM benefits section (stops blending, prevents fabrication, improves codegen, accurate recommendations).
 
 ### Session 2026-03-09 17:25 (MacBook)
-
-- **Pattern:** General updates
-- **Status:** Work in progress
-- **Files Changed:** 7
-- **Tests Added/Modified:** 0
-- **Notes:** Redesigned audit results UI: gaps now display as a single sorted table (Issue/Fix/Severity columns) instead of grouped card lists. Removed hero title/description and gradient background when audit is active for clean transition. Widened audit layout to max-w-7xl. Improved summary bar with 4-column grid metrics, larger font sizes, and more padding throughout all audit components.
-
-### Session 2026-03-09 16:58 (MacBook)
