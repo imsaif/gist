@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import { SiteHeader } from '@/components/Layout/SiteHeader';
 
 export const metadata: Metadata = {
   title: 'About — llms.gist',
@@ -10,29 +11,7 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <div className="bg-background-primary min-h-screen">
-      {/* Header */}
-      <header className="glass-nav sticky top-0 z-50 flex h-14 items-center justify-between px-6">
-        <Link href="/" className="text-ink-primary text-xl font-semibold">
-          llms.gist
-        </Link>
-        <nav className="flex items-center gap-6">
-          <Link
-            href="/"
-            className="text-ink-secondary hover:text-ink-primary text-sm font-medium transition-colors"
-          >
-            Audit
-          </Link>
-          <Link
-            href="/spec"
-            className="text-ink-secondary hover:text-ink-primary text-sm font-medium transition-colors"
-          >
-            Spec
-          </Link>
-          <Link href="/about" className="text-brand-primary text-sm font-medium">
-            About
-          </Link>
-        </nav>
-      </header>
+      <SiteHeader active="about" />
 
       {/* Hero — grain texture */}
       <section className="bg-background-grain bg-grain relative">
@@ -48,7 +27,7 @@ export default function AboutPage() {
           <section>
             <h2 className="text-ink-primary mb-3 text-xl font-semibold">What this is</h2>
             <p className="text-ink-secondary text-base leading-relaxed">
-              llms.gist shows you how AI tools describe your product. Audit your URL, see what
+              llms.gist shows you how AI tools describe your product. Audit your product, see what
               ChatGPT and Claude say, and get a downloadable fix file that patches the context LLMs
               are missing.
             </p>

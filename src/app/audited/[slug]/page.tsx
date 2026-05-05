@@ -42,7 +42,9 @@ export default async function AuditedDetail({ params }: Props) {
   const headline = entry.headline;
   const llmsGistMarkdown = renderDraftMarkdown(entry.draftFile, entry.name);
   const categoryLabel = entry.category ? CATEGORY_LABELS[entry.category] : null;
-  const description = composeDescription(entry);
+  const productSummary = entry.draftFile?.product?.description ?? composeDescription(entry);
+  const audience =
+    entry.draftFile?.product?.audience ?? entry.draftFile?.positioning?.forWho ?? null;
 
   return (
     <div className="bg-background-primary min-h-screen">
@@ -57,39 +59,51 @@ export default async function AuditedDetail({ params }: Props) {
         <header className="mb-10 flex flex-col items-start gap-5">
           <div className="flex items-center gap-4">
             <div
-              className="flex h-14 w-14 items-center justify-center rounded-2xl"
+              className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl"
               style={{ background: `${logo.hex}1A`, color: logo.hex }}
               dangerouslySetInnerHTML={{
-                __html: stripIconTitle(logo.svg).replace('<svg', '<svg width="32" height="32"'),
+                __html: stripIconTitle(logo.svg).replace('<svg', '<svg width="36" height="36"'),
               }}
             />
             <div>
               {categoryLabel && <p className="eyebrow text-ink-tertiary mb-1">{categoryLabel}</p>}
-              <h1 className="text-ink-primary text-3xl font-bold tracking-tight md:text-4xl">
-                Audit of how AI describes {entry.name}
+              <h1 className="text-ink-primary text-4xl font-bold tracking-tight md:text-5xl">
+                <span className="text-brand-primary font-serif italic">llms.gist</span>{' '}
+                <span className="text-ink-secondary">for</span> {entry.name}
               </h1>
             </div>
           </div>
-          {description && (
+          {productSummary && (
             <p className="text-ink-secondary max-w-3xl text-base leading-relaxed md:text-lg">
-              {description}
+              {productSummary}
             </p>
           )}
         </header>
 
-        <section className="mb-12 grid gap-6 lg:grid-cols-[1fr_320px]">
-          <AuditUsageBlock slug={entry.slug} />
-          <AuditStatsRail
-            slug={entry.slug}
-            companyName={entry.name}
-            criticalGaps={entry.criticalGaps ?? 0}
-            totalGaps={entry.totalGaps ?? 0}
-            readabilityScore={entry.readabilityScore}
-            rawFileHref={`/audited/${entry.slug}/llms.gist`}
-          />
+        <hr className="border-border-primary mb-10" />
+
+        <section className="mb-12">
+          <h2 className="text-ink-primary mb-5 text-xl font-semibold">Usage</h2>
+          <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
+            <AuditUsageBlock slug={entry.slug} />
+            <AuditStatsRail
+              slug={entry.slug}
+              companyName={entry.name}
+              criticalGaps={entry.criticalGaps ?? 0}
+              totalGaps={entry.totalGaps ?? 0}
+              readabilityScore={entry.readabilityScore}
+              rawFileHref={`/audited/${entry.slug}/llms.gist`}
+            />
+          </div>
+          {audience && (
+            <p className="text-ink-secondary mt-6 max-w-3xl text-sm leading-relaxed md:text-base">
+              <span className="text-ink-tertiary">For:</span> {audience}
+            </p>
+          )}
         </section>
 
         <section className="mb-12">
+          <h2 className="text-ink-primary mb-5 text-xl font-semibold">Preview</h2>
           <AuditPreviewTabs
             chatgptText={headline?.chatgptSays ?? null}
             claudeText={headline?.claudeSays ?? null}

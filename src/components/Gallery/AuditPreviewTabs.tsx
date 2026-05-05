@@ -11,7 +11,7 @@ interface Props {
 type Tab = 'chatgpt' | 'claude' | 'gist';
 
 export function AuditPreviewTabs({ chatgptText, claudeText, llmsGistMarkdown }: Props) {
-  const [tab, setTab] = useState<Tab>('chatgpt');
+  const [tab, setTab] = useState<Tab>('gist');
 
   return (
     <section className="border-border-primary overflow-hidden rounded-2xl border">

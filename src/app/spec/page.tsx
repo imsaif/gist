@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { SiteHeader } from '@/components/Layout/SiteHeader';
 
 function CodeBlock({ children }: { children: string }) {
   return (
@@ -11,25 +12,7 @@ function CodeBlock({ children }: { children: string }) {
 export default function SpecPage() {
   return (
     <div className="bg-background-primary min-h-screen">
-      <header className="flex h-14 items-center justify-between px-6">
-        <Link href="/" className="text-ink-primary text-xl font-semibold">
-          llms.gist
-        </Link>
-        <nav className="flex items-center gap-6">
-          <Link
-            href="/"
-            className="text-ink-secondary hover:text-ink-primary text-sm font-medium transition-colors"
-          >
-            Audit
-          </Link>
-          <Link
-            href="/spec"
-            className="text-brand-primary hover:text-brand-hover text-sm font-medium transition-colors"
-          >
-            Spec
-          </Link>
-        </nav>
-      </header>
+      <SiteHeader active="spec" />
 
       {/* Hero — grain texture */}
       <section className="bg-background-grain bg-grain relative">

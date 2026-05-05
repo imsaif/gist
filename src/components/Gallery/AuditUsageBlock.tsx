@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { CheckIcon } from '@heroicons/react/24/outline';
 
 interface Props {
   slug: string;
@@ -25,7 +26,14 @@ export function AuditUsageBlock({ slug }: Props) {
           className="text-ink-tertiary hover:text-ink-primary text-xs"
           aria-label="Copy command"
         >
-          {copied ? '✓ Copied' : 'Copy'}
+          {copied ? (
+            <span className="inline-flex items-center gap-1">
+              <CheckIcon className="h-3.5 w-3.5" aria-hidden="true" />
+              Copied
+            </span>
+          ) : (
+            'Copy'
+          )}
         </button>
       </div>
       <p className="text-ink-secondary mt-3 text-xs leading-relaxed">

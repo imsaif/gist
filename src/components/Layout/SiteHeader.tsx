@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import GistIcon from '@/components/GistIcon';
+import { RequestPrivateButton } from '@/components/Gallery/RequestPrivateButton';
 
 interface SiteHeaderProps {
   /** Which nav entry should render in the brand colour. */
@@ -17,16 +18,22 @@ export function SiteHeader({ active, sticky = true }: SiteHeaderProps) {
     <header
       className={`${sticky ? 'glass-nav sticky top-0 z-50' : ''} flex h-14 items-center justify-between px-6`}
     >
-      <Link href="/" className="text-ink-primary flex items-center gap-2 text-xl font-semibold">
-        <GistIcon className="h-6 w-6" />
-        llms.gist
-      </Link>
-      <nav className="flex items-center gap-6">
-        <Link href="/" className={cls('audit')}>
-          Audit
+      <div className="flex items-center gap-4">
+        <Link href="/" className="text-ink-primary flex items-center gap-2 text-xl font-semibold">
+          <GistIcon className="h-6 w-6" />
+          llms.gist
         </Link>
+        <RequestPrivateButton variant="primary" size="xs" />
+      </div>
+      <nav className="flex items-center gap-6">
         <Link href="/spec" className={cls('spec')}>
           Spec
+        </Link>
+        <Link
+          href="/start"
+          className="bg-ink-primary text-background-primary hover:bg-ink-secondary rounded-full px-4 py-1.5 text-sm font-medium transition-colors"
+        >
+          Audit your product
         </Link>
       </nav>
     </header>

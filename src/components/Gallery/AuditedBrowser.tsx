@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import {
   CATEGORY_LABELS,
@@ -9,6 +10,7 @@ import {
   type GalleryEntry,
 } from '@/lib/gallery/loadResults';
 import { resolveLogo, stripIconTitle } from '@/lib/gallery/logo';
+import { MagnifyingGlassIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 
 interface Props {
   entries: GalleryEntry[];
@@ -28,10 +30,7 @@ export function AuditedBrowser({ entries, categoryCounts }: Props) {
       .filter((e) => activeCategory === 'all' || e.category === activeCategory)
       .filter((e) => {
         if (!q) return true;
-        return (
-          e.name.toLowerCase().includes(q) ||
-          (e.headline?.description ?? '').toLowerCase().includes(q)
-        );
+        return e.name.toLowerCase().includes(q) || rowDescription(e).toLowerCase().includes(q);
       })
       .sort((a, b) => {
         if (sort === 'name') return a.name.localeCompare(b.name);
@@ -72,9 +71,7 @@ export function AuditedBrowser({ entries, categoryCounts }: Props) {
       <section>
         <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <label className="border-border-primary bg-background-secondary focus-within:border-border-focus flex w-full items-center gap-2 rounded-full border px-4 py-2 sm:max-w-md">
-            <span aria-hidden className="text-ink-tertiary">
-              🔍
-            </span>
+            <MagnifyingGlassIcon className="text-ink-tertiary h-4 w-4" aria-hidden="true" />
             <input
               type="search"
               placeholder="Search audits"
@@ -181,19 +178,24 @@ function Th({
         className={`inline-flex items-center gap-1 ${active ? 'text-ink-primary' : ''}`}
       >
         {children}
-        {active && <span aria-hidden>↓</span>}
+        {active && <ChevronDownIcon className="h-3.5 w-3.5" aria-hidden="true" />}
       </button>
     </th>
   );
 }
 
 function Row({ index, entry }: { index: number; entry: GalleryEntry }) {
+  const router = useRouter();
   const logo = resolveLogo(entry.simpleIcon);
+  const href = `/audited/${entry.slug}`;
   return (
-    <tr className="hover:bg-background-secondary/60 group transition-colors">
+    <tr
+      onClick={() => router.push(href)}
+      className="hover:bg-background-secondary/60 group cursor-pointer transition-colors"
+    >
       <td className="text-ink-tertiary px-4 py-3 text-xs tabular-nums">{index}</td>
       <td className="px-4 py-3">
-        <Link href={`/audited/${entry.slug}`} className="flex items-center gap-3">
+        <Link href={href} className="flex items-center gap-3" onClick={(e) => e.stopPropagation()}>
           <span
             className="flex h-7 w-7 items-center justify-center rounded-md"
             style={{ background: `${logo.hex}1A`, color: logo.hex }}
@@ -207,7 +209,7 @@ function Row({ index, entry }: { index: number; entry: GalleryEntry }) {
         </Link>
       </td>
       <td className="text-ink-secondary max-w-xl truncate px-4 py-3">
-        {entry.headline?.description ?? '—'}
+        {rowDescription(entry) || '—'}
       </td>
       <td className="text-ink-primary px-4 py-3 text-right tabular-nums">{entry.totalGaps ?? 0}</td>
       <td className="px-4 py-3 text-right tabular-nums">
@@ -242,6 +244,14 @@ function ReadabilityChip({ score }: { score: string | undefined }) {
       {score}
     </span>
   );
+}
+
+function rowDescription(entry: GalleryEntry): string {
+  if (entry.headline?.description) return entry.headline.description;
+  if (entry.draftFile?.product?.description) return entry.draftFile.product.description;
+  if (entry.draftFile?.positioning?.category)
+    return `${entry.name} — ${entry.draftFile.positioning.category}.`;
+  return '';
 }
 
 function readabilityRank(s: string | undefined): number {
