@@ -56,7 +56,7 @@ export default function AuditReportPage() {
     <div className="bg-background-primary min-h-screen">
       <header className="flex h-14 items-center justify-between px-6">
         <Link href="/" className="text-ink-primary flex items-center gap-2 text-xl font-semibold">
-          <GistIcon className="h-6 w-6" />
+          <GistIcon className="h-5 w-5" />
           llms.gist
         </Link>
         <Link

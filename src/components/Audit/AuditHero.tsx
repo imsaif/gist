@@ -4,7 +4,7 @@ import { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { AuditResult, LLMProvider, LLMResponse, GapAnalysis } from '@/types/audit';
 import { parseSSEEvents } from '@/lib/audit/sseParser';
-import { AuditInput } from './AuditInput';
+import { AuditInput, type AuditInputValue } from './AuditInput';
 import { ConflictChips } from './ConflictChips';
 import { InlineProgress } from './InlineProgress';
 import { AuditEmailGate } from './AuditEmailGate';
@@ -26,6 +26,8 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
   const router = useRouter();
   const [phase, setPhase] = useState<AuditPhase>('input');
   const [url, setUrl] = useState('');
+  const [productName, setProductName] = useState('');
+  const [productDescription, setProductDescription] = useState('');
   const [responses, setResponses] = useState<Partial<Record<LLMProvider, LLMResponse>>>({});
   const [result, setResult] = useState<AuditResult | null>(null);
   const [errorMessage, setErrorMessage] = useState('');
@@ -39,7 +41,8 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
   );
 
   const runAudit = useCallback(
-    async (auditUrl: string) => {
+    async (input: AuditInputValue) => {
+      const auditUrl = input.url;
       updatePhase('fetching');
       setResponses({});
       setResult(null);
@@ -49,7 +52,11 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
         const response = await fetch('/api/audit', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ url: auditUrl }),
+          body: JSON.stringify({
+            url: auditUrl,
+            name: input.name,
+            description: input.description,
+          }),
         });
 
         if (!response.ok) {
@@ -133,31 +140,42 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
     [updatePhase]
   );
 
-  const handleUrlSubmit = useCallback(
-    (auditUrl: string) => {
-      setUrl(auditUrl);
-      runAudit(auditUrl);
+  const handleFormSubmit = useCallback(
+    (input: AuditInputValue) => {
+      setUrl(input.url);
+      setProductName(input.name);
+      setProductDescription(input.description);
+      runAudit(input);
     },
     [runAudit]
   );
 
   const handleReset = () => {
     setUrl('');
+    setProductName('');
+    setProductDescription('');
     setResponses({});
     setResult(null);
     setErrorMessage('');
     updatePhase('input');
   };
 
-  const goToFixPage = useCallback(() => {
+  const persistResult = useCallback(() => {
     if (!result) return;
     try {
       sessionStorage.setItem('audit_result', JSON.stringify(result));
+      if (productName) sessionStorage.setItem('audit_product_name', productName);
+      if (productDescription)
+        sessionStorage.setItem('audit_product_description', productDescription);
     } catch {
       // sessionStorage may be unavailable; navigation still proceeds
     }
+  }, [result, productName, productDescription]);
+
+  const goToFixPage = useCallback(() => {
+    persistResult();
     router.push('/fix');
-  }, [result, router]);
+  }, [persistResult, router]);
 
   const handleFixGaps = () => {
     if (!result) return;
@@ -178,7 +196,7 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
     <div className="flex w-full flex-col items-center">
       {/* URL input — always visible except during email-gate / error */}
       {phase !== 'email-gate' && phase !== 'error' && (
-        <AuditInput onSubmit={handleUrlSubmit} isLoading={isRunning} />
+        <AuditInput onSubmit={handleFormSubmit} isLoading={isRunning} />
       )}
 
       {/* State-dependent row below the input */}
@@ -204,9 +222,7 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
           <div className="mt-4 flex justify-center">
             <button
               onClick={() => {
-                try {
-                  sessionStorage.setItem('audit_result', JSON.stringify(result));
-                } catch {}
+                persistResult();
                 router.push('/audit');
               }}
               className="text-ink-secondary hover:text-ink-primary text-sm font-medium underline underline-offset-2 transition-colors"

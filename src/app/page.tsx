@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { aggregateByCategory, loadAllResults } from '@/lib/gallery/loadResults';
 import { SiteHeader } from '@/components/Layout/SiteHeader';
 import { AuditedBrowser } from '@/components/Gallery/AuditedBrowser';
-import { ArrowRightIcon } from '@heroicons/react/24/outline';
+import { AuditHeroToggle } from '@/components/Audit';
 
 export const metadata: Metadata = {
   title: 'llms.gist — public llms.gist files for popular products',
@@ -32,7 +32,7 @@ export default function Home() {
     <div className="bg-background-primary min-h-screen">
       <SiteHeader />
 
-      <section className="px-6 pt-16 pb-12 md:px-10 md:pt-24 md:pb-16 lg:px-14">
+      <section className="bg-background-grain bg-grain px-6 pt-16 pb-12 md:px-10 md:pt-24 md:pb-16 lg:px-14">
         <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
           <p className="eyebrow text-ink-tertiary mb-5">llms.gist</p>
           <h1 className="text-ink-primary text-3xl leading-[1.1] font-bold tracking-[-0.02em] md:text-4xl lg:text-5xl">
@@ -53,16 +53,10 @@ export default function Home() {
             </code>{' '}
             so they describe your product correctly.
           </p>
-          <div className="mt-8 flex justify-center">
-            <Link
-              href="/start"
-              className="bg-ink-primary text-background-primary hover:bg-ink-secondary inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-medium transition-colors"
-            >
-              Audit your product
-              <ArrowRightIcon className="h-4 w-4" aria-hidden="true" />
-            </Link>
+          <div className="mt-10 flex w-full justify-center">
+            <AuditHeroToggle />
           </div>
-          <p className="text-ink-tertiary mt-6 text-xs tabular-nums">
+          <p className="text-ink-tertiary mt-8 text-xs tabular-nums">
             {entries.length} public {entries.length === 1 ? 'file' : 'files'} below · Updated{' '}
             {lastUpdatedLabel}
           </p>

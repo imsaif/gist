@@ -21,10 +21,16 @@ function eventToSse(e: RunAuditEvent): string {
 
 export async function POST(request: NextRequest) {
   try {
-    const { url } = await request.json();
+    const { url, name, description } = await request.json();
 
     if (!url || typeof url !== 'string') {
       return Response.json({ error: 'URL is required' }, { status: 400 });
+    }
+    if (!name || typeof name !== 'string' || !name.trim()) {
+      return Response.json({ error: 'Product name is required' }, { status: 400 });
+    }
+    if (!description || typeof description !== 'string' || !description.trim()) {
+      return Response.json({ error: 'Description is required' }, { status: 400 });
     }
 
     let parsedUrl: URL;
@@ -56,6 +62,8 @@ export async function POST(request: NextRequest) {
         try {
           await runAudit({
             url: normalizedUrl,
+            name: name.trim(),
+            description: description.trim(),
             mock,
             onEvent: (e) => controller.enqueue(encoder.encode(eventToSse(e))),
           });

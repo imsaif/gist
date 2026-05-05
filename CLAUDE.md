@@ -48,6 +48,14 @@ npm run build    # Build for production
 
 ## Recent Sessions
 
+### Session 2026-05-05 22:13 (MacBook)
+
+- **Pattern:** Inline progressive audit form on homepage hero + product-context prompt threading + UI polish
+- **Status:** Complete
+- **Files Changed:** 13
+- **Tests Added/Modified:** 0
+- **Notes:** Killed `/start` page and brought the audit flow onto the homepage hero with progressive disclosure. **Hero icon size**: scaled `<GistIcon/>` from `h-6 w-6` (24px) → `h-5 w-5` (20px) in `SiteHeader.tsx`, `audit/page.tsx`, `fix/page.tsx`; expanded the favicon viewBox in `src/app/icon.svg` from `0 -960 960 960` → `-160 -1120 1280 1280` so the Material robot has padding instead of filling the tile. **Hero background**: wrapped homepage hero `<section>` in `bg-background-grain bg-grain` (slate `#f0f1f5` + SVG noise — same treatment we used on `/spec` and `/about`). **Audit moved to homepage**: deleted `src/app/start/page.tsx` and pointed the `SiteHeader` "Audit your product" pill at `/`; rebuilt `src/components/Audit/AuditInput.tsx` as a 3-step progressive form (Product name → URL → One-line description) with auto-focus on step change, per-step validation, summary chips for completed steps that are clickable to jump back, 3-segment progress bar + `n/3` counter, and a submit button that toggles label `Continue` → `Run audit` on the last step. **Threaded founder context into prompts**: `buildAuditPrompt(url, siteContent, productContext?)` in `src/lib/audit/prompts.ts` now prepends a "Product context (provided by the founder)" block with name + description; `buildAnalysisPrompt(...)` accepts the same context and adds a "Founder's stated framing" ground-truth block so the conflict detector can flag mismatches against the founder's own framing (uses existing `category_conflict` / `audience_mismatch` categories — no new gap type). `runAudit()` in `src/lib/audit/runAudit.ts` extended `RunAuditOptions` with `name?` + `description?` and forwards both. **API**: `src/app/api/audit/route.ts` now validates non-empty `name` + `description` from the JSON body and forwards them to `runAudit()`. **AuditHero**: stores `productName` + `productDescription` in state, persists them into `sessionStorage` (`audit_product_name`, `audit_product_description`) alongside `audit_result` via a new `persistResult()` helper used by both `/audit` and `/fix` navigation. **Reveal-on-click pattern**: created `src/components/Audit/AuditHeroToggle.tsx` (client component) that renders the dark "Audit your product →" pill by default; clicking swaps in `<AuditHero/>` with a fade-in animation. Wired into `src/app/page.tsx` so the hero starts clean (eyebrow + H1 + paragraph + CTA + caption) and only reveals the 3-step form when the user opts in. **Brief detour on H1 copy**: tried "AI can read your code, but not your product." then reverted to original "AI doesn't know your product. llms.gist makes sure it knows." per user. Typecheck clean throughout.
+
 ### Session 2026-05-05 21:49 (MacBook)
 
 - **Pattern:** Homepage redesign as llms.gist catalog + replace mock gallery data with real audits + nav simplification
@@ -129,11 +137,3 @@ npm run build    # Build for production
 - **Notes:** Added custom Gist icon (globe+sparkle SVG) as favicon with prefers-color-scheme and inline GistIcon component in nav. Added "gist.design vs llms.txt" section to landing page clarifying complementary positioning. Tightened all landing page copy across every section — cut verbose descriptions to punchy one-liners.
 
 ### Session 2026-03-24 16:49 (MacBook)
-
-- **Pattern:** General updates
-- **Status:** Work in progress
-- **Files Changed:** 19
-- **Tests Added/Modified:** 2
-- **Notes:** Redesigned audit from gap-finding to conflict-detection: analysis now compares what ChatGPT and Claude say against each other and the site content, only flagging real contradictions, fabrications, category conflicts, audience mismatches, missing differentiators, pricing confusion, and shared inaccuracies. Added evidence quotes (ChatGPT says/Claude says/Site says) to each conflict. Fixed audit-to-fix navigation by rendering GapFixer inline (no more localStorage/sessionStorage page handoff). Added two-column layout with right-side gap checklist, back navigation between questions and done screen, and back-to-audit-results link. Submitted gist-design skill PR to anthropics/skills (#753). Removed Perplexity provider.
-
-### Session 2026-03-10 20:40 (MacBook)

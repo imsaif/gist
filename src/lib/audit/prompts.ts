@@ -4,8 +4,26 @@ import { GapAnalysis, DraftFile } from '@/types/audit';
 // Audit Prompt (sent to each LLM)
 // ============================================
 
-export function buildAuditPrompt(url: string, siteContent: string): string {
-  return `I'm evaluating how well AI tools can understand this product from its public website. Based on the following website content from ${url}, please answer these questions:
+export interface ProductContext {
+  name?: string;
+  description?: string;
+}
+
+export function buildAuditPrompt(
+  url: string,
+  siteContent: string,
+  context?: ProductContext
+): string {
+  const contextBlock =
+    context?.name || context?.description
+      ? `Product context (provided by the founder):
+${context.name ? `- Name: ${context.name}\n` : ''}${context.description ? `- One-line description: ${context.description}\n` : ''}
+---
+
+`
+      : '';
+
+  return `I'm evaluating how well AI tools can understand this product from its public website. ${contextBlock}Based on the following website content from ${url}, please answer these questions:
 
 1. **What does this product do?** Describe its core purpose and functionality.
 2. **How does it work?** Explain the key mechanics and user workflow.
@@ -33,9 +51,22 @@ function truncate(text: string, maxLength: number): string {
 export function buildAnalysisPrompt(
   siteContent: string,
   chatgptResponse: string,
-  claudeResponse: string
+  claudeResponse: string,
+  context?: ProductContext
 ): string {
+  const founderBlock =
+    context?.name || context?.description
+      ? `## Founder's stated framing
+
+${context.name ? `- Name: ${context.name}\n` : ''}${context.description ? `- One-line description: ${context.description}\n` : ''}
+Use this as ground truth for what the product calls itself and how it's positioned. If an LLM contradicts this framing, that's a real conflict (category_conflict / audience_mismatch / contradiction as appropriate).
+
+`
+      : '';
+
   return `You are a cross-model conflict detector. Two LLMs were given the same product website and asked to describe it. Your job is to find where they **contradict each other** or **contradict the actual website content**.
+
+${founderBlock}
 
 You are NOT looking for what's missing. You are looking for what's WRONG or CONFLICTING.
 

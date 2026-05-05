@@ -6,6 +6,8 @@ import type { LLMResponse, GapAnalysis, FetchedContent, LLMProvider } from '@/ty
 
 export interface RunAuditOptions {
   url: string;
+  name?: string;
+  description?: string;
   mock?: boolean;
   onEvent?: (event: RunAuditEvent) => void;
 }
@@ -28,7 +30,8 @@ export interface RunAuditResult {
  * the cron job ignores them.
  */
 export async function runAudit(opts: RunAuditOptions): Promise<RunAuditResult> {
-  const { url, mock = false, onEvent } = opts;
+  const { url, name, description, mock = false, onEvent } = opts;
+  const productContext = name || description ? { name, description } : undefined;
 
   const siteContent: FetchedContent = mock
     ? {
@@ -43,7 +46,7 @@ export async function runAudit(opts: RunAuditOptions): Promise<RunAuditResult> {
 
   onEvent?.({ type: 'fetched', url: siteContent.url, contentLength: siteContent.contentLength });
 
-  const prompt = buildAuditPrompt(url, siteContent.content);
+  const prompt = buildAuditPrompt(url, siteContent.content, productContext);
   const responses: Partial<Record<LLMProvider, LLMResponse>> = {};
 
   if (mock) {
@@ -77,7 +80,12 @@ export async function runAudit(opts: RunAuditOptions): Promise<RunAuditResult> {
       ? `[Claude error: ${responses.claude.error} — exclude this model from analysis]`
       : responses.claude?.content || '[Claude: not queried]';
 
-    const analysisPrompt = buildAnalysisPrompt(siteContent.content, chatgptContent, claudeContent);
+    const analysisPrompt = buildAnalysisPrompt(
+      siteContent.content,
+      chatgptContent,
+      claudeContent,
+      productContext
+    );
     const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
     const res = await anthropic.messages.create({
       model: 'claude-haiku-4-5-20251001',
