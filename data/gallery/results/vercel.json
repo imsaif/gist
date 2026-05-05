@@ -3,74 +3,26 @@
   "name": "Vercel",
   "url": "https://vercel.com",
   "simpleIcon": "vercel",
-  "auditedAt": "2026-04-24T13:58:29.716Z",
+  "auditedAt": "2026-05-05T09:56:08.564Z",
   "status": "ok",
   "readabilityScore": "Good",
-  "totalGaps": 3,
+  "totalGaps": 0,
   "criticalGaps": 0,
-  "allGaps": [
-    {
-      "id": "vercel-gap-1",
-      "severity": "medium",
-      "category": "pricing_confusion",
-      "description": "ChatGPT says Vercel is free, Claude says it's $99/month enterprise-only. The truth is a freemium model with a $29 pro tier.",
-      "modelsAffected": ["chatgpt", "claude"],
-      "whatFileNeeds": "Context.pricing with the real tier structure written in one sentence.",
-      "evidence": {
-        "chatgptSays": "It's a free tool with no paid tiers.",
-        "claudeSays": "Pricing starts at $99 per user per month for teams.",
-        "siteContent": "Free to start. Pro is $29/month. Team is $99/month."
-      }
-    },
-    {
-      "id": "vercel-gap-2",
-      "severity": "high",
-      "category": "missing_differentiator",
-      "description": "Neither model names Vercel's actual differentiator — the audit layer that catches AI hallucinations before they ship. Both models describe it as \"another dev tool.\"",
-      "modelsAffected": ["chatgpt", "claude"],
-      "whatFileNeeds": "Positioning: explicit comparisons vs 2–3 well-known alternatives.",
-      "evidence": {
-        "chatgptSays": "Vercel is one of many dev tools in the space, similar to its peers.",
-        "claudeSays": "Vercel offers a standard set of developer-productivity features.",
-        "siteContent": "Vercel is the only tool that checks AI outputs against your design decisions."
-      }
-    },
-    {
-      "id": "vercel-gap-3",
-      "severity": "high",
-      "category": "audience_mismatch",
-      "description": "Both models describe Vercel as an enterprise tool, but the site targets solo founders and small teams. Wrong buyer gets recommended.",
-      "modelsAffected": ["chatgpt", "claude"],
-      "whatFileNeeds": "Positioning: forWho and notForWho, with concrete team-size ranges.",
-      "evidence": {
-        "chatgptSays": "Vercel is built for large engineering organisations and Fortune 500 teams.",
-        "claudeSays": "Vercel is suited to enterprise adoption with SSO and advanced RBAC.",
-        "siteContent": "Built for founders and teams of 1–20. Priced accordingly."
-      }
-    }
-  ],
+  "allGaps": [],
   "draftFile": {
     "product": {
       "name": "Vercel",
-      "description": "Vercel — the single source of truth for how AI models should describe this product.",
-      "audience": "founders who already have users and want to keep them"
+      "description": "A cloud platform for web development and deployment that provides developer tools and cloud infrastructure to build, deploy, scale, and secure web applications. Positioned as 'the AI Cloud' for building faster, more personalized web experiences.",
+      "audience": "Developers, development teams, and businesses of multiple sizes (from individual developers to enterprises)"
     },
     "positioning": {
-      "category": "design collaboration platform",
-      "forWho": "teams of 1–20 people",
-      "notForWho": "Fortune 500 enterprises or regulated industries"
+      "category": "Cloud platform / Web deployment infrastructure",
+      "forWho": "Developers, teams, and enterprises requiring deployment, scaling, and security capabilities",
+      "notForWho": null
     },
     "context": {
-      "pricing": "Free to start. Pro $29/month. Team $99/month.",
-      "stage": "established"
+      "pricing": "Freemium model with Free, Pro, and Enterprise tiers",
+      "stage": "Mature product with established offerings"
     }
-  },
-  "headline": {
-    "category": "pricing_confusion",
-    "severity": "medium",
-    "description": "ChatGPT says Vercel is free, Claude says it's $99/month enterprise-only. The truth is a freemium model with a $29 pro tier.",
-    "chatgptSays": "It's a free tool with no paid tiers.",
-    "claudeSays": "Pricing starts at $99 per user per month for teams.",
-    "siteContent": "Free to start. Pro is $29/month. Team is $99/month."
   }
 }

@@ -50,6 +50,7 @@ export interface GalleryEntry {
   category: GalleryCategory;
   auditedAt: string;
   status: 'ok' | 'error';
+  synthetic?: boolean;
   error?: string;
   readabilityScore?: ReadabilityScore;
   totalGaps?: number;
@@ -90,7 +91,7 @@ export function loadAllResults(): GalleryEntry[] {
   const files = readdirSync(RESULTS_DIR).filter((f) => f.endsWith('.json'));
   return files
     .map((f) => JSON.parse(readFileSync(join(RESULTS_DIR, f), 'utf8')) as GalleryEntry)
-    .filter((r) => r.status === 'ok')
+    .filter((r) => r.status === 'ok' && r.synthetic !== true)
     .map(attachCategory);
 }
 
@@ -98,7 +99,8 @@ export function loadResult(slug: string): GalleryEntry | null {
   const file = join(RESULTS_DIR, `${slug}.json`);
   if (!existsSync(file)) return null;
   const entry = JSON.parse(readFileSync(file, 'utf8')) as GalleryEntry;
-  return entry.status === 'ok' ? attachCategory(entry) : null;
+  if (entry.status !== 'ok' || entry.synthetic === true) return null;
+  return attachCategory(entry);
 }
 
 export function loadAllSlugs(): string[] {

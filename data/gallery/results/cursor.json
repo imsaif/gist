@@ -3,74 +3,70 @@
   "name": "Cursor",
   "url": "https://cursor.com",
   "simpleIcon": null,
-  "auditedAt": "2026-04-24T13:58:29.716Z",
+  "auditedAt": "2026-05-05T09:56:29.598Z",
   "status": "ok",
   "readabilityScore": "Partial",
-  "totalGaps": 3,
-  "criticalGaps": 1,
+  "totalGaps": 2,
+  "criticalGaps": 0,
   "allGaps": [
     {
-      "id": "cursor-gap-1",
-      "severity": "critical",
-      "category": "category_conflict",
-      "description": "ChatGPT categorises Cursor as a \"project management tool\" while Claude describes it as a \"design collaboration platform.\" The two positions imply different competitor sets and different buyers.",
-      "modelsAffected": ["chatgpt", "claude"],
-      "whatFileNeeds": "Positioning section with explicit category and \"not this\" statements.",
+      "id": "conflict-1",
+      "severity": "medium",
+      "category": "fabrication",
+      "description": "Claude claims Cursor supports 'multi-model support' including GPT-5, Opus, Gemini, xAI models. The website only mentions 'GPT-5.2 Codex Extra High Fast' and 'Agent Opus 4.6' in specific feature contexts, but never lists a general multi-model selection feature or model switcher.",
+      "modelsAffected": ["claude"],
+      "whatFileNeeds": "Clarification on whether Cursor allows users to choose between different LLM models or if specific features are tied to specific models",
       "evidence": {
-        "chatgptSays": "Cursor is a project management tool for engineering teams.",
-        "claudeSays": "Cursor is a design collaboration and prototyping platform.",
-        "siteContent": "Cursor — the single source of truth for your product team."
+        "chatgptSays": "N/A (model errored out)",
+        "claudeSays": "Integrates models from OpenAI (GPT-5), Anthropic (Opus), Gemini, xAI, and proprietary Cursor models",
+        "siteContent": "The website shows 'GPT-5.2 Codex Extra High Fast' and 'Agent Opus 4.6' mentioned in specific feature demonstrations, but does not describe a user-facing model selection feature or claim support for Gemini or xAI models"
       }
     },
     {
-      "id": "cursor-gap-2",
-      "severity": "high",
-      "category": "missing_differentiator",
-      "description": "Neither model names Cursor's actual differentiator — the audit layer that catches AI hallucinations before they ship. Both models describe it as \"another dev tool.\"",
-      "modelsAffected": ["chatgpt", "claude"],
-      "whatFileNeeds": "Positioning: explicit comparisons vs 2–3 well-known alternatives.",
+      "id": "conflict-2",
+      "severity": "medium",
+      "category": "fabrication",
+      "description": "Claude describes an 'autonomy slider' feature that allows users to control agent independence. This specific term and feature are not mentioned anywhere on the website content provided.",
+      "modelsAffected": ["claude"],
+      "whatFileNeeds": "Clarification on whether there is an actual 'autonomy slider' UI control or if Claude inferred this from agent capability descriptions",
       "evidence": {
-        "chatgptSays": "Cursor is one of many dev tools in the space, similar to its peers.",
-        "claudeSays": "Cursor offers a standard set of developer-productivity features.",
-        "siteContent": "Cursor is the only tool that checks AI outputs against your design decisions."
-      }
-    },
-    {
-      "id": "cursor-gap-3",
-      "severity": "high",
-      "category": "contradiction",
-      "description": "ChatGPT says Cursor is self-hosted, Claude says it's cloud-only. The site says both are available.",
-      "modelsAffected": ["chatgpt", "claude"],
-      "whatFileNeeds": "Context: deployment options listed plainly.",
-      "evidence": {
-        "chatgptSays": "Cursor runs entirely on your own infrastructure, self-hosted.",
-        "claudeSays": "Cursor is a cloud-only SaaS with no self-hosting option.",
-        "siteContent": "Deploy in the cloud or self-host. Your call."
+        "chatgptSays": "N/A (model errored out)",
+        "claudeSays": "Autonomy slider approach: Users control how much independence to give the AI, from simple autocomplete to fully autonomous agents",
+        "siteContent": "Website describes agents that 'work autonomously' and tab autocomplete features, but does not mention an 'autonomy slider' or explicit control mechanism by that name"
       }
     }
   ],
   "draftFile": {
     "product": {
       "name": "Cursor",
-      "description": "Cursor — the single source of truth for how AI models should describe this product.",
-      "audience": "product teams that care about getting recommended"
+      "description": "An AI-powered code editor and development environment designed to accelerate software development through autonomous agents and context-aware AI assistance",
+      "audience": "Software developers and engineering teams"
     },
     "positioning": {
-      "category": "developer tool",
-      "forWho": "teams of 1–20 people",
-      "notForWho": "Fortune 500 enterprises or regulated industries"
+      "category": "AI-powered IDE / Code Editor",
+      "forWho": "Professional developers and engineering teams building production software",
+      "notForWho": null
     },
+    "capabilities": [
+      "Desktop IDE with AI-powered coding assistance",
+      "CLI interface for terminal-based AI help",
+      "Autonomous agents that build, test, and demo features end-to-end",
+      "Tab autocomplete with context-aware predictions",
+      "Composer interface for task planning and delegation",
+      "Slack and GitHub integrations",
+      "Codebase indexing and semantic search"
+    ],
     "context": {
-      "pricing": "Free to start. Pro $29/month. Team $99/month.",
-      "stage": "growing"
+      "pricing": null,
+      "stage": "Active product with recent roadmap items (2026 features like Secure codebase indexing, Semantic search)"
     }
   },
   "headline": {
-    "category": "category_conflict",
-    "severity": "critical",
-    "description": "ChatGPT categorises Cursor as a \"project management tool\" while Claude describes it as a \"design collaboration platform.\" The two positions imply different competitor sets and different buyers.",
-    "chatgptSays": "Cursor is a project management tool for engineering teams.",
-    "claudeSays": "Cursor is a design collaboration and prototyping platform.",
-    "siteContent": "Cursor — the single source of truth for your product team."
+    "category": "fabrication",
+    "severity": "medium",
+    "description": "Claude claims Cursor supports 'multi-model support' including GPT-5, Opus, Gemini, xAI models. The website only mentions 'GPT-5.2 Codex Extra High Fast' and 'Agent Opus 4.6' in specific feature contexts, but never lists a general multi-model selection feature or model switcher.",
+    "chatgptSays": "N/A (model errored out)",
+    "claudeSays": "Integrates models from OpenAI (GPT-5), Anthropic (Opus), Gemini, xAI, and proprietary Cursor models",
+    "siteContent": "The website shows 'GPT-5.2 Codex Extra High Fast' and 'Agent Opus 4.6' mentioned in specific feature demonstrations, but does not describe a user-facing model selection feature or claim support for Gemini or xAI models"
   }
 }

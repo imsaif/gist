@@ -34,6 +34,8 @@ interface GalleryEntry {
   simpleIcon: string | null;
   auditedAt: string;
   status: 'ok' | 'error';
+  /** True when generated via --mock; used by loadResults to keep mock data off public surfaces. */
+  synthetic?: boolean;
   error?: string;
   // Flattened pieces the template needs; keeps pages independent of audit internals.
   readabilityScore?: string;
@@ -100,6 +102,7 @@ async function main() {
       simpleIcon: company.simpleIcon,
       auditedAt: new Date().toISOString(),
       status: 'error',
+      ...(mock ? { synthetic: true } : {}),
     };
 
     try {
