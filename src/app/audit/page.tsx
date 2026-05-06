@@ -9,7 +9,7 @@ import { GapItem } from '@/components/Audit/GapItem';
 import type { AuditResult, LLMProvider } from '@/types/audit';
 
 const providers: LLMProvider[] = ['chatgpt', 'claude'];
-const severityOrder: Record<string, number> = { critical: 0, high: 1, medium: 2 };
+const severityOrder: Record<string, number> = { critical: 0, high: 1 };
 
 export default function AuditReportPage() {
   const router = useRouter();
@@ -133,7 +133,11 @@ export default function AuditReportPage() {
           </span>
           {sortedGaps.length > 0 && (
             <button
-              onClick={() => router.push('/fix')}
+              onClick={() =>
+                router.push(
+                  url ? `/request-private?url=${encodeURIComponent(url)}` : '/request-private'
+                )
+              }
               className="bg-brand-primary hover:bg-brand-hover inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white transition-colors"
             >
               Fix conflicts

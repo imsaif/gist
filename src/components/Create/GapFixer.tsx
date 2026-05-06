@@ -126,12 +126,6 @@ const severityConfig: Record<
     bg: 'border-amber-500/30 bg-amber-500/5',
     badge: 'bg-amber-500/20 text-amber-400',
   },
-  medium: {
-    icon: InformationCircleIcon,
-    color: 'text-blue-400',
-    bg: 'border-blue-500/30 bg-blue-500/5',
-    badge: 'bg-blue-500/20 text-blue-400',
-  },
 };
 
 const categoryMeta: Record<string, { label: string; icon: typeof ShieldExclamationIcon }> = {
@@ -164,7 +158,7 @@ export function GapFixer({
   onCopyMarkdown,
   onBackToAudit,
 }: GapFixerProps) {
-  const severityOrder: Record<string, number> = { critical: 0, high: 1, medium: 2 };
+  const severityOrder: Record<string, number> = { critical: 0, high: 1 };
   const sortedGaps = [...gaps].sort(
     (a, b) => (severityOrder[a.severity] ?? 3) - (severityOrder[b.severity] ?? 3)
   );
@@ -476,7 +470,7 @@ export function GapFixer({
                 icon: InformationCircleIcon,
               };
               const CategoryIcon = meta.icon;
-              const config = severityConfig[gap.severity] || severityConfig.medium;
+              const config = severityConfig[gap.severity] || severityConfig.high;
 
               return (
                 <button
@@ -577,7 +571,7 @@ function GapStep({
   textareaRef: React.RefObject<HTMLTextAreaElement | null>;
 }) {
   const [inputValue, setInputValue] = useState(answer);
-  const config = severityConfig[gap.severity] || severityConfig.medium;
+  const config = severityConfig[gap.severity] || severityConfig.high;
   const Icon = isAnswered ? CheckCircleIcon : config.icon;
   const questionConfig = gapQuestions[gap.category];
 

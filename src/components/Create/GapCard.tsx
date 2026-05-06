@@ -4,7 +4,6 @@ import { Gap } from '@/types/audit';
 import {
   ExclamationTriangleIcon,
   ExclamationCircleIcon,
-  InformationCircleIcon,
   CheckCircleIcon,
 } from '@heroicons/react/24/outline';
 
@@ -28,13 +27,6 @@ const severityConfig = {
     badge: 'bg-amber-500/20 text-amber-400',
     text: 'text-amber-300/80',
   },
-  medium: {
-    icon: InformationCircleIcon,
-    border: 'border-blue-500/30',
-    bg: 'bg-blue-500/5',
-    badge: 'bg-blue-500/20 text-blue-400',
-    text: 'text-blue-300/80',
-  },
 };
 
 const categoryLabels: Record<string, string> = {
@@ -48,7 +40,7 @@ const categoryLabels: Record<string, string> = {
 };
 
 export function GapCard({ gap, isResolved }: GapCardProps) {
-  const config = severityConfig[gap.severity] || severityConfig.medium;
+  const config = severityConfig[gap.severity] || severityConfig.high;
   const Icon = isResolved ? CheckCircleIcon : config.icon;
 
   return (

@@ -4,6 +4,7 @@ import { aggregateByCategory, loadAllResults } from '@/lib/gallery/loadResults';
 import { SiteHeader } from '@/components/Layout/SiteHeader';
 import { AuditedBrowser } from '@/components/Gallery/AuditedBrowser';
 import { AuditHeroToggle } from '@/components/Audit';
+import { LogoMarquee } from '@/components/LogoMarquee';
 
 export const metadata: Metadata = {
   title: 'llms.gist — public llms.gist files for popular products',
@@ -63,8 +64,10 @@ export default function Home() {
         </div>
       </section>
 
-      <main id="browse" className="mx-auto max-w-6xl scroll-mt-20 px-6 pb-20">
-        <div className="border-border-primary mb-8 border-t pt-10">
+      <LogoMarquee />
+
+      <main id="browse" className="scroll-mt-20 px-6 pb-20 md:px-10 lg:px-14">
+        <div className="mb-8 pt-10">
           <h2 className="text-ink-primary text-2xl font-bold tracking-tight md:text-3xl">
             Find llms.gist files
           </h2>

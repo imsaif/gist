@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { AuditResult, LLMProvider, LLMResponse, GapAnalysis } from '@/types/audit';
 import { parseSSEEvents } from '@/lib/audit/sseParser';
 import { AuditInput, type AuditInputValue } from './AuditInput';
 import { ConflictChips } from './ConflictChips';
+import { CleanAuditCallout } from './CleanAuditCallout';
 import { InlineProgress } from './InlineProgress';
 import { AuditEmailGate } from './AuditEmailGate';
 
@@ -31,6 +32,7 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
   const [responses, setResponses] = useState<Partial<Record<LLMProvider, LLMResponse>>>({});
   const [result, setResult] = useState<AuditResult | null>(null);
   const [errorMessage, setErrorMessage] = useState('');
+  const abortRef = useRef<AbortController | null>(null);
 
   const updatePhase = useCallback(
     (newPhase: AuditPhase) => {
@@ -48,6 +50,9 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
       setResult(null);
       setErrorMessage('');
 
+      const controller = new AbortController();
+      abortRef.current = controller;
+
       try {
         const response = await fetch('/api/audit', {
           method: 'POST',
@@ -57,6 +62,7 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
             name: input.name,
             description: input.description,
           }),
+          signal: controller.signal,
         });
 
         if (!response.ok) {
@@ -133,12 +139,27 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
           }
         }
       } catch (err) {
+        if (err instanceof DOMException && err.name === 'AbortError') {
+          // User-initiated cancel — handled by handleCancel which already reset phase.
+          return;
+        }
         setErrorMessage(err instanceof Error ? err.message : 'An unexpected error occurred');
         updatePhase('error');
+      } finally {
+        abortRef.current = null;
       }
     },
     [updatePhase]
   );
+
+  const handleCancel = useCallback(() => {
+    abortRef.current?.abort();
+    abortRef.current = null;
+    setResponses({});
+    setResult(null);
+    setErrorMessage('');
+    updatePhase('input');
+  }, [updatePhase]);
 
   const handleFormSubmit = useCallback(
     (input: AuditInputValue) => {
@@ -179,11 +200,9 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
 
   const handleFixGaps = () => {
     if (!result) return;
-    if (sessionStorage.getItem('audit_email')) {
-      goToFixPage();
-    } else {
-      updatePhase('email-gate');
-    }
+    persistResult();
+    const target = url ? `/request-private?url=${encodeURIComponent(url)}` : '/request-private';
+    router.push(target);
   };
 
   const handleEmailUnlocked = () => {
@@ -194,8 +213,8 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
 
   return (
     <div className="flex w-full flex-col items-center">
-      {/* URL input — always visible except during email-gate / error */}
-      {phase !== 'email-gate' && phase !== 'error' && (
+      {/* URL input — visible in input/running phases; replaced by the result panel on complete */}
+      {phase !== 'email-gate' && phase !== 'error' && phase !== 'complete' && (
         <AuditInput onSubmit={handleFormSubmit} isLoading={isRunning} />
       )}
 
@@ -211,29 +230,40 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
       )}
 
       {isRunning && (
-        <div className="mt-6">
+        <div className="mt-6 flex flex-col items-center gap-3">
           <InlineProgress url={url} phase={phase} responses={responses} />
+          <button
+            type="button"
+            onClick={handleCancel}
+            className="text-ink-tertiary hover:text-ink-primary cursor-pointer text-xs font-medium underline-offset-2 transition-colors hover:underline"
+          >
+            Cancel audit
+          </button>
         </div>
       )}
 
       {phase === 'complete' && result && (
-        <div className="mt-8 w-full max-w-2xl">
-          <ConflictChips gaps={result.analysis?.gaps ?? []} onFix={handleFixGaps} />
-          <div className="mt-4 flex justify-center">
-            <button
-              onClick={() => {
+        <div className="w-full max-w-2xl">
+          {(result.analysis?.gaps ?? []).length === 0 ? (
+            <CleanAuditCallout
+              url={url}
+              productName={productName}
+              productDescription={productDescription}
+            />
+          ) : (
+            <ConflictChips
+              gaps={result.analysis?.gaps ?? []}
+              onFix={handleFixGaps}
+              onView={() => {
                 persistResult();
                 router.push('/audit');
               }}
-              className="text-ink-secondary hover:text-ink-primary text-sm font-medium underline underline-offset-2 transition-colors"
-            >
-              Check the full audit →
-            </button>
-          </div>
-          <div className="mt-6 flex justify-center">
+            />
+          )}
+          <div className="text-ink-tertiary mt-5 flex justify-center text-xs">
             <button
               onClick={handleReset}
-              className="text-ink-tertiary hover:text-ink-primary text-xs font-medium transition-colors"
+              className="hover:text-ink-primary cursor-pointer font-medium transition-colors"
             >
               Audit a different URL
             </button>

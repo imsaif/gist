@@ -213,7 +213,7 @@ describe('buildAuditContextBlock', () => {
       gaps: [
         {
           id: 'g1',
-          severity: 'medium',
+          severity: 'high',
           category: 'unknown_cat' as never,
           description: 'test',
           modelsAffected: ['chatgpt'],

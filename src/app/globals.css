@@ -1,5 +1,15 @@
 @import 'tailwindcss';
 
+/* Tailwind v4 dropped the v3 default of cursor:pointer on buttons.
+   Restore it for interactive elements so all CTAs get a hand cursor. */
+@layer base {
+  button:not(:disabled),
+  [role='button']:not([aria-disabled='true']),
+  summary {
+    cursor: pointer;
+  }
+}
+
 :root {
   /* Backgrounds (light) */
   --background-primary: #ffffff;
@@ -325,6 +335,29 @@ p {
   to {
     opacity: 1;
     transform: translateX(0);
+  }
+}
+
+/* Logo marquee — duplicated track translates -50% over the duration so each loop
+   stitches seamlessly. Container masks the edges so logos fade in/out. */
+.animate-marquee {
+  animation: marquee 60s linear infinite;
+}
+.marquee-mask {
+  -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+}
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
   }
 }
 

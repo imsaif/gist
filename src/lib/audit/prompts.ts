@@ -105,15 +105,16 @@ Compare the two LLM responses against each other and against the website content
 
 ### Severity:
 
+Only emit conflicts at one of two severities. Anything that would have been "minor" is NOT a conflict — drop it.
+
 - **critical**: Fundamentally wrong about what the product IS or DOES
 - **high**: Significant factual error that would mislead users
-- **medium**: Minor disagreement or inaccuracy
 
 ### Scoring:
 
-- **Good**: 0 conflicts, or only 1 medium conflict. Both LLMs agree and match the site.
-- **Partial**: 1-2 conflicts with at most 1 high/critical
-- **Poor**: 3+ conflicts, or 2+ critical
+- **Good**: 0 conflicts. Both LLMs agree and match the site.
+- **Partial**: 1-2 high conflicts, no critical
+- **Poor**: 3+ conflicts, or 1+ critical
 
 ### Evidence:
 
@@ -234,7 +235,7 @@ export function getMockAnalysis(): GapAnalysis {
       },
       {
         id: 'conflict-4',
-        severity: 'medium',
+        severity: 'high',
         category: 'missing_differentiator',
         description:
           'Both LLMs describe the product generically as a "task tracking and collaboration tool." Neither can explain what makes it different from Asana, Trello, or Monday.com. The descriptions are interchangeable.',
@@ -251,7 +252,7 @@ export function getMockAnalysis(): GapAnalysis {
       },
       {
         id: 'conflict-5',
-        severity: 'medium',
+        severity: 'high',
         category: 'pricing_confusion',
         description:
           'ChatGPT guesses the product is "probably freemium" while Claude doesn\'t mention pricing. The site doesn\'t clearly state pricing either, leaving LLMs to guess.',

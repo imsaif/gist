@@ -5,9 +5,8 @@ interface GapItemProps {
 }
 
 const severityConfig: Record<GapSeverity, { bg: string; text: string }> = {
-  critical: { bg: 'bg-red-500/15', text: 'text-red-400' },
-  high: { bg: 'bg-amber-500/15', text: 'text-amber-400' },
-  medium: { bg: 'bg-slate-500/15', text: 'text-slate-400' },
+  critical: { bg: 'bg-red-50 ring-1 ring-red-200', text: 'text-red-700' },
+  high: { bg: 'bg-amber-50 ring-1 ring-amber-200', text: 'text-amber-800' },
 };
 
 const categoryLabels: Record<GapCategory, string> = {
@@ -26,7 +25,7 @@ const providerNames: Record<LLMProvider, string> = {
 };
 
 export function GapItem({ gap }: GapItemProps) {
-  const severity = severityConfig[gap.severity] || severityConfig.medium;
+  const severity = severityConfig[gap.severity] || severityConfig.high;
   const evidence = gap.evidence;
 
   return (
@@ -60,10 +59,10 @@ export function GapItem({ gap }: GapItemProps) {
             )}
             {evidence.siteContent && (
               <div className="flex items-start gap-2">
-                <span className="mt-0.5 shrink-0 rounded bg-green-500/15 px-1.5 py-0.5 text-[10px] font-semibold text-green-400 uppercase">
+                <span className="mt-0.5 shrink-0 rounded bg-emerald-50 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-800 uppercase ring-1 ring-emerald-200">
                   Site
                 </span>
-                <p className="text-xs leading-relaxed text-green-400/80 italic">
+                <p className="text-xs leading-relaxed text-emerald-800 italic">
                   &ldquo;{evidence.siteContent}&rdquo;
                 </p>
               </div>

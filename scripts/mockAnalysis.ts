@@ -78,7 +78,7 @@ const TEMPLATES: Template[] = [
   },
   {
     category: 'pricing_confusion',
-    severity: 'medium',
+    severity: 'high',
     description: (c) =>
       `ChatGPT says ${c.name} is free, Claude says it's $99/month enterprise-only. The truth is a freemium model with a $29 pro tier.`,
     chatgpt: () => `It's a free tool with no paid tiers.`,
@@ -100,7 +100,7 @@ const TEMPLATES: Template[] = [
   },
   {
     category: 'shared_inaccuracy',
-    severity: 'medium',
+    severity: 'high',
     description: (c) =>
       `Both models claim ${c.name} has a Slack integration that has never existed on the product.`,
     chatgpt: () => `Integrates natively with Slack for notifications and commands.`,

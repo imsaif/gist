@@ -117,7 +117,7 @@ This conversation started from an AI readability audit. The user's product was d
 2. **Quote model responses**: When relevant, reference what specific models said vs. reality.
 3. **Focus on gaps**: Prioritize gathering information that addresses the identified gaps, starting with critical severity.
 4. **Don't repeat the audit**: The user already saw the results. Build on them, don't recite them.
-5. **Prioritize by severity**: Address critical gaps first, then high, then medium.
+5. **Prioritize by severity**: Address critical gaps first, then high.
 
 ### Role-adaptive behavior:
 

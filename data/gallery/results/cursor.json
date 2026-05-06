@@ -11,7 +11,7 @@
   "allGaps": [
     {
       "id": "conflict-1",
-      "severity": "medium",
+      "severity": "high",
       "category": "fabrication",
       "description": "Claude claims Cursor supports 'multi-model support' including GPT-5, Opus, Gemini, xAI models. The website only mentions 'GPT-5.2 Codex Extra High Fast' and 'Agent Opus 4.6' in specific feature contexts, but never lists a general multi-model selection feature or model switcher.",
       "modelsAffected": ["claude"],
@@ -24,7 +24,7 @@
     },
     {
       "id": "conflict-2",
-      "severity": "medium",
+      "severity": "high",
       "category": "fabrication",
       "description": "Claude describes an 'autonomy slider' feature that allows users to control agent independence. This specific term and feature are not mentioned anywhere on the website content provided.",
       "modelsAffected": ["claude"],
@@ -63,7 +63,7 @@
   },
   "headline": {
     "category": "fabrication",
-    "severity": "medium",
+    "severity": "high",
     "description": "Claude claims Cursor supports 'multi-model support' including GPT-5, Opus, Gemini, xAI models. The website only mentions 'GPT-5.2 Codex Extra High Fast' and 'Agent Opus 4.6' in specific feature contexts, but never lists a general multi-model selection feature or model switcher.",
     "chatgptSays": "N/A (model errored out)",
     "claudeSays": "Integrates models from OpenAI (GPT-5), Anthropic (Opus), Gemini, xAI, and proprietary Cursor models",

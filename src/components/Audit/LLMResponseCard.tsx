@@ -47,10 +47,10 @@ export function LLMResponseCard({ response, isLoading, gapCount }: LLMResponseCa
   const gapBadgeStyle =
     gapCount !== undefined
       ? gapCount >= 3
-        ? 'bg-red-500/15 text-red-400'
+        ? 'bg-red-50 text-red-700 ring-1 ring-red-200'
         : gapCount >= 1
-          ? 'bg-amber-500/15 text-amber-400'
-          : 'bg-green-500/15 text-green-400'
+          ? 'bg-amber-50 text-amber-800 ring-1 ring-amber-200'
+          : 'bg-emerald-50 text-emerald-800 ring-1 ring-emerald-200'
       : '';
 
   return (

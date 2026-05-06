@@ -23,7 +23,7 @@ export function SiteHeader({ active, sticky = true }: SiteHeaderProps) {
           <GistIcon className="h-5 w-5" />
           llms.gist
         </Link>
-        <RequestPrivateButton variant="primary" size="xs" />
+        <RequestPrivateButton variant="primary" size="sm" />
       </div>
       <nav className="flex items-center gap-6">
         <Link href="/spec" className={cls('spec')}>
@@ -31,7 +31,7 @@ export function SiteHeader({ active, sticky = true }: SiteHeaderProps) {
         </Link>
         <Link
           href="/"
-          className="bg-ink-primary text-background-primary hover:bg-ink-secondary rounded-full px-4 py-1.5 text-sm font-medium transition-colors"
+          className="bg-background-secondary hover:bg-background-tertiary text-ink-primary border-border-primary rounded-full border px-4 py-1.5 text-sm font-medium transition-colors"
         >
           Audit your product
         </Link>

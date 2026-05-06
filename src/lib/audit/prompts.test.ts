@@ -62,7 +62,6 @@ describe('buildAnalysisPrompt', () => {
     const prompt = buildAnalysisPrompt('site', 'gpt', 'claude');
     expect(prompt).toContain('critical');
     expect(prompt).toContain('high');
-    expect(prompt).toContain('medium');
   });
 
   it('includes evidence schema', () => {
@@ -114,7 +113,7 @@ describe('getMockAnalysis', () => {
 
   it('has gaps with valid severity and category', () => {
     const mock = getMockAnalysis();
-    const validSeverities = ['critical', 'high', 'medium'];
+    const validSeverities = ['critical', 'high'];
     const validCategories = [
       'contradiction',
       'fabrication',

@@ -4,7 +4,7 @@
 
 export type LLMProvider = 'chatgpt' | 'claude';
 
-export type GapSeverity = 'critical' | 'high' | 'medium';
+export type GapSeverity = 'critical' | 'high';
 
 export type GapCategory =
   | 'contradiction'
