@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { XMarkIcon, ArrowLeftIcon } from '@heroicons/react/24/outline';
 
 export interface AuditInputValue {
   name: string;
@@ -12,6 +13,7 @@ interface AuditInputProps {
   onSubmit: (input: AuditInputValue) => void;
   isLoading: boolean;
   remaining?: number;
+  onClose?: () => void;
 }
 
 const DESCRIPTION_LIMIT = 140;
@@ -39,7 +41,7 @@ const STEPS: { key: StepKey; label: string; placeholder: string; helper: string 
   },
 ];
 
-export function AuditInput({ onSubmit, isLoading, remaining }: AuditInputProps) {
+export function AuditInput({ onSubmit, isLoading, remaining, onClose }: AuditInputProps) {
   const [step, setStep] = useState(0);
   const [name, setName] = useState('');
   const [url, setUrl] = useState('');
@@ -110,80 +112,121 @@ export function AuditInput({ onSubmit, isLoading, remaining }: AuditInputProps) 
   };
 
   return (
-    <form onSubmit={handleAdvance} className="card w-full max-w-xl p-5 text-left">
-      {step > 0 && (
-        <div className="mb-4 space-y-1.5">
-          {STEPS.slice(0, step).map((s, i) => (
-            <button
-              type="button"
-              key={s.key}
-              onClick={() => goToStep(i)}
-              disabled={isLoading}
-              className="group text-ink-secondary hover:text-ink-primary flex w-full items-center justify-between gap-3 text-left text-sm transition-colors disabled:cursor-not-allowed"
-            >
-              <span className="text-ink-tertiary text-xs font-medium tracking-wide uppercase">
-                {s.key}
-              </span>
-              <span className="flex-1 truncate">{valueFor(s.key)}</span>
-              <span className="text-ink-tertiary group-hover:text-ink-secondary text-xs">Edit</span>
-            </button>
-          ))}
+    <form onSubmit={handleAdvance} className="card w-full max-w-xl overflow-hidden text-left">
+      <div className="border-border-primary flex items-center justify-between gap-3 border-b px-5 py-3">
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => goToStep(step - 1)}
+            disabled={isLoading || step === 0}
+            aria-label="Back to previous step"
+            className="text-ink-tertiary hover:bg-background-secondary hover:text-ink-primary -ml-1.5 inline-flex h-7 w-7 items-center justify-center rounded-full transition-colors disabled:cursor-not-allowed disabled:opacity-30"
+          >
+            <ArrowLeftIcon className="h-4 w-4" aria-hidden="true" />
+          </button>
+          <div className="flex items-center gap-1">
+            {STEPS.map((s, i) => (
+              <span
+                key={s.key}
+                aria-hidden
+                className={`h-1.5 rounded-full transition-all ${
+                  i === step
+                    ? 'bg-brand-primary w-6'
+                    : i < step
+                      ? 'bg-brand-primary/60 w-3'
+                      : 'bg-border-primary w-3'
+                }`}
+              />
+            ))}
+          </div>
+          <span className="text-ink-tertiary ml-1 text-xs font-medium tabular-nums">
+            Step {step + 1} of {STEPS.length}
+          </span>
         </div>
-      )}
-
-      <div className="space-y-2">
-        <label className="text-ink-primary block text-base font-medium">{current.label}</label>
-        <p className="text-ink-tertiary text-xs">{current.helper}</p>
-        <div className="relative">
-          <input
-            ref={inputRef}
-            type="text"
-            value={valueFor(current.key)}
-            maxLength={current.key === 'description' ? DESCRIPTION_LIMIT : undefined}
-            onChange={(e) => {
-              setValueFor(current.key, e.target.value);
-              if (error) setError('');
-            }}
-            placeholder={current.placeholder}
+        {onClose && (
+          <button
+            type="button"
+            onClick={onClose}
             disabled={isLoading}
-            className="border-border-primary focus:border-border-secondary disabled:bg-background-secondary disabled:text-ink-tertiary bg-surface-primary mt-1 w-full rounded-2xl border px-4 py-3 text-base shadow-[0_2px_8px_rgba(51,65,85,0.06),inset_0_1px_0_rgba(255,255,255,0.9)] transition-colors outline-none"
-          />
-          {current.key === 'description' && (
-            <p className="text-ink-tertiary mt-1.5 text-right text-xs tabular-nums">
-              {description.length}/{DESCRIPTION_LIMIT}
-            </p>
-          )}
-        </div>
-        {error && <p className="text-sm text-red-500">{error}</p>}
+            aria-label="Close audit form"
+            className="text-ink-tertiary hover:bg-background-secondary hover:text-ink-primary -mr-1.5 inline-flex h-7 w-7 items-center justify-center rounded-full transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <XMarkIcon className="h-4 w-4" aria-hidden="true" />
+          </button>
+        )}
       </div>
 
-      <div className="mt-5 flex items-center justify-between gap-3">
-        <div className="text-ink-tertiary flex items-center gap-1.5 text-xs">
-          {STEPS.map((s, i) => (
-            <span
-              key={s.key}
-              aria-hidden
-              className={`h-1.5 w-6 rounded-full transition-colors ${
-                i <= step ? 'bg-brand-primary' : 'bg-border-primary'
-              }`}
+      <div className="px-5 py-5">
+        {step > 0 && (
+          <div className="mb-5 space-y-1.5">
+            {STEPS.slice(0, step).map((s, i) => (
+              <button
+                type="button"
+                key={s.key}
+                onClick={() => goToStep(i)}
+                disabled={isLoading}
+                className="group bg-background-secondary/60 hover:bg-background-secondary border-border-primary/60 flex w-full items-center gap-3 rounded-xl border px-3 py-2 text-left text-sm transition-colors disabled:cursor-not-allowed"
+              >
+                <span className="text-ink-tertiary w-20 shrink-0 text-[10px] font-semibold tracking-wider uppercase">
+                  {s.key}
+                </span>
+                <span className="text-ink-primary flex-1 truncate font-medium">
+                  {valueFor(s.key)}
+                </span>
+                <span className="text-ink-tertiary group-hover:text-brand-primary text-xs font-medium transition-colors">
+                  Edit
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
+
+        <div className="space-y-1.5">
+          <label className="text-ink-primary block text-lg font-semibold tracking-tight">
+            {current.label}
+          </label>
+          <p className="text-ink-tertiary text-xs">{current.helper}</p>
+          <div className="relative pt-2">
+            <input
+              ref={inputRef}
+              type="text"
+              value={valueFor(current.key)}
+              maxLength={current.key === 'description' ? DESCRIPTION_LIMIT : undefined}
+              onChange={(e) => {
+                setValueFor(current.key, e.target.value);
+                if (error) setError('');
+              }}
+              placeholder={current.placeholder}
+              disabled={isLoading}
+              className="border-border-primary focus:border-border-secondary disabled:bg-background-secondary disabled:text-ink-tertiary bg-surface-primary w-full rounded-2xl border px-4 py-3 text-base shadow-[0_2px_8px_rgba(51,65,85,0.06),inset_0_1px_0_rgba(255,255,255,0.9)] transition-colors outline-none"
             />
-          ))}
-          <span className="ml-2 tabular-nums">
-            {step + 1}/{STEPS.length}
-          </span>
-          {remaining !== undefined && remaining >= 0 && (
-            <span className="ml-3">
-              · {remaining} audit{remaining !== 1 ? 's' : ''} left today
-            </span>
-          )}
+            {current.key === 'description' && (
+              <p className="text-ink-tertiary mt-1.5 text-right text-xs tabular-nums">
+                {description.length}/{DESCRIPTION_LIMIT}
+              </p>
+            )}
+          </div>
+          {error && <p className="text-sm text-red-500">{error}</p>}
         </div>
-        <button
-          type="submit"
-          disabled={isLoading}
-          className="bg-brand-primary hover:bg-brand-hover rounded-full px-6 py-3 text-sm font-medium text-white transition-colors disabled:opacity-60"
-        >
-          {isLoading ? 'Auditing...' : isLast ? 'Run audit' : 'Continue'}
-        </button>
+
+        <div className="mt-5 flex items-center justify-between gap-3">
+          <div className="text-ink-tertiary text-xs">
+            {remaining !== undefined && remaining >= 0 ? (
+              <span>
+                {remaining} audit{remaining !== 1 ? 's' : ''} left today
+              </span>
+            ) : (
+              <span>{isLast ? 'Ready to run' : 'Press Enter to continue'}</span>
+            )}
+          </div>
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="bg-brand-primary hover:bg-brand-hover rounded-full px-6 py-3 text-sm font-medium text-white transition-colors disabled:opacity-60"
+          >
+            {isLoading ? 'Auditing...' : isLast ? 'Run audit' : 'Continue'}
+          </button>
+        </div>
       </div>
     </form>
   );

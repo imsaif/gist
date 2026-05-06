@@ -22,7 +22,7 @@ export function AuditHeroToggle() {
 
   return (
     <div className="animate-fade-in w-full">
-      <AuditHero />
+      <AuditHero onClose={() => setOpen(false)} />
     </div>
   );
 }

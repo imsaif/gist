@@ -7,7 +7,7 @@ import { parseSSEEvents } from '@/lib/audit/sseParser';
 import { AuditInput, type AuditInputValue } from './AuditInput';
 import { ConflictChips } from './ConflictChips';
 import { CleanAuditCallout } from './CleanAuditCallout';
-import { InlineProgress } from './InlineProgress';
+import { AuditJourney } from './AuditJourney';
 import { AuditEmailGate } from './AuditEmailGate';
 
 type AuditPhase =
@@ -21,9 +21,10 @@ type AuditPhase =
 
 interface AuditHeroProps {
   onPhaseChange?: (phase: string) => void;
+  onClose?: () => void;
 }
 
-export function AuditHero({ onPhaseChange }: AuditHeroProps) {
+export function AuditHero({ onPhaseChange, onClose }: AuditHeroProps) {
   const router = useRouter();
   const [phase, setPhase] = useState<AuditPhase>('input');
   const [url, setUrl] = useState('');
@@ -213,12 +214,11 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
 
   return (
     <div className="flex w-full flex-col items-center">
-      {/* URL input — visible in input/running phases; replaced by the result panel on complete */}
-      {phase !== 'email-gate' && phase !== 'error' && phase !== 'complete' && (
-        <AuditInput onSubmit={handleFormSubmit} isLoading={isRunning} />
+      {/* URL input — visible only in input phase */}
+      {phase === 'input' && (
+        <AuditInput onSubmit={handleFormSubmit} isLoading={false} onClose={onClose} />
       )}
 
-      {/* State-dependent row below the input */}
       {phase === 'input' && (
         <div className="text-ink-tertiary mt-5 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-sm">
           <span>Free</span>
@@ -230,16 +230,7 @@ export function AuditHero({ onPhaseChange }: AuditHeroProps) {
       )}
 
       {isRunning && (
-        <div className="mt-6 flex flex-col items-center gap-3">
-          <InlineProgress url={url} phase={phase} responses={responses} />
-          <button
-            type="button"
-            onClick={handleCancel}
-            className="text-ink-tertiary hover:text-ink-primary cursor-pointer text-xs font-medium underline-offset-2 transition-colors hover:underline"
-          >
-            Cancel audit
-          </button>
-        </div>
+        <AuditJourney url={url} phase={phase} responses={responses} onCancel={handleCancel} />
       )}
 
       {phase === 'complete' && result && (

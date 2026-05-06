@@ -1,6 +1,6 @@
 export { AuditInput } from './AuditInput';
 export { ConflictChips } from './ConflictChips';
-export { InlineProgress } from './InlineProgress';
+export { AuditJourney } from './AuditJourney';
 export { GapItem } from './GapItem';
 export { AuditEmailGate } from './AuditEmailGate';
 export { AuditHero } from './AuditHero';

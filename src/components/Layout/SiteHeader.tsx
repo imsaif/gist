@@ -29,12 +29,6 @@ export function SiteHeader({ active, sticky = true }: SiteHeaderProps) {
         <Link href="/spec" className={cls('spec')}>
           Spec
         </Link>
-        <Link
-          href="/"
-          className="bg-background-secondary hover:bg-background-tertiary text-ink-primary border-border-primary rounded-full border px-4 py-1.5 text-sm font-medium transition-colors"
-        >
-          Audit your product
-        </Link>
       </nav>
     </header>
   );
