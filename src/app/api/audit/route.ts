@@ -10,6 +10,10 @@ function sseMessage(event: string, data: unknown): string {
 
 function eventToSse(e: RunAuditEvent): string {
   switch (e.type) {
+    case 'no_llms_txt':
+      return sseMessage('no_llms_txt', { siteUrl: e.siteUrl, checkedUrl: e.checkedUrl });
+    case 'llms_txt_found':
+      return sseMessage('llms_txt_found', { url: e.url, pageCount: e.pageCount, bytes: e.bytes });
     case 'fetched':
       return sseMessage('fetched', { url: e.url, contentLength: e.contentLength });
     case 'llm_response':
@@ -42,7 +46,7 @@ export async function POST(request: NextRequest) {
     }
 
     const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
-    const rateLimit = checkAuditRateLimit(ip);
+    const rateLimit = await checkAuditRateLimit(ip);
     if (!rateLimit.allowed) {
       return Response.json(
         {

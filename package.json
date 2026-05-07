@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "prebuild": "tsx scripts/migrate-on-deploy.ts",
     "start": "next start",
     "lint": "eslint",
     "format": "prettier --write .",
@@ -12,7 +13,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "db:migrate": "tsx scripts/migrate.ts",
+    "db:migrate": "node --env-file-if-exists=.env.local --import tsx scripts/migrate.ts",
     "build-gallery": "tsx scripts/build-gallery.ts",
     "prepare": "husky"
   },

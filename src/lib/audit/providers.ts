@@ -2,16 +2,46 @@ import Anthropic from '@anthropic-ai/sdk';
 import OpenAI from 'openai';
 import { LLMProvider, LLMResponse } from '@/types/audit';
 
+// Pinned model snapshots — change deliberately so audit results stay reproducible
+// across runs. The gallery JSON and the founder-facing /audit page should not
+// shift when a provider rolls a new "latest" alias under us.
+export const OPENAI_AUDIT_MODEL = 'gpt-4o-2024-11-20';
+export const CLAUDE_AUDIT_MODEL = 'claude-sonnet-4-5-20250929';
+
+// Temperature is pinned to 0 so the same URL produces the same answer twice.
+// We are not asking the LLMs to be creative — we are asking them to describe
+// a public product. Determinism > variety for this task.
+const AUDIT_TEMPERATURE = 0;
+
+// 30s per LLM call. Vercel maxDuration is 60s for /api/audit, and we run
+// OpenAI + Claude in parallel, so a 30s ceiling on each leaves the judge
+// (Haiku, ~3-5s) plenty of room before the route times out.
+const LLM_TIMEOUT_MS = 30_000;
+
+// One retry on transient errors (429, 5xx, network blips). The SDKs handle
+// exponential backoff internally; we just bound how many times they try.
+// A persistent failure should fail fast so the analyzer can mark the model
+// as errored and the audit still completes with one model's output.
+const LLM_MAX_RETRIES = 1;
+
 // ============================================
 // Provider Clients
 // ============================================
 
 function getOpenAIClient(): OpenAI {
-  return new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  return new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+    timeout: LLM_TIMEOUT_MS,
+    maxRetries: LLM_MAX_RETRIES,
+  });
 }
 
 function getAnthropicClient(): Anthropic {
-  return new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+  return new Anthropic({
+    apiKey: process.env.ANTHROPIC_API_KEY,
+    timeout: LLM_TIMEOUT_MS,
+    maxRetries: LLM_MAX_RETRIES,
+  });
 }
 
 // ============================================
@@ -23,9 +53,10 @@ export async function queryOpenAI(prompt: string): Promise<LLMResponse> {
   try {
     const client = getOpenAIClient();
     const response = await client.chat.completions.create({
-      model: 'gpt-4o',
+      model: OPENAI_AUDIT_MODEL,
       messages: [{ role: 'user', content: prompt }],
       max_tokens: 1024,
+      temperature: AUDIT_TEMPERATURE,
     });
     return {
       model: 'chatgpt',
@@ -47,8 +78,9 @@ export async function queryClaude(prompt: string): Promise<LLMResponse> {
   try {
     const client = getAnthropicClient();
     const response = await client.messages.create({
-      model: 'claude-sonnet-4-5-20250929',
+      model: CLAUDE_AUDIT_MODEL,
       max_tokens: 1024,
+      temperature: AUDIT_TEMPERATURE,
       messages: [{ role: 'user', content: prompt }],
     });
     const text = response.content[0].type === 'text' ? response.content[0].text : '';

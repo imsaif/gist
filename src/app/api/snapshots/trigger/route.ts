@@ -41,6 +41,12 @@ export async function createSnapshotFor(product: {
   const mock = process.env.MOCK_MODE === 'true';
   const audit = await runAudit({ url: product.url, mock });
 
+  // Tracked products without /llms.txt can't produce a meaningful snapshot —
+  // bail with a clear error instead of silently writing a stub row.
+  if (audit.verdict === 'no_llms_txt' || !audit.analysis) {
+    throw new Error('Cannot snapshot: site has no /llms.txt');
+  }
+
   const category = baselines.categories.find((c) => c.slug === product.category_slug);
   const prompts = category?.prompts ?? [];
   const mentionResult = await runMentionSample({

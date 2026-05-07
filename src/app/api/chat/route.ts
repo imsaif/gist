@@ -225,7 +225,7 @@ export async function POST(request: NextRequest) {
   try {
     // Rate limiting
     const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
-    const rateLimit = checkChatRateLimit(ip);
+    const rateLimit = await checkChatRateLimit(ip);
     if (!rateLimit.allowed) {
       return Response.json(
         {

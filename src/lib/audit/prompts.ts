@@ -27,7 +27,7 @@ ${context.name ? `- Name: ${context.name}\n` : ''}${context.description ? `- One
 
 1. **What does this product do?** Describe its core purpose and functionality.
 2. **How does it work?** Explain the key mechanics and user workflow.
-3. **What makes it different?** How does it stand out from competitors or alternatives?
+3. **What makes it different?** Name 2-3 specific capabilities only this product has — things competitors in the same category don't do. If you can't name any from the website content, say so explicitly.
 4. **Who is it for?** Describe the target audience and use cases.
 
 Be specific. If you're unsure about something, say so rather than guessing.
@@ -64,11 +64,13 @@ Use this as ground truth for what the product calls itself and how it's position
 `
       : '';
 
-  return `You are a cross-model conflict detector. Two LLMs were given the same product website and asked to describe it. Your job is to find where they **contradict each other** or **contradict the actual website content**.
+  return `You are auditing how well a product's homepage trains AI tools to describe it. Two LLMs were given the same homepage content and asked to describe the product. Your job is to find places where the homepage failed to give the LLMs enough material to agree on the product, or led them to say things the homepage itself contradicts.
+
+You are NOT judging whether the LLMs are right about the product in some absolute sense — they may know things from training data that aren't on the page today. You ARE judging whether what they said is consistent with each other and with what the homepage actually says right now.
 
 ${founderBlock}
 
-You are NOT looking for what's missing. You are looking for what's WRONG or CONFLICTING.
+You are NOT looking for what's missing. You are looking for where the LLM descriptions DISAGREE with each other or with the homepage.
 
 ## Website content (partial reference):
 
@@ -110,11 +112,9 @@ Only emit conflicts at one of two severities. Anything that would have been "min
 - **critical**: Fundamentally wrong about what the product IS or DOES
 - **high**: Significant factual error that would mislead users
 
-### Scoring:
+### Summary fields:
 
-- **Good**: 0 conflicts. Both LLMs agree and match the site.
-- **Partial**: 1-2 high conflicts, no critical
-- **Poor**: 3+ conflicts, or 1+ critical
+You must still emit a "summary" object so the JSON parses, but the values do not need to be accurate — they will be overwritten with values derived from your gap list. Just emit any plausible placeholder.
 
 ### Evidence:
 

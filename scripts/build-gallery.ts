@@ -108,9 +108,27 @@ async function main() {
     try {
       // In mock mode we bypass runAudit entirely so each company gets a
       // visibly-distinct headline (runAudit's mock returns one canned payload).
-      const analysis = mock
-        ? buildMockAnalysis({ slug: company.slug, name: company.name, url: company.url })
-        : (await runAudit({ url: company.url, mock: false })).analysis;
+      let analysis;
+      if (mock) {
+        analysis = buildMockAnalysis({
+          slug: company.slug,
+          name: company.name,
+          url: company.url,
+        });
+      } else {
+        const result = await runAudit({ url: company.url, mock: false });
+        if (result.verdict === 'no_llms_txt' || !result.analysis) {
+          entry.status = 'error';
+          entry.error = 'Site has no /llms.txt — skipped audit.';
+          console.log('skipped: no llms.txt');
+          writeFileSync(outFile, JSON.stringify(entry, null, 2));
+          if (!mock && i < targets.length - 1) {
+            await new Promise((r) => setTimeout(r, 2000));
+          }
+          continue;
+        }
+        analysis = result.analysis;
+      }
       const headline =
         analysis.gaps.find((g) => g.category === 'fabrication') ??
         analysis.gaps.find((g) => g.severity === 'critical') ??

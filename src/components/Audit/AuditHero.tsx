@@ -9,6 +9,7 @@ import { ConflictChips } from './ConflictChips';
 import { CleanAuditCallout } from './CleanAuditCallout';
 import { AuditJourney } from './AuditJourney';
 import { AuditEmailGate } from './AuditEmailGate';
+import { NoLlmsTxtVerdict } from './NoLlmsTxtVerdict';
 
 type AuditPhase =
   | 'input'
@@ -16,6 +17,7 @@ type AuditPhase =
   | 'querying'
   | 'analyzing'
   | 'complete'
+  | 'no-llms-txt'
   | 'email-gate'
   | 'error';
 
@@ -33,6 +35,7 @@ export function AuditHero({ onPhaseChange, onClose }: AuditHeroProps) {
   const [responses, setResponses] = useState<Partial<Record<LLMProvider, LLMResponse>>>({});
   const [result, setResult] = useState<AuditResult | null>(null);
   const [errorMessage, setErrorMessage] = useState('');
+  const [noLlmsTxtCheckedUrl, setNoLlmsTxtCheckedUrl] = useState('');
   const abortRef = useRef<AbortController | null>(null);
 
   const updatePhase = useCallback(
@@ -93,6 +96,17 @@ export function AuditHero({ onPhaseChange, onClose }: AuditHeroProps) {
               const data = JSON.parse(event.data);
 
               switch (event.event) {
+                case 'no_llms_txt':
+                  setNoLlmsTxtCheckedUrl(data.checkedUrl);
+                  updatePhase('no-llms-txt');
+                  break;
+
+                case 'llms_txt_found':
+                  // Currently no UI affordance — kept silent so the existing
+                  // journey transitions cleanly via the subsequent `fetched`
+                  // event. Worth surfacing later as a "Found llms.txt" badge.
+                  break;
+
                 case 'fetched':
                   fetchedContent = data;
                   updatePhase('querying');
@@ -179,6 +193,7 @@ export function AuditHero({ onPhaseChange, onClose }: AuditHeroProps) {
     setResponses({});
     setResult(null);
     setErrorMessage('');
+    setNoLlmsTxtCheckedUrl('');
     updatePhase('input');
   };
 
@@ -260,6 +275,16 @@ export function AuditHero({ onPhaseChange, onClose }: AuditHeroProps) {
             </button>
           </div>
         </div>
+      )}
+
+      {phase === 'no-llms-txt' && (
+        <NoLlmsTxtVerdict
+          siteUrl={url}
+          checkedUrl={noLlmsTxtCheckedUrl}
+          productName={productName}
+          productDescription={productDescription}
+          onReset={handleReset}
+        />
       )}
 
       {phase === 'email-gate' && (
