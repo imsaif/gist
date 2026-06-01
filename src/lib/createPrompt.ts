@@ -252,9 +252,16 @@ export function buildContextBlock(file: GistDesignFile, currentFeatureId: string
 // System Prompt
 // ============================================
 
+// Builds the per-conversation audit section (audit framing + findings). Kept
+// separate so callers can place it AFTER a prompt-cache breakpoint — it is
+// volatile (varies per conversation) and must not sit inside the cached prefix.
+export function buildAuditSection(auditContext: string): string {
+  return `\n${AUDIT_CONTEXT_PROMPT}\n\n${auditContext}\n`;
+}
+
 export function getCreateSystemPrompt(auditContext?: string): string {
   const patternList = getPatternsForAIContext();
-  const auditSection = auditContext ? `\n${AUDIT_CONTEXT_PROMPT}\n\n${auditContext}\n` : '';
+  const auditSection = auditContext ? buildAuditSection(auditContext) : '';
 
   return `You are Gist, a design consultant who helps product teams create .gist files — structured documents that make design decisions readable to AI coding tools and LLMs.
 

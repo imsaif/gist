@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
-import { getCreateSystemPrompt, buildContextBlock } from '@/lib/createPrompt';
+import { getCreateSystemPrompt, buildContextBlock, buildAuditSection } from '@/lib/createPrompt';
 import { GistDesignFile } from '@/types/file';
 import { Message } from '@/types';
 import { checkChatRateLimit } from '@/lib/rateLimit';
@@ -252,20 +252,41 @@ export async function POST(request: NextRequest) {
       content: msg.content,
     }));
 
-    let systemPrompt = getCreateSystemPrompt(auditContext || undefined);
+    // Prompt caching: the base system prompt (role + pattern library + rules) is
+    // byte-identical across every turn, conversation, and user, so we cache it as
+    // a stable prefix. Per-conversation/per-turn volatile context (audit findings,
+    // current file state) goes in a second, uncached block AFTER the breakpoint —
+    // anything volatile inside the cached prefix would invalidate it every turn.
+    const baseSystem = getCreateSystemPrompt();
 
-    // Inject file state context
+    let volatileContext = '';
+    if (auditContext) volatileContext += buildAuditSection(auditContext);
     if (fileState) {
       const contextBlock = buildContextBlock(fileState as GistDesignFile, currentFeatureId || null);
-      systemPrompt += `\n\n${contextBlock}`;
+      volatileContext += `\n\n${contextBlock}`;
+    }
+
+    const system: Anthropic.TextBlockParam[] = [
+      { type: 'text', text: baseSystem, cache_control: { type: 'ephemeral' } },
+    ];
+    if (volatileContext) {
+      system.push({ type: 'text', text: volatileContext });
     }
 
     const response = await anthropic.messages.create({
       model: 'claude-sonnet-4-20250514',
       max_tokens: 4096,
-      system: systemPrompt,
+      system,
       messages: claudeMessages,
     });
+
+    // Cache visibility: cache_read_input_tokens should be > 0 on the 2nd+ turn of
+    // a conversation (within the 5-min TTL). If it stays 0 across repeated turns,
+    // a prefix invalidator has crept into getCreateSystemPrompt().
+    const usage = response.usage;
+    console.log(
+      `[chat] usage input=${usage.input_tokens} cache_write=${usage.cache_creation_input_tokens ?? 0} cache_read=${usage.cache_read_input_tokens ?? 0}`
+    );
 
     const assistantMessage = response.content[0].type === 'text' ? response.content[0].text : '';
 
