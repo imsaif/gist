@@ -81,9 +81,9 @@ Env vars (names only): `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `DATABASE_URL`, `D
 - Tailwind v4 dropped v3's default `cursor: pointer` on `<button>`; it's restored in a `globals.css` base layer, don't re-add it per component
 - Don't run `npm run build` while the dev server is running (it clobbers `.next/`); use `npx tsc --noEmit`
 
-## Open Question
+## Tracking Surface
 
-`/dashboard`, `/api/cron/weekly-audit`, and the snapshots/MRR tables contradict the Apr 2026 positioning constraint "no dashboards, no auto re-audit cron, don't compete with AEO trackers." It's unresolved whether that was a deliberate reversal. **Ask before extending or removing that surface.**
+`/dashboard`, `/api/cron/weekly-audit`, and the snapshots / mention-sample / MRR tables are a separate surface from the one-off audit flow. Its scope is unsettled. **Ask before extending or removing it.**
 
 ## Session History
 
