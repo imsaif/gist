@@ -20,9 +20,9 @@ It audits how AI tools see your project and generates a `.gist` file to fix the 
 
 ## Why
 
-AI tools — coding assistants like Cursor and Claude Code, agents like ChatGPT and Claude — can read your product's HTML and docs. They can't read your positioning, audience, "not for", or what AI tools commonly get wrong about you. So they guess.
+AI tools (coding assistants like Cursor and Claude Code, agents like ChatGPT and Claude) can read your product's HTML and docs. They can't read your positioning, audience, "not for", or what AI tools commonly get wrong about you. So they guess.
 
-A `.gist` file fixes that. A single structured file at your project root that captures what your product is, who it's for, and what AI tools commonly get wrong — readable by any AI tool.
+A `.gist` file fixes that. A single structured file at your project root that captures what your product is, who it's for, and what AI tools commonly get wrong, readable by any AI tool.
 
 ```
 robots.txt    → for crawlers      → "What can you access?"
@@ -40,13 +40,13 @@ llms.txt      → for AI tools       → "What content matters?"
 
 **What's wrong:**
 
-- "Similar to Jira" — Linear is opinionated where Jira is customizable. No custom workflows, no configurable issue types.
-- "Sprint planning" — Linear uses Cycles, not Sprints. Cycles auto-schedule, don't require ceremonies, and unfinished issues roll forward.
-- "Keyboard shortcuts" — Undersells it. Linear is keyboard-_first_. Triage is designed around single-keypress actions.
+- "Similar to Jira": Linear is opinionated where Jira is customizable. No custom workflows, no configurable issue types.
+- "Sprint planning": Linear uses Cycles, not Sprints. Cycles auto-schedule, don't require ceremonies, and unfinished issues roll forward.
+- "Keyboard shortcuts": undersells it. Linear is keyboard-_first_. Triage is designed around single-keypress actions.
 
 ### After (with .gist)
 
-> Linear is a keyboard-first issue tracker with an opinionated workflow. Issues flow through a fixed pipeline: Triage → Backlog → Active (via Cycles) → Done. There are no customizable workflows or configurable issue types. Cycles auto-schedule and roll unfinished work forward — there are no sprint ceremonies. The triage flow is designed around single-keypress actions: press `1` to move to backlog, `2` to assign a cycle, `D` to dismiss. This is not Jira with a faster UI. It's a different philosophy: fewer options, stronger opinions, faster execution.
+> Linear is a keyboard-first issue tracker with an opinionated workflow. Issues flow through a fixed pipeline: Triage → Backlog → Active (via Cycles) → Done. There are no customizable workflows or configurable issue types. Cycles auto-schedule and roll unfinished work forward, so there are no sprint ceremonies. The triage flow is designed around single-keypress actions: press `1` to move to backlog, `2` to assign a cycle, `D` to dismiss. This is not Jira with a faster UI. It's a different philosophy: fewer options, stronger opinions, faster execution.
 
 See [examples/BEFORE-AFTER.md](examples/BEFORE-AFTER.md) for more products (v0, Raycast, Spark Mail).
 
@@ -92,52 +92,54 @@ Three modes in Claude Code:
 /gist-design create   ← full guided conversation
 ```
 
-- **Audit** — reads your repo, describes your product as AI tools would, scores readability, highlights gaps
-- **Quick** — one question, then generates a starter `.gist` file you can refine later
-- **Create** — guided conversation that documents features, decisions, and boundaries in depth
+- **Audit**: reads your repo, describes your product as AI tools would, scores readability, highlights gaps
+- **Quick**: one question, then generates a starter `.gist` file you can refine later
+- **Create**: guided conversation that documents features, decisions, and boundaries in depth
 
 ## What the file captures
 
-- **Product Overview** — what it is, who it's for, how AI fits
+- **Product Overview**: what it is, who it's for, how AI fits
 - **Per feature:**
-  - **Intent** — goal, user, core anxiety, scope boundaries
-  - **Interaction Model** — primary flow, key interactions, error handling
-  - **Design Decisions** — chose X over Y because Z
-  - **Patterns Used** — specific implementations with links to [aiuxdesign.guide](https://aiuxdesign.guide)
-  - **Constraints** — technical, business, and user limitations
-  - **Not This** — what it's NOT (prevents competitor blending)
-  - **Open Questions** — what's still unresolved
+  - **Intent**: goal, user, core anxiety, scope boundaries
+  - **Interaction Model**: primary flow, key interactions, error handling
+  - **Design Decisions**: chose X over Y because Z
+  - **Patterns Used**: specific implementations with links to [aiuxdesign.guide](https://aiuxdesign.guide)
+  - **Constraints**: technical, business, and user limitations
+  - **Not This**: what it's NOT (prevents competitor blending)
+  - **Open Questions**: what's still unresolved
 
 See [skills/gist-design/references/file-format.md](skills/gist-design/references/file-format.md) for the full spec.
 
 ## Examples
 
-- [linear.gist](examples/linear.gist) — opinionated project management
-- [v0.gist](examples/v0.gist) — iterative AI UI generation
-- [raycast.gist](examples/raycast.gist) — extensible desktop launcher with AI
-- [spark-mail.gist](examples/spark-mail.gist) — AI email composition
-- [BEFORE-AFTER.md](examples/BEFORE-AFTER.md) — what AI gets wrong without vs. with .gist
+- [linear.gist](examples/linear.gist): opinionated project management
+- [v0.gist](examples/v0.gist): iterative AI UI generation
+- [raycast.gist](examples/raycast.gist): extensible desktop launcher with AI
+- [spark-mail.gist](examples/spark-mail.gist): AI email composition
+- [BEFORE-AFTER.md](examples/BEFORE-AFTER.md): what AI gets wrong without vs. with .gist
 
 ## Using the file with your tools
 
-| Tool                 | How to use                                   |
-| -------------------- | -------------------------------------------- |
-| **Cursor**           | `@Docs > Add new doc` → point to the file    |
-| **Claude Code**      | Already at project root — read automatically |
-| **ChatGPT / Claude** | Paste contents or upload the file            |
-| **Copilot**          | Add to `.github/copilot-instructions.md`     |
-| **llms.txt**         | Add a reference in your `llms.txt`           |
+| Tool                 | How to use                                  |
+| -------------------- | ------------------------------------------- |
+| **Cursor**           | `@Docs > Add new doc` → point to the file   |
+| **Claude Code**      | Already at project root, read automatically |
+| **ChatGPT / Claude** | Paste contents or upload the file           |
+| **Copilot**          | Add to `.github/copilot-instructions.md`    |
+| **llms.txt**         | Add a reference in your `llms.txt`          |
 
 ## Web app
 
-Also available at [llmsgist.org](https://llmsgist.org) — no installation needed.
+[llmsgist.org](https://llmsgist.org) runs the same audit in the browser, no installation needed. Enter a URL, and it asks ChatGPT and Claude what your product is, compares their answers against your site, and reports the gaps: contradictions, fabrications, category drift, audience drift, pricing confusion. Then it drafts an `llms.gist` that closes them.
+
+[llmsgist.org/audited](https://llmsgist.org/audited) is a public gallery of pre-run audits, each with a downloadable `llms.gist`.
 
 ## Development (web app)
 
 ### Prerequisites
 
-- Node.js 18+
-- Anthropic API key (optional — set `MOCK_MODE=true` for testing)
+- Node.js 20.9+ (required by Next.js 16)
+- Anthropic and OpenAI API keys (optional: set `MOCK_MODE=true` to run without them)
 
 ### Setup
 
@@ -151,30 +153,47 @@ cp .env.example .env.local
 ### Environment Variables
 
 ```env
-ANTHROPIC_API_KEY=your_api_key_here   # Required for /create and /audit
-OPENAI_API_KEY=your_api_key_here      # Required for /audit (ChatGPT queries)
-MOCK_MODE=true                        # Set to use mock responses without API keys
+ANTHROPIC_API_KEY=...        # Claude queries in the audit, plus /create
+OPENAI_API_KEY=...           # ChatGPT queries in the audit
+MOCK_MODE=true               # Use mock responses instead of real API calls
+
+DATABASE_URL=...             # libsql / Turso. Backs auth, snapshots, rate limiting
+DATABASE_AUTH_TOKEN=...
+HMAC_SECRET=...              # Email gate. Generate with: openssl rand -hex 32
+RESEND_API_KEY=...           # Transactional email
+RESEND_FROM_EMAIL=noreply@llmsgist.org
+GALLERY_SUBMIT_TO_EMAIL=...  # Where clean-audit gallery submissions land
+REQUEST_PRIVATE_TO_EMAIL=... # Where /request-private enquiries land
+CRON_SECRET=...              # Guards /api/cron/weekly-audit
+DISABLE_RATE_LIMIT=true      # Local development only
 ```
+
+See `.env.example` for the full list.
 
 ### Commands
 
 ```bash
-npm run dev      # Start dev server
-npm run build    # Build for production
-npm start        # Start production server
+npm run dev            # Start dev server
+npm run build          # Build for production (runs migrations first)
+npm start              # Start production server
+npm test               # Run the test suite
+npm run db:migrate     # Apply database migrations
+npm run build-gallery  # Regenerate gallery data from audit results
 ```
 
 ## Tech Stack
 
-- **Framework:** Next.js 14+ (App Router)
+- **Framework:** Next.js 16 (App Router), React 19
 - **Language:** TypeScript
-- **Styling:** Tailwind CSS
+- **Styling:** Tailwind CSS v4
 - **AI:** Claude API (Anthropic), OpenAI API
+- **Database:** libsql / Turso
+- **Tests:** Vitest
 - **Deployment:** Vercel
 
 ## Pattern Library
 
-Powered by [aiuxdesign.guide](https://aiuxdesign.guide) — 36 AI UX design patterns (including agentic patterns) from ChatGPT, Claude, GitHub Copilot, Midjourney, Devin, and 50+ shipped products.
+Powered by [aiuxdesign.guide](https://aiuxdesign.guide): 36 AI UX design patterns (including agentic patterns) from ChatGPT, Claude, GitHub Copilot, Midjourney, Devin, and 50+ shipped products.
 
 ## License
 
