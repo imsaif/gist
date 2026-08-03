@@ -27,7 +27,8 @@ A single `.gist` markdown file placed at the project root. This file follows a s
 
 1. Read the pattern library reference at `references/patterns.md` in this skill's directory for the full list of AI UX patterns you can identify during conversation.
 2. Read the file format reference at `references/file-format.md` for the exact output structure.
-3. Read the example files in `references/` to see completed .gist files for different product types:
+3. Read the wiring reference at `references/wiring.md` for which config files each coding agent loads and the exact pointer text to append.
+4. Read the example files in `references/` to see completed .gist files for different product types:
    - `references/example-spark-mail.gist` — AI feature layer in an email client
    - `references/example-linear.gist` — opinionated project management tool
    - `references/example-v0.gist` — iterative AI code generation
@@ -186,6 +187,44 @@ If they say yes, transition into the **State B** conversation flow, but with aud
 - Prioritize high-severity gaps first
 - Quote what AI tools would get wrong: "Without a .gist file, AI tools would describe this as 'a Shopify-like checkout.' Let's make sure the Not This section prevents that."
 
+## Wiring flow
+
+Run this after writing the file, before verifying.
+
+A file at the project root is not read just because it is there. Claude Code auto-loads
+`CLAUDE.md`. Cursor reads `.cursor/rules`. Copilot reads
+`.github/copilot-instructions.md`. None of them look for `llms.gist` on their own, so the
+file has to be pointed at.
+
+Read `references/wiring.md` for the per-agent targets, the exact pointer text, and the
+rules about appending rather than rewriting.
+
+### Step 1 — Detect
+
+Check which agent config files the repo actually has. Do not assume, and do not create
+config for an agent the user does not use.
+
+### Step 2 — Append the pointer
+
+Add the pointer section from `references/wiring.md` to each config file found. Append it at
+the end. Never reformat or remove anything already in those files.
+
+If the file already references `llms.gist`, leave it alone and say so.
+
+### Step 3 — Handle the empty case
+
+If no agent config exists, ask which agent they use and create only that one file, with
+only the pointer section in it.
+
+### Step 4 — Report
+
+List every file you touched, then say:
+
+> The pointer takes effect in a new session. Your current one already has the file loaded
+> from writing it.
+
+Then move to the Verify flow.
+
 ## Verify flow
 
 After the file is written and wired in, prove an agent actually picks it up.
@@ -330,8 +369,8 @@ After writing the file, tell the user:
      ## Design
      - [Product context](/llms.gist): What the product is, who it's for, what AI tools commonly get wrong
      ```
-3. Offer the verify flow: "Want me to verify how this changes what AI tools would say about your product?"
-4. Suggest testing: "Paste the file into ChatGPT and ask about your product. If it gets something wrong, that section needs more detail."
+3. Run the wiring flow so an agent will actually load the file.
+4. Then run the verify flow to confirm it did.
 
 ## Quality checklist — evaluate before writing the file
 
