@@ -19,12 +19,9 @@ const satoshi = localFont({
 const baseUrl = 'https://llmsgist.org';
 
 export const metadata: Metadata = {
-  title: {
-    default: 'llms.gist — See how AI describes your product',
-    template: '%s | llms.gist',
-  },
+  title: 'llms.gist: product context your coding agent actually reads',
   description:
-    'Audit what ChatGPT and Claude say about your product. Fix the gaps with an llms.gist file.',
+    'Audit how AI tools describe your product, write an llms.gist spec, and wire it into the config files your coding agent loads.',
   metadataBase: new URL(baseUrl),
   alternates: {
     canonical: baseUrl,

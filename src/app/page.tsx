@@ -1,86 +1,74 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
-import { aggregateByCategory, loadAllResults } from '@/lib/gallery/loadResults';
-import { SiteHeader } from '@/components/Layout/SiteHeader';
-import { AuditedBrowser } from '@/components/Gallery/AuditedBrowser';
-import { AuditHeroToggle } from '@/components/Audit';
-import { LogoMarquee } from '@/components/LogoMarquee';
 
 export const metadata: Metadata = {
-  title: 'llms.gist — public llms.gist files for popular products',
+  title: 'llms.gist: product context your coding agent actually reads',
   description:
-    'Browse public llms.gist files for popular founder and developer tools. Drop one in your repo so AI tools describe your product correctly.',
+    'Audit how AI tools describe your product, write an llms.gist spec, and wire it into the config files your coding agent loads.',
 };
 
+const INSTALL = 'curl -fsSL https://raw.githubusercontent.com/imsaif/gist/main/install.sh | bash';
+
 export default function Home() {
-  const entries = loadAllResults();
-  const categoryCounts = aggregateByCategory(entries);
-
-  const lastUpdated = entries
-    .map((e) => e.auditedAt)
-    .filter(Boolean)
-    .sort()
-    .at(-1);
-  const lastUpdatedLabel = lastUpdated
-    ? new Date(lastUpdated).toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-      })
-    : '—';
-
   return (
-    <div className="bg-background-primary min-h-screen">
-      <SiteHeader />
+    <main className="mx-auto max-w-2xl px-6 py-20">
+      <h1 className="text-ink-primary text-4xl font-bold tracking-[-0.02em]">llms.gist</h1>
 
-      <section className="bg-background-grain bg-grain px-6 pt-16 pb-12 md:px-10 md:pt-24 md:pb-16 lg:px-14">
-        <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
-          <p className="eyebrow text-ink-tertiary mb-5">llms.gist</p>
-          <h1 className="text-ink-primary text-3xl leading-[1.1] font-bold tracking-[-0.02em] md:text-4xl lg:text-5xl">
-            AI doesn&apos;t know your product.
-            <br />
-            <span className="text-brand-primary font-serif italic">llms.gist</span>{' '}
-            <span className="text-ink-primary">makes sure it knows.</span>
-          </h1>
-          <p className="text-ink-secondary mt-6 max-w-xl text-base leading-relaxed md:text-lg">
-            ChatGPT, Claude, and coding agents fabricate features, miss positioning, and blend you
-            with competitors. Drop an{' '}
-            <code className="bg-background-secondary rounded px-1 py-0.5 text-sm font-medium">
-              llms.gist
-            </code>{' '}
-            file at{' '}
-            <code className="bg-background-secondary rounded px-1 py-0.5 text-sm font-medium">
-              /llms.gist
-            </code>{' '}
-            so they describe your product correctly.
-          </p>
-          <div className="mt-10 flex w-full justify-center">
-            <AuditHeroToggle />
-          </div>
-          <p className="text-ink-tertiary mt-8 text-xs tabular-nums">
-            {entries.length} public {entries.length === 1 ? 'file' : 'files'} below · Updated{' '}
-            {lastUpdatedLabel}
-          </p>
-        </div>
-      </section>
+      <p className="text-ink-secondary mt-6 text-lg leading-relaxed">
+        AI tools describe your product from whatever they can find. That is usually your README and
+        your homepage, which say what it does but not who it is for, what it deliberately does not
+        do, or how it differs from the product it keeps getting confused with.
+      </p>
 
-      <LogoMarquee />
+      <p className="text-ink-secondary mt-4 text-lg leading-relaxed">
+        gist audits how your repo reads to an AI tool, writes an <code>llms.gist</code> file that
+        fills the gaps, and points your coding agent at it.
+      </p>
 
-      <main id="browse" className="scroll-mt-20 px-6 pb-20 md:px-10 lg:px-14">
-        <div className="mb-8 pt-10">
-          <h2 className="text-ink-primary text-2xl font-bold tracking-tight md:text-3xl">
-            Find llms.gist files
-          </h2>
-        </div>
-        <AuditedBrowser entries={entries} categoryCounts={categoryCounts} />
-      </main>
+      <h2 className="text-ink-primary mt-12 text-sm font-semibold tracking-wide uppercase">
+        Install
+      </h2>
+      <pre className="border-border-primary bg-background-secondary mt-3 overflow-x-auto rounded-lg border p-4 text-sm">
+        <code>{INSTALL}</code>
+      </pre>
+      <p className="text-ink-tertiary mt-3 text-sm">
+        Then run <code>/gist-design</code> in any repo.
+      </p>
 
-      <footer className="text-ink-tertiary mx-auto flex max-w-6xl items-center justify-between gap-3 px-6 pb-6 text-xs">
-        <span>llms.gist · 2026</span>
-        <Link href="/spec" className="hover:text-ink-primary transition-colors">
-          Built on the open .gist spec
-        </Link>
+      <h2 className="text-ink-primary mt-12 text-sm font-semibold tracking-wide uppercase">
+        What it writes
+      </h2>
+      <pre className="border-border-primary bg-background-secondary mt-3 overflow-x-auto rounded-lg border p-4 text-sm leading-relaxed">
+        <code>{`# Linear
+
+> A keyboard-first issue tracker with an opinionated workflow.
+
+## Positioning
+
+- Not for: teams who need custom workflows or configurable issue types.
+- vs Jira: Jira is customizable, Linear is opinionated. No custom
+  workflows, no configurable issue types.
+
+### Not This
+
+- This is not Jira with a faster UI. Cycles auto-schedule and roll
+  unfinished work forward, so there are no sprint ceremonies.`}</code>
+      </pre>
+
+      <h2 className="text-ink-primary mt-12 text-sm font-semibold tracking-wide uppercase">
+        What it does not do
+      </h2>
+      <p className="text-ink-secondary mt-3 leading-relaxed">
+        This makes your coding agent describe the product correctly, because its config points at
+        the file. It does not change what ChatGPT tells someone who asks about your product on the
+        web. Those models read pages a search index already contains, and a file nothing links to is
+        not in any index.
+      </p>
+
+      <footer className="border-border-primary text-ink-tertiary mt-16 border-t pt-6 text-sm">
+        <a className="hover:text-ink-primary" href="https://github.com/imsaif/gist">
+          github.com/imsaif/gist
+        </a>
       </footer>
-    </div>
+    </main>
   );
 }
