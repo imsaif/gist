@@ -268,3 +268,24 @@ generated `llms.gist`.
   deletions with no original lines removed) — it just wasn't necessary to elicit the
   correct answer in this test, because a 3-file repo makes `llms.gist` trivially
   discoverable regardless of any pointer.
+
+---
+
+## Known deferred items (2026-08-03)
+
+Recorded at merge time so they are not lost with the scratch workspace. None blocks merge.
+
+- **The wiring reference was never exercised end to end.** During the E2E, the skill's own
+  `references/wiring.md` and `references/file-format.md` could not be read (permission
+  decline), so the agent improvised the pointer text and file structure. The wiring
+  _behaviour_ was verified; the shipped artifact was reviewed by desk-read only. This is
+  also how a contradictory "paste the file into ChatGPT" testing procedure survived in
+  `file-format.md` until the final review caught it.
+- **`references/wiring.md` check-before-adding rule is single-file.** It does not spell out
+  how to check across a `.cursor/rules/` directory holding several `.mdc` files. An agent
+  has to infer "grep the directory."
+- **`scripts/stress-test-gist.ts` became tracked.** It was a pre-existing untracked file
+  swept in by a `git add -A` during the deletion task. Scanned: no secrets, and it is a
+  topical stress test of this same thesis. Untrack it if that was not intended.
+- **`.claude-plugin` descriptions say "a .gist file"** rather than `llms.gist`. Shorthand
+  for the format rather than the filename, so imprecise but not false.
