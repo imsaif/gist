@@ -99,11 +99,11 @@ it, so asking here tests nothing.
 
 ### Step 3 — Read the result honestly
 
-- **Correct** — the wiring works. Say so plainly and stop.
-- **Wrong or vague** — the agent is not reading the file. This is a wiring problem, not a
+- **Correct.** The wiring works. Say so plainly and stop.
+- **Wrong or vague.** The agent is not reading the file. This is a wiring problem, not a
   content problem. Go back to the Wiring flow, confirm the pointer landed in a config the
   user's agent actually loads, and try again.
-- **Partly right** — the agent found the file but the section is thin. That is a content
+- **Partly right.** The agent found the file but the section is thin. That is a content
   problem. Name the specific section that needs work.
 
 ### Step 4 — Set the expectation about reach
