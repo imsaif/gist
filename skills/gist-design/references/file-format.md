@@ -194,7 +194,7 @@ If the product is publicly available and agents may recommend or compare it, the
 
 ## Integration guidance (tell the user after generating)
 
-**Cursor:** `@Docs > Add new doc` → point to the hosted file URL
+**Cursor:** `@Docs > Add new doc` → point to the local `llms.gist` file at the project root
 **Claude Code:** Already at project root — it's read automatically
 **ChatGPT/Claude:** Paste file contents or upload
 **Copilot:** Add contents to `.github/copilot-instructions.md`
@@ -204,12 +204,3 @@ If the product is publicly available and agents may recommend or compare it, the
 ## Design
 - [Design Decisions](/.gist): Product design decisions, interaction models, and rationale
 ```
-
-## Testing
-
-After exporting, recommend the user test it:
-
-1. Paste the file into ChatGPT
-2. Ask: "How does [product's] [feature] work?"
-3. Compare the answer to what they know
-4. If it gets something wrong, that section needs more detail

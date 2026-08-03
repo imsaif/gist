@@ -14,7 +14,7 @@ cleanup() {
 trap cleanup EXIT
 
 echo ""
-echo "  gist.design — installing Claude Code skill"
+echo "  llmsgist.org: installing Claude Code skill"
 echo "  ────────────────────────────────────────────"
 echo ""
 

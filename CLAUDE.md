@@ -55,7 +55,6 @@ Env vars (names only): `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`. Both are only need
 
 - No em-dashes in user-facing copy. Use commas, periods, colons, or parens
 - Parser pattern: `addX` appends to arrays, `updateX` merges by ID
-- Mock mode (`MOCK_MODE=true`) runs the app without API keys
 - Tailwind v4 dropped v3's default `cursor: pointer` on `<button>`; it's restored in a `globals.css` base layer, don't re-add it per component
 - Don't run `npm run build` while the dev server is running (it clobbers `.next/`); use `npx tsc --noEmit`
 - Never claim in copy that publishing the file changes what a search-connected model says. The provable claim is local.
