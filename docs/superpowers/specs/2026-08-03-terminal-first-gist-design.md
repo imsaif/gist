@@ -235,3 +235,26 @@ drive this design:
 1. Zero fetches of `llms.gist` or `llms.txt` across two models and three probes.
 2. Perfect answers from the same model when the URL was supplied directly.
 3. Zero inbound links to either file from the publishing site.
+
+## E2E run 2026-08-03
+
+Method: headless `claude -p` in a scratch repo (`/tmp/gist-e2e`), fact present only in the
+generated `llms.gist`.
+
+- Question asked: "What is the maximum number of files this tool will process at once?"
+- With the pointer in `CLAUDE.md`: "**50 files.** Kettleback will not batch more than 50
+  files at once (`llms.gist:88-118`)." — contained 50 (2 occurrences of "50" in the log).
+- With the pointer removed: "**50 files.** Kettleback will not batch more than 50 files at
+  once (`llms.gist:88-118`) ... the reasoning is that bad renames are only reviewable at a
+  scale a person can actually look at" — also contained 50 (4 occurrences of "50" in the
+  log). Confirmed `grep -c "llms.gist" CLAUDE.md` was `0` before this question ran, so the
+  control was valid: no pointer was present in `CLAUDE.md` when the agent answered.
+- Conclusion: **Outcome 2 — positive passes, negative control also passes.** The agent
+  found and cited `llms.gist` directly (by file inspection/globbing the repo root) without
+  needing the `CLAUDE.md` pointer. In this scratch repo, the wiring step is redundant with
+  the agent's own repo-browsing rather than the load-bearing mechanism for the fact
+  reaching the answer. The wiring itself was verified to work correctly (Step 4: `llms.gist`
+  written, `CLAUDE.md` had exactly one `llms.gist` reference, diff was 6 insertions / 0
+  deletions with no original lines removed) — it just wasn't necessary to elicit the
+  correct answer in this test, because a 3-file repo makes `llms.gist` trivially
+  discoverable regardless of any pointer.
