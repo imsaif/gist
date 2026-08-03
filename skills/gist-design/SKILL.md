@@ -188,37 +188,57 @@ If they say yes, transition into the **State B** conversation flow, but with aud
 
 ## Verify flow
 
-After generating a .gist file, offer to verify it works:
+After the file is written and wired in, prove an agent actually picks it up.
 
-### Step 1 — Re-describe with context
+The check has one rule: **do not mention the file.** If you name `llms.gist`, or paste its
+contents, or say "using the spec we just wrote", the test cannot fail and proves nothing.
+The whole point is to find out whether the wiring works when nobody points at it.
 
-"Let me re-describe your product — this time using the .gist file I just created."
+### Step 1 — Pick a question only the file answers
 
-Write a new natural paragraph describing the product, now informed by the .gist file. This is what AI tools would say with the file present.
+Choose something stated in the `llms.gist` and nowhere else in the repo. Prefer the
+**Not This**, **Positioning**, or **Open Questions** sections, because boundaries and
+negative claims are what AI tools most reliably get wrong.
 
-### Step 2 — Show before/after (audit → create flow only)
+Verify the answer really is unique to the file before using it:
 
-If the conversation started from an audit, show the comparison:
+```bash
+grep -ril "<distinctive phrase>" . \
+  --exclude=llms.gist --exclude-dir=node_modules --exclude-dir=.git
+```
 
-**Before (from audit):**
+If that returns any file, the question is answerable from the repo and is not a valid
+test. Pick another.
 
-> [Original description based on repo alone]
+### Step 2 — Ask it in a fresh session
 
-**After (with .gist):**
+Tell the user, in your own words:
 
-> [New description informed by the file]
+> Open a new Claude Code session in this repo and ask: "<question>". Don't mention
+> llms.gist. If the answer is right, the wiring works.
 
-### Step 3 — Highlight improvements
+A fresh session matters. The current session already has the file in context from writing
+it, so asking here tests nothing.
 
-For each gap from the audit, show whether it's fixed:
+### Step 3 — Read the result honestly
 
-- Fixed — the .gist file addresses this gap
-- Partially fixed — more detail would help
-- Still open — flagged as an Open Question in the file
+- **Correct.** The wiring works. Say so plainly and stop.
+- **Wrong or vague.** The agent is not reading the file. This is a wiring problem, not a
+  content problem. Go back to the Wiring flow, confirm the pointer landed in a config the
+  user's agent actually loads, and try again.
+- **Partly right.** The agent found the file but the section is thin. That is a content
+  problem. Name the specific section that needs work.
 
-### Step 4 — Suggest testing
+### Step 4 — Set the expectation about reach
 
-"Want to verify this yourself? Paste the file into ChatGPT and ask: 'How does [product name]'s [feature] work?' If it gets something wrong, that section needs more detail."
+Say this plainly, because the alternative is a promise that does not hold:
+
+> This makes your coding agent describe the product correctly, because its config now
+> points at the file. It does not change what ChatGPT tells someone who asks about your
+> product on the web. Those models only read pages a search index already contains, and a
+> file nothing links to is not in any index.
+
+Do not soften this. Overpromising here is the specific failure this flow exists to avoid.
 
 ## Adapting to who you're talking to
 
