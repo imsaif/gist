@@ -52,49 +52,25 @@ See [examples/BEFORE-AFTER.md](examples/BEFORE-AFTER.md) for more products (v0, 
 
 </details>
 
-## Install
+## How it works
 
-### Option 1: One-liner (recommended)
+Four steps, run in order by the `/gist-design` skill.
 
-```bash
-curl -fsSL https://raw.githubusercontent.com/imsaif/gist/main/install.sh | bash
-```
+### Audit
 
-Installs to `~/.claude/skills/gist-design/`. Works across all your projects.
+Reads what's already in the repo, README, package metadata, existing agent config files, key source files, and describes the product the way an AI tool would if asked "what does this do?" It scores readability across positioning, features, interaction model, and boundaries, then lists the specific gaps.
 
-### Option 2: Git clone
+### Generate
 
-```bash
-git clone --depth 1 https://github.com/imsaif/gist.git /tmp/gist && \
-  mkdir -p ~/.claude/skills && \
-  cp -r /tmp/gist/skills/gist-design ~/.claude/skills/gist-design && \
-  rm -rf /tmp/gist
-```
+Turns the audit gaps (or a guided conversation, in the fuller modes) into a `.gist` file, written as `llms.gist` at the project root.
 
-### Option 3: Project-level (for teams)
+### Wire it in
 
-Copy `skills/gist-design/` into your repo's `.claude/skills/` directory. Commit it so every team member gets the skill automatically.
+A file at the project root is not read just because it exists. The skill checks which agent config files the repo has (`CLAUDE.md`, `.cursor/rules`, `.github/copilot-instructions.md`, `AGENTS.md`) and appends a pointer to `llms.gist` in each one it finds, never rewriting what's already there.
 
-```bash
-git clone --depth 1 https://github.com/imsaif/gist.git /tmp/gist && \
-  mkdir -p .claude/skills && \
-  cp -r /tmp/gist/skills/gist-design .claude/skills/gist-design && \
-  rm -rf /tmp/gist
-```
+### Verify
 
-## Usage
-
-Three modes in Claude Code:
-
-```
-/gist-design          ← audit your current project (default)
-/gist-design quick    ← generate a starter file in 2-3 turns
-/gist-design create   ← full guided conversation
-```
-
-- **Audit**: reads your repo, describes your product as AI tools would, scores readability, highlights gaps
-- **Quick**: one question, then generates a starter `.gist` file you can refine later
-- **Create**: guided conversation that documents features, decisions, and boundaries in depth
+Proves the wiring worked instead of assuming it. It picks a question only `llms.gist` answers, asks you to put it to a fresh Claude Code session without naming the file, and reads the result honestly: right means the wiring works, wrong means the pointer didn't land.
 
 ## What the file captures
 
@@ -128,72 +104,24 @@ See [skills/gist-design/references/file-format.md](skills/gist-design/references
 | **Copilot**          | Add to `.github/copilot-instructions.md`    |
 | **llms.txt**         | Add a reference in your `llms.txt`          |
 
-## Web app
+The Wire it in step now does this for you. The table is here for reference and for tools the skill does not yet detect.
 
-[llmsgist.org](https://llmsgist.org) runs the same audit in the browser, no installation needed. Enter a URL, and it asks ChatGPT and Claude what your product is, compares their answers against your site, and reports the gaps: contradictions, fabrications, category drift, audience drift, pricing confusion. Then it drafts an `llms.gist` that closes them.
+## What this does not do
 
-[llmsgist.org/audited](https://llmsgist.org/audited) is a public gallery of pre-run audits, each with a downloadable `llms.gist`.
+This makes your coding agent describe your product correctly, because its config points
+at the file. It does not change what ChatGPT tells someone who asks about your product
+on the web. Those models read pages a search index already contains, and a file nothing
+links to is not in any index.
 
-## Development (web app)
-
-### Prerequisites
-
-- Node.js 20.9+ (required by Next.js 16)
-- Anthropic and OpenAI API keys (optional: set `MOCK_MODE=true` to run without them)
-
-### Setup
+## Development
 
 ```bash
-git clone https://github.com/imsaif/gist.git
-cd gist
 npm install
-cp .env.example .env.local
+npm run dev
+npm test
 ```
 
-### Environment Variables
-
-```env
-ANTHROPIC_API_KEY=...        # Claude queries in the audit, plus /create
-OPENAI_API_KEY=...           # ChatGPT queries in the audit
-MOCK_MODE=true               # Use mock responses instead of real API calls
-
-DATABASE_URL=...             # libsql / Turso. Backs auth, snapshots, rate limiting
-DATABASE_AUTH_TOKEN=...
-HMAC_SECRET=...              # Email gate. Generate with: openssl rand -hex 32
-RESEND_API_KEY=...           # Transactional email
-RESEND_FROM_EMAIL=noreply@llmsgist.org
-GALLERY_SUBMIT_TO_EMAIL=...  # Where clean-audit gallery submissions land
-REQUEST_PRIVATE_TO_EMAIL=... # Where /request-private enquiries land
-CRON_SECRET=...              # Guards /api/cron/weekly-audit
-DISABLE_RATE_LIMIT=true      # Local development only
-```
-
-See `.env.example` for the full list.
-
-### Commands
-
-```bash
-npm run dev            # Start dev server
-npm run build          # Build for production (runs migrations first)
-npm start              # Start production server
-npm test               # Run the test suite
-npm run db:migrate     # Apply database migrations
-npm run build-gallery  # Regenerate gallery data from audit results
-```
-
-## Tech Stack
-
-- **Framework:** Next.js 16 (App Router), React 19
-- **Language:** TypeScript
-- **Styling:** Tailwind CSS v4
-- **AI:** Claude API (Anthropic), OpenAI API
-- **Database:** libsql / Turso
-- **Tests:** Vitest
-- **Deployment:** Vercel
-
-## Pattern Library
-
-Powered by [aiuxdesign.guide](https://aiuxdesign.guide): 36 AI UX design patterns (including agentic patterns) from ChatGPT, Claude, GitHub Copilot, Midjourney, Devin, and 50+ shipped products.
+`src/lib/audit/` is dormant and intentionally unreferenced. See its own README before touching it.
 
 ## License
 

@@ -1,6 +1,6 @@
 {
   "name": "gist-design",
-  "description": "Generate a .gist file through guided conversation — structured product context (positioning, audience, what AI commonly gets wrong) readable by AI coding tools and LLMs",
+  "description": "Audit how AI tools describe your product, generate a .gist file at your project root, and wire it into your agent config so Claude Code, Cursor, and Copilot read it automatically",
   "version": "1.0.0",
   "author": {
     "name": "imsaif"

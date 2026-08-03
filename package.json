@@ -5,7 +5,6 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "prebuild": "tsx scripts/migrate-on-deploy.ts",
     "start": "next start",
     "lint": "eslint",
     "format": "prettier --write .",
@@ -13,8 +12,6 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "db:migrate": "node --env-file-if-exists=.env.local --import tsx scripts/migrate.ts",
-    "build-gallery": "tsx scripts/build-gallery.ts",
     "prepare": "husky"
   },
   "lint-staged": {
@@ -28,16 +25,11 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.71.2",
-    "@heroicons/react": "^2.2.0",
-    "@libsql/client": "^0.17.3",
     "cheerio": "^1.2.0",
-    "framer-motion": "^12.33.0",
     "next": "16.1.1",
     "openai": "^6.22.0",
     "react": "19.2.3",
-    "react-dom": "19.2.3",
-    "resend": "^6.9.2",
-    "simple-icons": "^16.17.0"
+    "react-dom": "19.2.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
