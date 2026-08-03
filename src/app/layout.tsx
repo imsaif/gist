@@ -27,9 +27,9 @@ export const metadata: Metadata = {
     canonical: baseUrl,
   },
   openGraph: {
-    title: 'llms.gist — See how AI describes your product',
+    title: 'llms.gist: product context your coding agent actually reads',
     description:
-      'Audit what ChatGPT and Claude say about your product. Fix the gaps with an llms.gist file.',
+      'Audit how AI tools describe your product, write an llms.gist spec, and wire it into the config files your coding agent loads.',
     url: baseUrl,
     siteName: 'llms.gist',
     locale: 'en_US',
@@ -37,9 +37,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'llms.gist — See how AI describes your product',
+    title: 'llms.gist: product context your coding agent actually reads',
     description:
-      'Audit what ChatGPT and Claude say about your product. Fix the gaps with an llms.gist file.',
+      'Audit how AI tools describe your product, write an llms.gist spec, and wire it into the config files your coding agent loads.',
   },
   robots: {
     index: true,
