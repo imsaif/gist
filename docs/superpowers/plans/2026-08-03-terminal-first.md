@@ -284,7 +284,34 @@ In `## Before you begin`, after the line referencing `references/file-format.md`
 
 Renumber the following list items so the sequence stays continuous.
 
-- [ ] **Step 4: Verify both pieces landed**
+- [ ] **Step 4: Reconcile the closing steps of `## Writing the file`**
+
+Found during Task 1. The closing list of `## Writing the file` still ends with instructions
+written for the old flow, and step 4 now directly contradicts the new Verify flow, which
+says "do not mention the file" and "if you paste its contents, the test cannot fail and
+proves nothing."
+
+Replace the numbered items 3 and 4 at the end of `## Writing the file` (currently around
+line 333) with:
+
+```markdown
+3. Run the wiring flow so an agent will actually load the file.
+4. Then run the verify flow to confirm it did.
+```
+
+Leave items 1 and 2 of that list alone, including the `llms.txt` reference block. That block
+adds a pointer inside a file the user already publishes, which is a different thing from
+claiming a crawler will find `llms.gist` on its own.
+
+Verify:
+
+```bash
+grep -c "Paste the file into ChatGPT" skills/gist-design/SKILL.md
+```
+
+Expected: `0`.
+
+- [ ] **Step 5: Verify both pieces landed**
 
 Run:
 
@@ -296,7 +323,7 @@ grep -n "references/wiring.md" skills/gist-design/SKILL.md
 
 Expected: `reference: ok`, then `1`, then at least two line numbers (one in Before you begin, one in the Wiring flow).
 
-- [ ] **Step 5: Verify ordering**
+- [ ] **Step 6: Verify ordering**
 
 Run:
 
@@ -306,7 +333,7 @@ grep -n "^## Wiring flow\|^## Verify flow" skills/gist-design/SKILL.md
 
 Expected: two lines, with Wiring flow on the lower line number. Wiring must precede Verify.
 
-- [ ] **Step 6: Commit**
+- [ ] **Step 7: Commit**
 
 ```bash
 git add skills/gist-design/SKILL.md skills/gist-design/references/wiring.md
