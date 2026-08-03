@@ -182,9 +182,11 @@ exist in the skill.
 
 ---
 
-## Open decisions
+## Decided
 
-### 1. `src/lib/audit/` : delete or keep dormant
+### `src/lib/audit/` stays, dormant
+
+**Decision (2026-08-03): keep the directory and its tests, unreferenced.**
 
 This is the strongest code in the repo: deterministic (temperature 0, pinned model
 snapshots), validating JSON parser, scoring derived in code so the judge cannot drift, and
@@ -192,12 +194,22 @@ a fix for a prompt-injection path where provider error text fed back into the ne
 
 The skill's audit reads a repo rather than querying two models, so it is not a like-for-like
 port. If the two-model comparison is ever wanted from the terminal flow, this is where it
-lives.
+lives. Deleting it would discard the only implementation of the comparison and its
+hardening.
 
-**Recommendation:** keep the directory and its tests, unreferenced, with a note explaining
-why. Deleting it discards the only implementation of the comparison and its hardening.
+Implementation requirements that follow from this:
 
-### 2. Acquisition
+- `src/lib/audit/` and its `*.test.ts` files stay in the repo and keep passing
+- `src/types/audit.ts` stays, since the audit modules depend on it
+- The Anthropic and OpenAI SDK dependencies stay in `package.json` for the same reason
+- A `README.md` in `src/lib/audit/` explains that the directory is intentionally
+  unreferenced, what it does, and what would be needed to revive it
+
+---
+
+## Open decisions
+
+### Acquisition
 
 Removing the gallery removes the shareable artifact. The prior positioning note states that
 the audit is the marketing and the file is the artifact. Terminal distribution plus a static
