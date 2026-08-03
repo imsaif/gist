@@ -129,7 +129,17 @@ Write `llms.gist` at the project root from the audit plus a short conversation.
 
 ### 3. Wire it in
 
-New. This is the step the test proved decisive, translated to the local case.
+New. Translated to the local case from the discovery failure that drove this redesign.
+
+**Corrected 2026-08-03 after the E2E run.** The original wording here claimed the test
+proved this step decisive. It does not. In the E2E, a fresh agent answered correctly with
+the pointer removed, so wiring was redundant with the agent's own repo browsing rather than
+the mechanism. Two limits on that result: the scratch repo held three files, which makes
+`llms.gist` trivially discoverable, and only Claude Code was exercised. Cursor and Copilot
+load configs differently and may still need it.
+
+Wiring is therefore justified as cheap insurance for large repos and for agents that do not
+browse, not as the proven mechanism.
 
 Dropping a file at the project root has the same flaw as dropping it at the web root:
 nothing points at it. Claude Code auto-loads `CLAUDE.md`, not `llms.gist`. Cursor needs it
