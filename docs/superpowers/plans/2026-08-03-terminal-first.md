@@ -323,21 +323,24 @@ never rewriting what is already in them."
 
 ### Task 3: End-to-end run of the skill against a scratch repo
 
-The first two tasks changed instructions, which unit tests cannot cover. This task is the real check. It is manual and it is the only thing that proves the flow works.
+The first two tasks changed instructions, which unit tests cannot cover. This task is the real check on whether the flow works. It runs headlessly via `claude -p`, which starts a fresh session per invocation and loads `CLAUDE.md` from the working directory, so it exercises the same loading path a user's session would.
 
 **Files:**
 
-- Create: nothing in this repo. Work happens in a scratch directory outside it.
+- Create: nothing in this repo. Work happens in `/tmp/gist-e2e`.
+- Modify: `docs/superpowers/specs/2026-08-03-terminal-first-gist-design.md` (append a results section)
 
 **Interfaces:**
 
 - Consumes: the Wiring flow and Verify flow from Tasks 1 and 2.
-- Produces: a pass or fail signal. Nothing downstream depends on its output.
+- Produces: a recorded result. Nothing downstream depends on its outcome, but a failure here means Tasks 1 or 2 need revisiting.
 
 - [ ] **Step 1: Build a scratch repo with a distinctive, checkable fact**
 
+The fact must not appear anywhere in the repo except the file the skill will write.
+
 ```bash
-mkdir -p /tmp/gist-e2e && cd /tmp/gist-e2e && git init -q
+rm -rf /tmp/gist-e2e && mkdir -p /tmp/gist-e2e && cd /tmp/gist-e2e && git init -q
 cat > README.md <<'EOF'
 # Kettleback
 
@@ -360,54 +363,97 @@ git add -A && git commit -qm "init"
 mkdir -p ~/.claude/skills
 rm -rf ~/.claude/skills/gist-design
 cp -r ~/gist/skills/gist-design ~/.claude/skills/gist-design
+test -f ~/.claude/skills/gist-design/references/wiring.md && echo "wiring reference installed"
 ```
 
-- [ ] **Step 3: Run the skill in the scratch repo**
+Expected: `wiring reference installed`. If missing, Task 2 did not complete.
 
-Open Claude Code in `/tmp/gist-e2e` and run `/gist-design`. Answer its questions. Make sure at least one answer states something that appears nowhere in `README.md` or `CLAUDE.md`, for example: "Kettleback is not an OCR library. It never uploads images, and it will not batch more than 50 files at once."
+- [ ] **Step 3: Run the skill headlessly, supplying the answer up front**
+
+Headless mode has nobody to answer questions, so the distinctive fact goes in the prompt.
+
+```bash
+cd /tmp/gist-e2e
+claude -p "Run the gist-design skill in quick mode on this repo. When you need to know what AI tools get wrong about it, use exactly this: Kettleback is not an OCR library, it never uploads images, and it will not batch more than 50 files at once. Write the llms.gist file, then complete the wiring flow." \
+  --permission-mode acceptEdits > /tmp/gist-e2e-run.log 2>&1
+tail -30 /tmp/gist-e2e-run.log
+```
 
 - [ ] **Step 4: Check the file and the wiring both landed**
 
 ```bash
 cd /tmp/gist-e2e
-test -f llms.gist && echo "file: ok"
+test -f llms.gist && echo "file: ok" || echo "file: MISSING"
 grep -c "llms.gist" CLAUDE.md
+grep -c "50" llms.gist
 git diff --stat CLAUDE.md
 ```
 
-Expected: `file: ok`, a count of `1` or higher, and a diff showing lines added but none removed. If any original line was removed, the append rule was violated and Task 2's reference file needs a stronger instruction.
+Expected: `file: ok`, a `llms.gist` count of 1 or higher in `CLAUDE.md`, at least one `50` in `llms.gist`, and a diff showing lines added to `CLAUDE.md` but none removed.
 
-- [ ] **Step 5: Run the verification the way a user would**
+If any original `CLAUDE.md` line was removed, the append-never-rewrite rule in `references/wiring.md` was violated and Task 2 needs a stronger instruction. Report this as a finding rather than fixing it here.
 
-Start a **new** Claude Code session in `/tmp/gist-e2e`. Ask a question whose answer is only in `llms.gist`, for example: "What is the maximum number of files this tool will process at once?" Do not mention `llms.gist`.
+- [ ] **Step 5: Run the positive check in a fresh session**
 
-Expected: the correct answer, drawn from the file.
+Each `claude -p` is a fresh session. The question never names the file.
 
-- [ ] **Step 6: Confirm the test can fail**
+```bash
+cd /tmp/gist-e2e
+claude -p "What is the maximum number of files this tool will process at once?" > /tmp/gist-e2e-positive.log 2>&1
+cat /tmp/gist-e2e-positive.log
+grep -c "50" /tmp/gist-e2e-positive.log
+```
 
-This proves the check is real rather than self-fulfilling.
+Expected: the answer states 50, so the grep count is 1 or higher.
+
+- [ ] **Step 6: Run the negative control**
+
+Remove the pointer and ask the identical question. This is what makes the check falsifiable.
 
 ```bash
 cd /tmp/gist-e2e && cp CLAUDE.md /tmp/CLAUDE.md.bak
 python3 - <<'EOF'
 import re
-p = "CLAUDE.md"
-s = open(p).read()
+s = open("CLAUDE.md").read()
 s = re.sub(r"\n## Product context\n.*?(?=\n## |\Z)", "\n", s, flags=re.S)
-open(p, "w").write(s)
+open("CLAUDE.md", "w").write(s)
 EOF
 grep -c "llms.gist" CLAUDE.md
+claude -p "What is the maximum number of files this tool will process at once?" > /tmp/gist-e2e-negative.log 2>&1
+cat /tmp/gist-e2e-negative.log
+grep -c "50" /tmp/gist-e2e-negative.log
+cp /tmp/CLAUDE.md.bak CLAUDE.md
 ```
 
-Expected: `0`. Now start another fresh session and ask the same question.
+The `llms.gist` count in `CLAUDE.md` must be `0` before the question runs.
 
-Expected: the agent cannot answer, or guesses. **If it still answers correctly, the test is not isolating the wiring** and Task 1's question-selection rule needs to be stricter. Restore with `cp /tmp/CLAUDE.md.bak CLAUDE.md`.
+- [ ] **Step 7: Interpret the result honestly**
 
-- [ ] **Step 7: Record the outcome**
+Three outcomes, and all three are reportable results. Do not tune the test to produce a particular one.
 
-Append a short `## E2E run <date>` section to `docs/superpowers/specs/2026-08-03-terminal-first-gist-design.md` stating what was asked, what came back with the pointer present, and what came back with it removed.
+- **Positive passes, negative fails.** The wiring is doing the work. This is the intended result.
+- **Positive passes, negative also passes.** The agent found `llms.gist` on its own, most likely by globbing or grepping the repo, without needing the pointer. This is a real and useful finding: it means the wiring step is redundancy rather than the load-bearing mechanism. Record it plainly. Do not weaken the negative control to manufacture a failure.
+- **Positive fails.** The wiring is not working. Record what `CLAUDE.md` contained and what the agent answered. This means Task 2 needs revisiting.
 
-- [ ] **Step 8: Commit**
+- [ ] **Step 8: Record the outcome in the spec**
+
+Append to `docs/superpowers/specs/2026-08-03-terminal-first-gist-design.md`:
+
+```markdown
+## E2E run 2026-08-03
+
+Method: headless `claude -p` in a scratch repo, fact present only in the generated
+`llms.gist`.
+
+- Question asked: "What is the maximum number of files this tool will process at once?"
+- With the pointer in `CLAUDE.md`: <answer, and whether it contained 50>
+- With the pointer removed: <answer, and whether it contained 50>
+- Conclusion: <one of the three outcomes from Step 7>
+```
+
+Fill every placeholder with the actual observed output. Leaving a `<...>` in place is a failure of this step.
+
+- [ ] **Step 9: Commit**
 
 ```bash
 cd ~/gist
