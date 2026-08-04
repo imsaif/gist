@@ -172,7 +172,54 @@ html[data-theme='light'] {
   --status-info: #3b82f6;
 }
 
+/* === gist additions to the shared aiex system ===
+   Everything else comes from the aiex tokens above. Two additions only:
+   an inverse surface for dark objects (install pill, evidence card), and the
+   correction red, which is reserved for struck wrong text and used nowhere else. */
+:root {
+  --surface-inverse: #162036;
+  --correction: #ff6b63;
+  --correction-wash: rgba(255, 107, 99, 0.14);
+}
+
+/* The signature: a proof-mark correction. The bar draws itself once on load.
+   This is gist's one distinct device across the aiex house style, and it comes
+   from the file format itself (### Not This), not from typography. */
+/* The bar is a background gradient rather than a positioned pseudo-element, so
+   box-decoration-break clones it onto every line fragment. An absolutely
+   positioned bar draws once across the whole inline box and misses wrapped text. */
+.correction {
+  color: rgba(255, 255, 255, 0.45);
+  padding: 0.05em 0.15em;
+  border-radius: 2px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  background-color: var(--correction-wash);
+  background-image: linear-gradient(var(--correction), var(--correction));
+  background-repeat: no-repeat;
+  background-position: 0 58%;
+  background-size: 0 2px;
+  animation: strike 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.7s forwards;
+}
+@keyframes strike {
+  to {
+    background-size: 100% 2px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .correction {
+    background-size: 100% 2px;
+    animation: none;
+  }
+}
+
 @theme inline {
+  --color-surface-inverse: var(--surface-inverse);
+  --color-correction: var(--correction);
+
+  --font-mono:
+    ui-monospace, SFMono-Regular, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
+
   --color-background-primary: var(--background-primary);
   --color-background-secondary: var(--background-secondary);
   --color-background-tertiary: var(--background-tertiary);
