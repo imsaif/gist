@@ -5,7 +5,7 @@
 ## Quick start
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/imsaif/gist/main/install.sh | bash
+curl -fsSL llmsgist.org/i | bash
 ```
 
 Then in Claude Code:

@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # llms-gist skill installer for Claude Code
-# Usage: curl -fsSL llmsgist.org/install.sh | bash
+# Usage: curl -fsSL llmsgist.org/i | bash
 
 REPO="https://github.com/imsaif/gist.git"
 SKILL_DIR="$HOME/.claude/skills/llms-gist"

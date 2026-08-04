@@ -7,7 +7,7 @@ export const metadata: Metadata = {
     'Audit how AI tools describe your product, write an llms.gist spec, and wire it into the config files your coding agent loads.',
 };
 
-const INSTALL = 'curl -fsSL llmsgist.org/install.sh | bash';
+const INSTALL = 'curl -fsSL llmsgist.org/i | bash';
 
 const ICON = 'h-6 w-6';
 const STROKE = {
@@ -90,9 +90,9 @@ export default function Home() {
           </h1>
 
           <p className="text-ink-secondary mx-auto mt-6 max-w-[52ch] text-[17px] leading-relaxed">
-            Your agent reads your code, so it knows what your product does. It cannot know who you
-            built it for or what you deliberately left out, so it fills those in anyway. gist asks
-            you, then writes the answers where your agent will read them.
+            One file at your project root that tells your coding agents who your product is for,
+            what it deliberately is not, and how it differs from the product they keep confusing it
+            with.
           </p>
 
           <div className="mx-auto mt-9 max-w-lg">

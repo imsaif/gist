@@ -4,9 +4,14 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
-        // Keeps the install command short enough to read in one line:
-        //   curl -fsSL llmsgist.org/install.sh | bash
+        // The short form the homepage shows: curl -fsSL llmsgist.org/i | bash
         // curl -L follows the 308, so the script still comes from the repo.
+        source: '/i',
+        destination: 'https://raw.githubusercontent.com/imsaif/gist/main/install.sh',
+        permanent: true,
+      },
+      {
+        // Kept so anything already pointing at the long form still resolves.
         source: '/install.sh',
         destination: 'https://raw.githubusercontent.com/imsaif/gist/main/install.sh',
         permanent: true,
