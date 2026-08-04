@@ -12,14 +12,14 @@ These examples show how AI tools describe real products **without** a gist file 
 
 ### What's wrong
 
-- **"Similar to Jira"** — Linear is opinionated where Jira is customizable. There are no custom workflows, no configurable issue types, no admin-heavy setup. Calling it "like Jira" tells a coding assistant to build Jira-style flexibility.
+- **"Similar to Jira"**: Linear is opinionated where Jira is customizable. Statuses are editable inside a category, but the status categories themselves are fixed, there are no Jira-style issue types, and there is no admin-heavy setup. Calling it "like Jira" tells a coding assistant to build Jira-style flexibility.
 - **"Sprint planning"** — Linear uses Cycles, not Sprints. Cycles auto-schedule, don't require ceremonies, and unfinished issues roll forward automatically. A coding assistant told "implement sprint planning" would build the wrong flow.
 - **"Keyboard shortcuts"** — Undersells it. Linear is keyboard-_first_. The triage flow is designed around pressing a single key to move an issue. Mouse usage is supported but not the primary interaction.
 - **"Team collaboration features"** — Generic. Doesn't mention that Linear's collaboration model is async-first with minimal real-time features. No live cursors, no simultaneous editing.
 
 ### After (with gist)
 
-> Linear is a keyboard-first issue tracker with an opinionated workflow. Issues flow through a fixed pipeline: Triage → Backlog → Active (via Cycles) → Done. There are no customizable workflows or configurable issue types. Cycles auto-schedule and roll unfinished work forward — there are no sprint ceremonies. The triage flow is designed around single-keypress actions: press `1` to move to backlog, `2` to assign a cycle, `D` to dismiss. This is not Jira with a faster UI. It's a different philosophy: fewer options, stronger opinions, faster execution.
+> Linear is a keyboard-first issue tracker with an opinionated workflow. Issues flow through fixed status categories: Backlog → Todo → In Progress → Done, plus Canceled. Teams can add and rename statuses inside a category, but the categories cannot be reordered and there are no Jira-style issue types. Cycles auto-schedule and roll unfinished work forward, so there are no sprint ceremonies. The triage flow is designed around single-keypress actions: press `1` to move to backlog, `2` to assign a cycle, `D` to dismiss. This is not Jira with a faster UI. It's a different philosophy: fewer options, stronger opinions, faster execution.
 
 ---
 

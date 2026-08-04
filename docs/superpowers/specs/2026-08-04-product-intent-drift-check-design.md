@@ -97,7 +97,7 @@ evidence rather than silently changed.
 **Not watched:** Product Overview, Interaction Model, Design Decisions, Open Questions.
 
 Contradiction is only well defined for a negative claim. A code change can violate "not for
-teams who need configurable issue types". Almost nothing clearly violates "the goal is to
+status categories are fixed and cannot be reordered". Almost nothing clearly violates "the goal is to
 triage an issue in under five seconds". Watching positive claims produces noise, and noise is
 what makes people stop running a check.
 
@@ -169,17 +169,17 @@ Written by the extractor at the end of the Write step.
   "claims": [
     {
       "id": "c_7d41a9",
-      "text": "Not for: teams who need custom workflows or configurable issue types.",
+      "text": "Status categories are fixed and cannot be reordered.",
       "section": "Positioning",
       "line": 34,
-      "terms": ["issue type", "issueType", "custom workflow", "workflowConfig", "configurable"],
+      "terms": ["statusCategory", "reorderCategory", "workflowCategory", "categoryOrder"],
       "paths": ["src/settings/**", "src/admin/**"]
     }
   ],
   "ignored": [
     {
       "claimId": "c_7d41a9",
-      "match": "src/legacy/IssueTypeShim.ts",
+      "match": "src/legacy/CategoryShim.ts",
       "reason": "Deprecated compat shim, deleted next release",
       "date": "2026-08-04"
     }
@@ -233,11 +233,11 @@ Scanned ........... src/**, app/** (312 files)
 ⚠  1 possible contradiction
 
    llms.gist:34  Positioning
-   "Not for: teams who need custom workflows
-    or configurable issue types."
+   "Status categories are fixed and cannot
+    be reordered."
 
-   matched  src/settings/IssueTypeEditor.tsx
-            src/settings/workflowConfig.ts
+   matched  src/settings/CategoryOrderEditor.tsx
+            src/settings/statusCategory.ts
 
    One of these is out of date:
      1  The decision changed. Update llms.gist.

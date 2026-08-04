@@ -40,13 +40,13 @@ llms.txt      → for AI tools       → "What content matters?"
 
 **What's wrong:**
 
-- "Similar to Jira": Linear is opinionated where Jira is customizable. No custom workflows, no configurable issue types.
+- "Similar to Jira": Linear is opinionated where Jira is customizable. Statuses are editable inside a category, but the status categories themselves are fixed, and there are no Jira-style issue types.
 - "Sprint planning": Linear uses Cycles, not Sprints. Cycles auto-schedule, don't require ceremonies, and unfinished issues roll forward.
 - "Keyboard shortcuts": undersells it. Linear is keyboard-_first_. Triage is designed around single-keypress actions.
 
 ### After (with .gist)
 
-> Linear is a keyboard-first issue tracker with an opinionated workflow. Issues flow through a fixed pipeline: Triage → Backlog → Active (via Cycles) → Done. There are no customizable workflows or configurable issue types. Cycles auto-schedule and roll unfinished work forward, so there are no sprint ceremonies. The triage flow is designed around single-keypress actions: press `1` to move to backlog, `2` to assign a cycle, `D` to dismiss. This is not Jira with a faster UI. It's a different philosophy: fewer options, stronger opinions, faster execution.
+> Linear is a keyboard-first issue tracker with an opinionated workflow. Issues flow through fixed status categories: Backlog → Todo → In Progress → Done, plus Canceled. Teams can add and rename statuses inside a category, but the categories cannot be reordered and there are no Jira-style issue types. Cycles auto-schedule and roll unfinished work forward, so there are no sprint ceremonies. The triage flow is designed around single-keypress actions: press `1` to move to backlog, `2` to assign a cycle, `D` to dismiss. This is not Jira with a faster UI. It's a different philosophy: fewer options, stronger opinions, faster execution.
 
 See [examples/BEFORE-AFTER.md](examples/BEFORE-AFTER.md) for more products (v0, Raycast, Spark Mail).
 
