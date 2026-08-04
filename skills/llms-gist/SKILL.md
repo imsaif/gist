@@ -1,5 +1,5 @@
 ---
-name: gist-design
+name: llms-gist
 argument-hint: '[audit | quick | create]'
 description: >
   Generate a .gist file for any product — a structured markdown document that
@@ -7,7 +7,7 @@ description: >
   Use when a user wants to document their product for AI agents and coding assistants,
   when starting a new project that needs design context, when AI tools are misrepresenting
   an existing product, or when they want to audit how AI tools currently describe their
-  product. Invoked with /gist-design or when users mention ".gist",
+  product. Invoked with /llms-gist or when users mention ".gist",
   "design decisions for AI", "make my product readable to AI", "document design intent",
   "document this project", "create design docs", "prepare this repo for AI tools",
   "what would Cursor get wrong about this", "add AI context to this project",
@@ -40,7 +40,7 @@ A single `.gist` markdown file placed at the project root. This file follows a s
 
 People arrive in three states. Detect which one from their first message:
 
-**Default behavior: When `/gist-design` is invoked without a specific message inside a project directory, default to State C (audit).** Don't ask what they want to do. Open immediately with: "Let me see how AI tools would describe this project." This gives instant value without any setup. The audit results will naturally lead to creating or fixing a .gist file.
+**Default behavior: When `/llms-gist` is invoked without a specific message inside a project directory, default to State C (audit).** Don't ask what they want to do. Open immediately with: "Let me see how AI tools would describe this project." This gives instant value without any setup. The audit results will naturally lead to creating or fixing a .gist file.
 
 **State A — "I'm building something new"**
 They're mid-design or post-design. They want AI tools to understand what they're creating.
@@ -58,13 +58,13 @@ The product exists. The pain is already happening.
 They want to see how AI tools currently describe their product, based on what's in the repo. This is the "show me the problem" entry point. **This is the default when invoked inside a project without additional context.**
 
 - Trigger phrases: "audit my product", "how does AI see my product", "what do AI tools get wrong about this", "AI readability audit", "how would AI describe this project"
-- Also triggered when a user invokes `/gist-design` or `/gist-design audit` from within an existing project without describing a specific product
+- Also triggered when a user invokes `/llms-gist` or `/llms-gist audit` from within an existing project without describing a specific product
 
 See the **Audit flow** section below for the full audit process.
 
 ### Quick mode
 
-Triggered by `/gist-design quick` or phrases like "just generate it", "fast mode", "quick gist", "starter file".
+Triggered by `/llms-gist quick` or phrases like "just generate it", "fast mode", "quick gist", "starter file".
 
 Quick mode generates a solid `.gist` file in 2-3 turns instead of the full guided conversation. Use this when someone wants a working file fast and can refine later.
 
@@ -76,7 +76,7 @@ Quick mode generates a solid `.gist` file in 2-3 turns instead of the full guide
    - Product Overview (from repo context + their answer)
    - 2-3 features: the one they flagged plus 1-2 you identified from the codebase. Each feature gets full Intent, Interaction Model, Design Decisions, and Not This sections.
    - A Positioning section if the product is publicly available
-   - An Open Questions section noting areas where you had to guess, plus: "Generated in quick mode. Run `/gist-design create` for a guided conversation that goes deeper."
+   - An Open Questions section noting areas where you had to guess, plus: "Generated in quick mode. Run `/llms-gist create` for a guided conversation that goes deeper."
 4. Write the file and offer: "This covers [n] features. Want to go deeper on any section, or add more features?"
 
 Quick mode still follows the file format spec and the quality checklist. The output should be useful on its own — not just a placeholder.

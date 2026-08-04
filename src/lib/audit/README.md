@@ -22,7 +22,7 @@ Four properties here are expensive to rebuild and easy to get wrong:
 - **Scoring in code.** `summary.ts` derives Good, Partial, or Poor in `deriveSummary()` and
   overwrites the judge's self-reported score, so the judge cannot drift.
 
-The `/gist-design` skill audits by reading a repo, not by querying two models. It is not a
+The `/llms-gist` skill audits by reading a repo, not by querying two models. It is not a
 replacement for this, so deleting this would lose the comparison entirely.
 
 ## What reviving it needs

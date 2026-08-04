@@ -11,7 +11,7 @@ curl -fsSL https://raw.githubusercontent.com/imsaif/gist/main/install.sh | bash
 Then in Claude Code:
 
 ```
-/gist-design
+/llms-gist
 ```
 
 It audits how AI tools see your project and generates a `.gist` file to fix the gaps.
@@ -54,7 +54,7 @@ See [examples/BEFORE-AFTER.md](examples/BEFORE-AFTER.md) for more products (v0, 
 
 ## How it works
 
-Four steps, run in order by the `/gist-design` skill.
+Four steps, run in order by the `/llms-gist` skill.
 
 ### Audit
 
@@ -84,7 +84,7 @@ Proves the wiring worked instead of assuming it. It picks a question only `llms.
   - **Not This**: what it's NOT (prevents competitor blending)
   - **Open Questions**: what's still unresolved
 
-See [skills/gist-design/references/file-format.md](skills/gist-design/references/file-format.md) for the full spec.
+See [skills/llms-gist/references/file-format.md](skills/llms-gist/references/file-format.md) for the full spec.
 
 ## Examples
 

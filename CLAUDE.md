@@ -8,18 +8,28 @@
 - **Repo:** github.com/imsaif/gist (public, MIT), never write credential values into tracked files
 - **Stack:** Next.js 16 (App Router), React 19, TypeScript, Tailwind v4, Vitest
 - **Models:** OpenAI `gpt-4o-2024-11-20` + Anthropic `claude-sonnet-4-5-20250929` for the dormant audit in `src/lib/audit/`, `claude-haiku-4-5-20251001` as its judge
-- **Distribution:** Claude Code plugin only (`install.sh` → `/gist-design`). The web app was removed in the terminal-first change (2026-08-03)
+- **Distribution:** Claude Code plugin only (`install.sh` → `/llms-gist`). The web app was removed in the terminal-first change (2026-08-03)
 
 ## Naming (locked — mirrors llms.txt)
 
 - Extension / format: **`.gist`** (never `.gist.design`)
 - Canonical filename at project root: **`llms.gist`** (mirrors `/llms.txt`)
 - Brand: **gist** / **llms.gist**. Crawler UA: `GistBot`
-- The skill directory stays `skills/gist-design/` on purpose — renaming breaks already-installed plugins
+- Skill directory and command: **`skills/llms-gist/`**, invoked as `/llms-gist`
+- Working state lives in `.llmsgist/`, never `.gist/`, which would collide with the extension
+- `gist.design`, `.gist.design`, and `gist-design` appear nowhere
+
+**On the rename (2026-08-04).** This file previously said the skill directory stays
+`gist-design` on purpose because renaming breaks already-installed plugins. That was
+overturned on evidence: the repo showed 0 stars, 0 forks, and 0 page views against 67 unique
+cloners, a pattern consistent with automation rather than people, and the telemetry that
+could have settled it was deleted with the API routes. That is the absence of positive
+evidence rather than proof of zero installs. A stale install fails loudly with an unknown
+command and is fixed by re-running one curl line.
 
 ## Product Flow
 
-Four steps, run by the `/gist-design` skill in this order: audit the repo (read README,
+Four steps, run by the `/llms-gist` skill in this order: audit the repo (read README,
 package metadata, existing agent config files, and key source to describe the product the
 way an AI tool would); generate `llms.gist` at the project root from what the audit finds;
 append a pointer to whichever agent config files the repo has (`CLAUDE.md`, `.cursor/rules`,
@@ -29,16 +39,16 @@ question only the file answers, without naming the file.
 ## Routes
 
 One static page at `/`. Everything else was removed in the terminal-first change
-(2026-08-03). See `docs/superpowers/specs/2026-08-03-terminal-first-gist-design.md`.
+(2026-08-03). See `docs/superpowers/specs/2026-08-03-terminal-first-llms-gist.md`.
 
 ## Key Files
 
-- `skills/gist-design/SKILL.md` — the skill: audit the repo, generate `llms.gist`, append a
+- `skills/llms-gist/SKILL.md` — the skill: audit the repo, generate `llms.gist`, append a
   pointer to the agent config files the repo has, then verify in a fresh session without
   naming the file
-- `skills/gist-design/references/file-format.md` — the `.gist` file spec
-- `skills/gist-design/references/patterns.md` — the 36 AI UX patterns the skill can name
-- `skills/gist-design/references/wiring.md` — per-agent config targets and the pointer text
+- `skills/llms-gist/references/file-format.md` — the `.gist` file spec
+- `skills/llms-gist/references/patterns.md` — the 36 AI UX patterns the skill can name
+- `skills/llms-gist/references/wiring.md` — per-agent config targets and the pointer text
 - `src/lib/audit/` — dormant, intentionally unreferenced. Read its README before touching it.
 
 ## Commands

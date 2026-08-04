@@ -22,7 +22,7 @@ const STEPS = [
   {
     n: '01',
     name: 'Audit',
-    body: 'gist reads your repo the way an AI tool would, then tells you how that reads back.',
+    body: 'Shows you how your product reads to an AI tool today, and exactly where it guesses wrong.',
     icon: (
       <svg viewBox="0 0 24 24" className={ICON} aria-hidden="true" {...STROKE}>
         <circle cx="11" cy="11" r="6.5" />
@@ -33,7 +33,7 @@ const STEPS = [
   {
     n: '02',
     name: 'Write',
-    body: 'It writes llms.gist at the project root: who this is for, and what it deliberately is not.',
+    body: 'Captures the positioning: who it is for, who it is not for, and what you chose not to build.',
     icon: (
       <svg viewBox="0 0 24 24" className={ICON} aria-hidden="true" {...STROKE}>
         <path d="M13.5 3H6.5A1.5 1.5 0 005 4.5v15A1.5 1.5 0 006.5 21h11a1.5 1.5 0 001.5-1.5V8.5z" />
@@ -44,8 +44,8 @@ const STEPS = [
   },
   {
     n: '03',
-    name: 'Wire',
-    body: 'It appends a pointer to the agent configs your repo actually has. It detects them, it does not assume.',
+    name: 'Connect',
+    body: 'Puts it where your AI tools will actually read it, whichever ones your team already uses.',
     icon: (
       <svg viewBox="0 0 24 24" className={ICON} aria-hidden="true" {...STROKE}>
         <path d="M10 14a4 4 0 005.7 0l3-3a4 4 0 10-5.7-5.7L11.5 6.8" />
@@ -56,24 +56,13 @@ const STEPS = [
   {
     n: '04',
     name: 'Verify',
-    body: 'It asks a fresh session a question only the file answers. This is the step that can fail.',
+    body: 'Asks an AI a question only your file can answer. You find out whether it worked.',
     icon: (
       <svg viewBox="0 0 24 24" className={ICON} aria-hidden="true" {...STROKE}>
         <path d="M12 3l7 3v5.5c0 4.2-2.9 7.6-7 9.5-4.1-1.9-7-5.3-7-9.5V6z" />
         <path d="M9 12l2 2 4-4" />
       </svg>
     ),
-  },
-];
-
-const CORRECTIONS = [
-  {
-    guess: 'reorder the workflow categories',
-    file: 'Status categories are fixed. Statuses can be added and renamed inside a category, but the categories themselves cannot be reordered.',
-  },
-  {
-    guess: 'carry unfinished work over by hand',
-    file: 'Cycles auto-schedule and roll unfinished work forward, so there are no sprint ceremonies.',
   },
 ];
 
@@ -110,17 +99,8 @@ export default function Home() {
             <CopyInstall command={INSTALL} />
           </div>
           <p className="text-ink-tertiary mt-4 text-sm">
-            Then run <span className="font-mono">/gist-design</span> in any repo.
+            Then run <span className="font-mono">/llms-gist</span> in any repo.
           </p>
-          <a
-            href="#example"
-            className="text-ink-primary hover:text-ink-secondary mt-6 inline-flex items-center gap-2 text-sm font-medium transition-colors"
-          >
-            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor" aria-hidden="true">
-              <path d="M8 5l11 7-11 7z" />
-            </svg>
-            See what it catches
-          </a>
         </section>
 
         {/* Four steps. Numbered because the order is a real dependency chain:
@@ -135,42 +115,6 @@ export default function Home() {
               <p className="text-ink-secondary mt-2 text-[15px] leading-relaxed">{step.body}</p>
             </div>
           ))}
-        </section>
-
-        {/* The signature: a proof-mark correction on the inverse surface */}
-        <section
-          id="example"
-          className="bg-surface-inverse mt-4 scroll-mt-8 rounded-2xl p-8 md:p-10"
-        >
-          <p className="eyebrow !text-white/40">Example: an agent given only the repo</p>
-
-          <p className="mt-6 max-w-[54ch] font-mono text-[14px] leading-[1.95] text-white/90">
-            Linear is a project management tool in the same space as Jira. Teams{' '}
-            <span className="correction">reorder the workflow categories</span> to match their
-            process, then plan each sprint and{' '}
-            <span className="correction">carry unfinished work over by hand</span>.
-          </p>
-
-          <div className="mt-8 border-t border-white/10 pt-7">
-            <p className="eyebrow !text-white/40">
-              Each wrong guess, and the line in llms.gist that prevents it
-            </p>
-            <ul className="mt-6 space-y-5">
-              {CORRECTIONS.map((c) => (
-                <li
-                  key={c.guess}
-                  className="grid gap-2 md:grid-cols-[1fr_1.4fr] md:items-baseline md:gap-8"
-                >
-                  <p className="decoration-correction font-mono text-[13px] leading-relaxed text-white/35 line-through decoration-2">
-                    {c.guess}
-                  </p>
-                  <p className="border-correction border-l-2 pl-4 font-mono text-[13px] leading-relaxed text-white/80">
-                    {c.file}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          </div>
         </section>
 
         <footer className="border-border-primary text-ink-tertiary mt-16 flex items-center justify-between border-t py-8 text-sm">
