@@ -44,7 +44,13 @@ export async function fetchRepoFiles(owner: string, repo: string): Promise<RepoF
     throw new GitHubError('Could not reach GitHub', 'network');
   });
   if (!readmeRes.ok && readmeRes.status !== 404) throw mapStatus(readmeRes.status);
-  const readme = readmeRes.ok ? (await readmeRes.text()).slice(0, MAX_README_CHARS) : null;
+  const readme = readmeRes.ok
+    ? (
+        await readmeRes.text().catch(() => {
+          throw new GitHubError('Could not read GitHub response', 'network');
+        })
+      ).slice(0, MAX_README_CHARS)
+    : null;
 
   const pkgRes = await fetch(`${base}/contents/package.json`, {
     headers: { ...headers(), Accept: 'application/vnd.github.raw' },
@@ -64,7 +70,9 @@ export async function fetchRepoFiles(owner: string, repo: string): Promise<RepoF
     }
   );
   if (!treeRes.ok) throw mapStatus(treeRes.status);
-  const tree = (await treeRes.json()) as { tree?: Array<{ path: string; type: string }> };
+  const tree = (await treeRes.json().catch(() => {
+    throw new GitHubError('Could not parse GitHub response', 'network');
+  })) as { tree?: Array<{ path: string; type: string }> };
   const filePaths = (tree.tree ?? [])
     .filter((n) => n.type === 'blob')
     .map((n) => n.path)

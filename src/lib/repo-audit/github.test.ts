@@ -36,7 +36,25 @@ describe('fetchRepoFiles', () => {
 
   it('maps a 403 to rate_limited', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false, status: 403 }));
+    await expect(fetchRepoFiles('a', 'b')).rejects.toMatchObject({ kind: 'rate_limited' });
+  });
+
+  it('maps a malformed tree response to network, not a raw SyntaxError', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockImplementation((url: string) => {
+        if (url.includes('/readme'))
+          return Promise.resolve({ ok: true, status: 200, text: () => Promise.resolve('# hi') });
+        if (url.includes('package.json')) return Promise.resolve({ ok: false, status: 404 });
+        return Promise.resolve({
+          ok: true,
+          status: 200,
+          json: () => Promise.reject(new SyntaxError('Unexpected end of JSON input')),
+        });
+      })
+    );
     await expect(fetchRepoFiles('a', 'b')).rejects.toBeInstanceOf(GitHubError);
+    await expect(fetchRepoFiles('a', 'b')).rejects.toMatchObject({ kind: 'network' });
   });
 
   it('tolerates a missing package.json', async () => {
