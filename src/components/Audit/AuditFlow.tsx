@@ -78,7 +78,7 @@ export function AuditFlow() {
             onChange={(e) => setUrl(e.target.value)}
             placeholder="github.com/you/yourproject"
             aria-label="GitHub repository URL"
-            className="border-border-primary text-ink-primary flex-1 rounded-full border px-5 py-3 text-sm"
+            className="border-border-primary text-ink-primary focus:border-brand-primary focus:ring-brand-primary/25 flex-1 rounded-full border px-5 py-3 text-sm focus:ring-2 focus:outline-none"
           />
           <button
             type="submit"
@@ -113,7 +113,7 @@ export function AuditFlow() {
                     onChange={(e) => setAnswers({ ...answers, [q.gapId]: e.target.value })}
                     placeholder={q.placeholder}
                     rows={2}
-                    className="border-border-primary mt-2 w-full rounded-lg border p-3 text-sm"
+                    className="border-border-primary focus:border-brand-primary focus:ring-brand-primary/25 mt-2 w-full rounded-lg border p-3 text-sm focus:ring-2 focus:outline-none"
                   />
                 </label>
               ))}

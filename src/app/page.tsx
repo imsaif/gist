@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { CopyInstall } from '@/components/CopyInstall';
 import { AuditFlow } from '@/components/Audit/AuditFlow';
 
 export const metadata: Metadata = {
@@ -116,15 +115,12 @@ export default function Home() {
           ))}
         </section>
 
-        <section className="mt-10 text-center">
-          <p className="text-ink-tertiary text-sm">Already know you want it?</p>
-          <div className="mx-auto mt-3 max-w-lg">
-            <CopyInstall command={INSTALL} />
-          </div>
-        </section>
-
-        <footer className="border-border-primary text-ink-tertiary mt-16 flex items-center justify-between border-t py-8 text-sm">
+        {/* The install command lives here rather than in a section of its own.
+            Findable for someone who already wants it, without reading as a
+            second primary action next to the audit. */}
+        <footer className="border-border-primary text-ink-tertiary mt-16 flex flex-col items-center gap-4 border-t py-8 text-sm md:flex-row md:justify-between">
           <span>llms.gist</span>
+          <code className="font-mono text-xs">{INSTALL}</code>
           <a
             href="https://github.com/imsaif/gist"
             className="hover:text-ink-primary transition-colors"
