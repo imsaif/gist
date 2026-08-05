@@ -79,8 +79,11 @@ Abandoners cost one call. The expensive half only fires for someone who answered
 
 ## Surfaces
 
-One route, `/audit`, a client component with four phases: input, diagnosis, questions, done.
-No per-result URLs, nothing to cache at the page level, nothing to invalidate.
+The entry field lives in the homepage hero, in place of the install command. The flow itself
+is a client component with four phases: input, diagnosis, questions, done. No per-result
+URLs, nothing to cache at the page level, nothing to invalidate.
+
+The install command moves below the fold rather than away, and reappears in the handoff.
 
 Two stateless API routes:
 
@@ -259,14 +262,28 @@ iterating a `/news` fix against production, all of which would have surfaced in
 
 ---
 
-## Open questions
+## Resolved 2026-08-05
 
-- **Where does the entry point live?** A field on the homepage hero, or a separate `/audit`
-  page linked from it. The hero is fewer clicks; a separate page keeps the homepage the calm
-  single-screen thing it currently is.
-- **How many questions?** Three to five is the working range. Fewer produces a thinner file,
-  more increases abandonment before the generation call, which is also the call that costs
-  money.
-- **Does the generated file mention it was made on the web?** The quick-mode precedent says
-  yes, and it doubles as the handoff. Worth confirming it does not read as an apology for the
-  output.
+**The entry point is the homepage hero**, replacing the install command as the primary
+action. The audit is what lands, so it goes in front.
+
+The install command does not disappear. It stays visible further down for anyone who already
+knows they want it, for example someone arriving from the README, and it is required in the
+handoff after download. Removing it entirely would leave a returning visitor with nowhere to
+go.
+
+**The number of questions follows the repo.** Questions are the gaps, so a repo with five
+gaps gets five questions and a repo with none skips straight to generation. Zero questions is
+a valid path, and in that case the diagnosis says the repo is already clear and the file is
+generated immediately.
+
+**Capped at five, ranked by inferential impact.** A repo with no README has every gap, and an
+uncapped rule would open with a twelve-question form that nobody finishes. Ranking is by how
+much the absence changes what an agent infers, so a missing audience or boundary outranks a
+missing rationale. The cap is a product decision, not a technical one, and it should be
+revisited once there is completion-rate data.
+
+**The file does not state that it was generated on the web.** The placeholder rule already
+carries the signal: any section without an answer is marked as needing input, so the file
+declares its own incompleteness where a reader or an agent will actually encounter it. A
+separate provenance note would be redundant with a signal that is already load-bearing.
