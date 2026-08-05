@@ -26,6 +26,15 @@ describe('parseRepoUrl', () => {
   it('rejects nonsense', () => {
     expect(parseRepoUrl('not a url')).toBeNull();
   });
+
+  it('rejects non-string input instead of throwing', () => {
+    expect(parseRepoUrl(1)).toBeNull();
+    expect(parseRepoUrl(true)).toBeNull();
+    expect(parseRepoUrl({})).toBeNull();
+    expect(parseRepoUrl([])).toBeNull();
+    expect(parseRepoUrl(null)).toBeNull();
+    expect(parseRepoUrl(undefined)).toBeNull();
+  });
 });
 
 describe('fetchRepoFiles', () => {

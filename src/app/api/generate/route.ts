@@ -19,11 +19,23 @@ export async function POST(req: NextRequest) {
 
   const body = (await req.json().catch(() => null)) as {
     url?: string;
-    answers?: Record<string, string>;
+    answers?: Record<string, unknown>;
   } | null;
   const parsed = body?.url ? parseRepoUrl(body.url) : null;
   if (!parsed) {
     return NextResponse.json({ error: 'Missing repository.', kind: 'bad_url' }, { status: 400 });
+  }
+
+  // Drop any non-string answer instead of coercing it. A number or object
+  // that survives here would either throw inside buildGistFile or, worse,
+  // get stringified into an invented claim, exactly what the placeholder
+  // rule exists to prevent. A dropped entry just renders as unanswered.
+  const rawAnswers = body?.answers ?? {};
+  const answers: Partial<Record<GapId, string>> = {};
+  for (const [key, value] of Object.entries(rawAnswers)) {
+    if (typeof value === 'string') {
+      answers[key as GapId] = value;
+    }
   }
 
   try {
@@ -32,7 +44,7 @@ export async function POST(req: NextRequest) {
     const file = buildGistFile({
       repo: parsed.repo,
       summary: summary || `${parsed.repo}.`,
-      answers: (body?.answers ?? {}) as Partial<Record<GapId, string>>,
+      answers,
     });
     return NextResponse.json({ file });
   } catch {

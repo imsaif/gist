@@ -14,7 +14,8 @@ export class GitHubError extends Error {
   }
 }
 
-export function parseRepoUrl(input: string): { owner: string; repo: string } | null {
+export function parseRepoUrl(input: unknown): { owner: string; repo: string } | null {
+  if (typeof input !== 'string') return null;
   const trimmed = input.trim().replace(/\/+$/, '');
   const url = trimmed.match(/^https?:\/\/(?:www\.)?github\.com\/([^/]+)\/([^/]+)/);
   const short = trimmed.match(/^([\w.-]+)\/([\w.-]+)$/);
