@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { CopyInstall } from '@/components/CopyInstall';
+import { AuditFlow } from '@/components/Audit/AuditFlow';
 
 export const metadata: Metadata = {
   title: 'llms.gist: product context your coding agent actually reads',
@@ -95,12 +95,10 @@ export default function Home() {
             with.
           </p>
 
-          <div className="mx-auto mt-9 max-w-lg">
-            <CopyInstall command={INSTALL} />
+          <div className="mt-9">
+            <AuditFlow />
           </div>
-          <p className="text-ink-tertiary mt-4 text-sm">
-            Then run <span className="font-mono">/llms-gist</span> in any repo.
-          </p>
+          <p className="text-ink-tertiary mt-4 text-sm">Public GitHub repos. No signup.</p>
         </section>
 
         {/* Four steps. Numbered because the order is a real dependency chain:
@@ -117,8 +115,12 @@ export default function Home() {
           ))}
         </section>
 
-        <footer className="border-border-primary text-ink-tertiary mt-16 flex items-center justify-between border-t py-8 text-sm">
+        {/* The install command lives here rather than in a section of its own.
+            Findable for someone who already wants it, without reading as a
+            second primary action next to the audit. */}
+        <footer className="border-border-primary text-ink-tertiary mt-16 flex flex-col items-center gap-4 border-t py-8 text-sm md:flex-row md:justify-between">
           <span>llms.gist</span>
+          <code className="font-mono text-xs">{INSTALL}</code>
           <a
             href="https://github.com/imsaif/gist"
             className="hover:text-ink-primary transition-colors"
