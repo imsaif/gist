@@ -21,14 +21,27 @@ function make(name: string, limit: number, window: `${number} ${'s' | 'm' | 'h'}
   });
 }
 
+// Wraps rate limit checks with fail-closed error handling. On transport error,
+// returns denial instead of rejecting, preventing spend control bypass.
+export async function checkLimit(
+  name: string,
+  limitFn: () => Promise<{ success: boolean; reset: number }>
+): Promise<{ ok: boolean; retryAfter: number }> {
+  try {
+    const { success, reset } = await limitFn();
+    return { ok: success, retryAfter: Math.max(0, Math.ceil((reset - Date.now()) / 1000)) };
+  } catch (error) {
+    console.error(`Rate limit check failed for ${name}:`, error);
+    return { ok: false, retryAfter: 60 };
+  }
+}
+
 // Per visitor: enough to audit a few repos, not enough to walk a list.
 export async function checkAuditLimit(ip: string) {
-  const { success, reset } = await make('audit', 10, '10 m').limit(ip);
-  return { ok: success, retryAfter: Math.max(0, Math.ceil((reset - Date.now()) / 1000)) };
+  return checkLimit('audit', () => make('audit', 10, '10 m').limit(ip));
 }
 
 // Global spend ceiling. Fails closed rather than running up a bill.
 export async function checkGenerateLimit() {
-  const { success, reset } = await make('generate', 60, '1 h').limit('global');
-  return { ok: success, retryAfter: Math.max(0, Math.ceil((reset - Date.now()) / 1000)) };
+  return checkLimit('generate', () => make('generate', 60, '1 h').limit('global'));
 }
