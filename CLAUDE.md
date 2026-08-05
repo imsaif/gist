@@ -67,6 +67,7 @@ Env vars (names only): `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`. Both are only need
 - Parser pattern: `addX` appends to arrays, `updateX` merges by ID
 - Tailwind v4 dropped v3's default `cursor: pointer` on `<button>`; it's restored in a `globals.css` base layer, don't re-add it per component
 - Don't run `npm run build` while the dev server is running (it clobbers `.next/`); use `npx tsc --noEmit`
+- **Never `vercel env pull .env.local`.** It overwrites rather than merges, so it deletes any local var Vercel does not hold. On 2026-08-05 it destroyed a working `ANTHROPIC_API_KEY` that existed only locally. Pull to a temp file and merge the lines you want, or edit `.env.local` by hand.
 - Never claim in copy that publishing the file changes what a search-connected model says. The provable claim is local.
 
 ## Session History
