@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { parseRepoUrl, fetchRepoFiles } from '@/lib/repo-audit/github';
+import { scanStructure } from '@/lib/repo-audit/scanner';
 import { buildSummaryPrompt, callModel } from '@/lib/repo-audit/provider';
-import { buildGistFile } from '@/lib/repo-audit/buildFile';
+import { buildGistFile, PLACEHOLDER } from '@/lib/repo-audit/buildFile';
 import { checkGenerateLimit } from '@/lib/repo-audit/rateLimit';
 import type { GapId } from '@/types/repo-audit';
 
@@ -9,14 +10,6 @@ export const runtime = 'nodejs';
 export const maxDuration = 60;
 
 export async function POST(req: NextRequest) {
-  const limit = await checkGenerateLimit();
-  if (!limit.ok) {
-    return NextResponse.json(
-      { error: 'We are at capacity for this hour. Try again later.', kind: 'rate_limited' },
-      { status: 429 }
-    );
-  }
-
   const body = (await req.json().catch(() => null)) as {
     url?: string;
     answers?: Record<string, unknown>;
@@ -24,6 +17,14 @@ export async function POST(req: NextRequest) {
   const parsed = body?.url ? parseRepoUrl(body.url) : null;
   if (!parsed) {
     return NextResponse.json({ error: 'Missing repository.', kind: 'bad_url' }, { status: 400 });
+  }
+
+  const limit = await checkGenerateLimit();
+  if (!limit.ok) {
+    return NextResponse.json(
+      { error: 'We are at capacity for this hour. Try again later.', kind: 'rate_limited' },
+      { status: 429 }
+    );
   }
 
   // Drop any non-string answer instead of coercing it. A number or object
@@ -40,10 +41,13 @@ export async function POST(req: NextRequest) {
 
   try {
     const files = await fetchRepoFiles(parsed.owner, parsed.repo);
-    const summary = (await callModel(buildSummaryPrompt(files))).trim().split('\n')[0];
+    const hasReadme = scanStructure(files).hasReadme;
+    const summary = hasReadme
+      ? (await callModel(buildSummaryPrompt(files))).trim().split('\n')[0] || PLACEHOLDER
+      : PLACEHOLDER;
     const file = buildGistFile({
       repo: parsed.repo,
-      summary: summary || `${parsed.repo}.`,
+      summary,
       answers,
     });
     return NextResponse.json({ file });

@@ -41,6 +41,13 @@ export async function checkAuditLimit(ip: string) {
   return checkLimit('audit', () => make('audit', 10, '10 m').limit(ip));
 }
 
+// Global spend ceiling for audits. Generous next to the generate ceiling
+// since audits are cheaper and an abandoner only costs one call, but it
+// still caps total spend when the per-IP check is bypassed by header rotation.
+export async function checkAuditGlobalLimit() {
+  return checkLimit('audit-global', () => make('audit-global', 200, '1 h').limit('global'));
+}
+
 // Global spend ceiling. Fails closed rather than running up a bill.
 export async function checkGenerateLimit() {
   return checkLimit('generate', () => make('generate', 60, '1 h').limit('global'));

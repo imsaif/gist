@@ -1,5 +1,5 @@
-import { describe, it, expect, vi } from 'vitest';
-import { limiterPrefix, checkLimit } from './rateLimit';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { limiterPrefix, checkLimit, checkAuditGlobalLimit } from './rateLimit';
 
 describe('limiterPrefix', () => {
   it('namespaces by environment so local never eats production counters', () => {
@@ -9,6 +9,32 @@ describe('limiterPrefix', () => {
 
   it('falls back to development when the environment is unset', () => {
     expect(limiterPrefix(undefined, 'generate')).toBe('rl:development:generate');
+  });
+});
+
+describe('checkAuditGlobalLimit', () => {
+  const originalUrl = process.env.KV_REST_API_URL;
+  const originalToken = process.env.KV_REST_API_TOKEN;
+
+  beforeEach(() => {
+    process.env.KV_REST_API_URL = 'http://localhost:0/does-not-exist';
+    process.env.KV_REST_API_TOKEN = 'test-token';
+  });
+
+  afterEach(() => {
+    process.env.KV_REST_API_URL = originalUrl;
+    process.env.KV_REST_API_TOKEN = originalToken;
+  });
+
+  it('exists and fails closed when the underlying KV call errors', async () => {
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    const result = await checkAuditGlobalLimit();
+
+    expect(result.ok).toBe(false);
+    expect(result.retryAfter).toBe(60);
+
+    consoleErrorSpy.mockRestore();
   });
 });
 

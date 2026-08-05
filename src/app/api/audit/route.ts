@@ -5,7 +5,7 @@ import { scanStructure } from '@/lib/repo-audit/scanner';
 import { buildReadingPrompt, callModel } from '@/lib/repo-audit/provider';
 import { parseReading } from '@/lib/repo-audit/parse';
 import { selectQuestions } from '@/lib/repo-audit/questions';
-import { checkAuditLimit } from '@/lib/repo-audit/rateLimit';
+import { checkAuditLimit, checkAuditGlobalLimit } from '@/lib/repo-audit/rateLimit';
 import type { AuditResult } from '@/types/repo-audit';
 
 export const runtime = 'nodejs';
@@ -42,10 +42,25 @@ const cachedAudit = (owner: string, repo: string) =>
   )();
 
 export async function POST(req: NextRequest) {
-  // Client controlled: x-forwarded-for can be rotated by an attacker to
-  // bypass this per-IP limit. Accepted per the task 8 decision, the global
-  // ceiling on the generate route is the real spend backstop, not this one.
-  const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
+  const body = (await req.json().catch(() => null)) as { url?: string } | null;
+  const parsed = body?.url ? parseRepoUrl(body.url) : null;
+  if (!parsed) {
+    return NextResponse.json(
+      { error: 'That does not look like a GitHub repository URL.', kind: 'bad_url' },
+      { status: 400 }
+    );
+  }
+
+  // x-vercel-forwarded-for and x-real-ip are set by the platform and cannot
+  // be spoofed by the client. x-forwarded-for is client controlled (an
+  // attacker can rotate it to bypass this per-IP limit), so it is only a
+  // fallback for environments where the platform headers are absent. The
+  // global ceiling below is the real backstop against that bypass.
+  const ip =
+    req.headers.get('x-vercel-forwarded-for')?.split(',')[0]?.trim() ??
+    req.headers.get('x-real-ip')?.trim() ??
+    req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ??
+    'unknown';
   const limit = await checkAuditLimit(ip);
   if (!limit.ok) {
     return NextResponse.json(
@@ -54,12 +69,14 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const body = (await req.json().catch(() => null)) as { url?: string } | null;
-  const parsed = body?.url ? parseRepoUrl(body.url) : null;
-  if (!parsed) {
+  const globalLimit = await checkAuditGlobalLimit();
+  if (!globalLimit.ok) {
     return NextResponse.json(
-      { error: 'That does not look like a GitHub repository URL.', kind: 'bad_url' },
-      { status: 400 }
+      {
+        error: `Too many audits right now. Try again in ${globalLimit.retryAfter} seconds.`,
+        kind: 'rate_limited',
+      },
+      { status: 429 }
     );
   }
 

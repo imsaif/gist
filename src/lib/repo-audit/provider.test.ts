@@ -31,6 +31,27 @@ describe('stripDelimiters', () => {
     expect(result).toContain('# Title');
     expect(result).toContain('Content');
   });
+
+  it('strips lowercase variants', () => {
+    const text = '--- repository: x/y ---\nContent\n--- end repository ---';
+    const result = stripDelimiters(text);
+    expect(result.toLowerCase()).not.toContain('repository:');
+    expect(result).toContain('Content');
+  });
+
+  it('strips four-dash and longer runs of dashes', () => {
+    const text = '---- REPOSITORY: x/y ----\nContent\n---- END REPOSITORY ----';
+    const result = stripDelimiters(text);
+    expect(result).not.toContain('REPOSITORY:');
+    expect(result).toContain('Content');
+  });
+
+  it('strips an indented marker', () => {
+    const text = '   --- REPOSITORY: x/y ---\nContent\n   --- END REPOSITORY ---';
+    const result = stripDelimiters(text);
+    expect(result).not.toContain('REPOSITORY:');
+    expect(result).toContain('Content');
+  });
 });
 
 describe('buildReadingPrompt', () => {
