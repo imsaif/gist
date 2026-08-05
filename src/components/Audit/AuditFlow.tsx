@@ -82,6 +82,7 @@ export function AuditFlow() {
           />
           <button
             type="submit"
+            disabled={(phase as Phase) === 'loading'}
             className="bg-surface-inverse rounded-full px-6 py-3 text-sm font-semibold text-white"
           >
             Audit
@@ -121,6 +122,7 @@ export function AuditFlow() {
           )}
           <button
             onClick={generate}
+            disabled={(phase as Phase) === 'loading'}
             className="bg-surface-inverse mt-6 rounded-full px-6 py-3 text-sm font-semibold text-white"
           >
             Generate my llms.gist
@@ -148,7 +150,11 @@ export function AuditFlow() {
         </div>
       )}
 
-      {error && <p className="text-correction mt-4 text-sm">{error}</p>}
+      {error && (
+        <p role="alert" className="text-correction mt-4 text-sm">
+          {error}
+        </p>
+      )}
     </div>
   );
 }
