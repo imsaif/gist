@@ -37,9 +37,12 @@ This audits a **repo**. Same mechanism, honest domain: everything it reports is 
 file actually fixes.
 
 Not in scope, and not reinstated: accounts, auth, sessions, Turso, the paid tier, the fix
-flow, the tracking dashboard, and the public gallery. A rate limiter does return, on KV
-rather than a relational database. No result is
-publicly addressable and nothing is browsable.
+flow, the tracking dashboard, and the public gallery. No result is publicly addressable and
+nothing is browsable.
+
+A rate limiter does return, on KV rather than a relational database. So does a server-side
+`GITHUB_TOKEN`, which is ours rather than the visitor's and grants nothing beyond public
+read.
 
 ---
 
@@ -47,7 +50,7 @@ publicly addressable and nothing is browsable.
 
 | Question            | Decision                                                    |
 | ------------------- | ----------------------------------------------------------- |
-| Visitor input       | Public GitHub URL, unauthenticated                          |
+| Visitor input       | Public GitHub URL. No visitor login at any point            |
 | Visitor output      | A downloadable `llms.gist`                                  |
 | Audit engine        | Structural facts in code, one model call for the semantics  |
 | Result persistence  | None. Ephemeral, no shareable URL, no gallery               |
@@ -84,8 +87,9 @@ Two stateless API routes:
 - `POST /api/audit` takes `{ owner, repo }`, returns `{ reading, gaps, questions }`
 - `POST /api/generate` takes `{ repoContext, answers }`, returns `{ file }`
 
-The browser carries state between them. That is why no database appears anywhere in this
-design.
+The browser carries state between them, which is why nothing relational appears in this
+design. The only server-side state is a KV counter for rate limiting and a function-level
+cache, neither of which stores a result anyone can address.
 
 ---
 
