@@ -36,8 +36,9 @@ is why the terminal-first change removed it.
 This audits a **repo**. Same mechanism, honest domain: everything it reports is something the
 file actually fixes.
 
-Not in scope, and not reinstated: accounts, auth, sessions, Turso, the rate limiter, the
-paid tier, the fix flow, the tracking dashboard, and the public gallery. No result is
+Not in scope, and not reinstated: accounts, auth, sessions, Turso, the paid tier, the fix
+flow, the tracking dashboard, and the public gallery. A rate limiter does return, on KV
+rather than a relational database. No result is
 publicly addressable and nothing is browsable.
 
 ---
@@ -50,7 +51,7 @@ publicly addressable and nothing is browsable.
 | Visitor output      | A downloadable `llms.gist`                                  |
 | Audit engine        | Structural facts in code, one model call for the semantics  |
 | Result persistence  | None. Ephemeral, no shareable URL, no gallery               |
-| Storage             | No database. Function-level cache only                      |
+| Storage             | No database. Function-level cache plus a KV counter         |
 | Model calls per run | Two, and the second is gated behind answering the questions |
 
 ---
@@ -92,10 +93,21 @@ design.
 
 ### 1. GitHub reader
 
-**In:** owner, repo. **Out:** README text, package metadata, file tree. **Depends on:** nothing.
+**In:** owner, repo. **Out:** README text, package metadata, file tree. **Depends on:** a
+server-side `GITHUB_TOKEN`.
 
-Three unauthenticated calls. Public repos only. A private repo returns a clear message, not
-an error page.
+Three calls per audit. Public repos only. A private repo returns a clear message, not an
+error page.
+
+**The token is required, not an optimisation.** Unauthenticated GitHub API allows 60 requests
+per hour per IP, and on Vercel those come from shared serverless IPs rather than the
+visitor's. At three calls per audit that is roughly 20 audits per hour for the whole site
+before GitHub returns 403. A token lifts it to 5,000 per hour. This is a normal-operation
+ceiling, not an abuse ceiling, so it cannot be deferred.
+
+The token is ours and server-side only. It is not user auth, grants no access to private
+repos, and never reaches the browser. Use a fine-grained token with public read only, so a
+leak exposes nothing that is not already public.
 
 ### 2. Structural scanner
 
@@ -182,11 +194,28 @@ errors propagate uncached. On aiex, `/news` cached a two-item static fallback wh
 errored and served it for an hour, and `unstable_noStore()` in a catch block did not prevent
 it. The same mistake here would serve a broken audit for a repo until the cache expired.
 
-No rate limiter in v1. The old one was DB-backed on purpose, because an in-memory map is
-bypassable across serverless instances, and reinstating that is most of what the
-terminal-first change removed. The exposure is bounded by the function cache and by the fact
-that generation requires answering questions. **This is a deliberate bet, and it is the most
-likely thing in this design to need revisiting.** Watch spend in the first week.
+**A rate limiter ships in v1.** An earlier draft deferred it, arguing that the old limiter was
+DB-backed and reinstating that was most of what the terminal-first change removed. That
+conflated two different things. The old limiter needed Turso because Turso was already there;
+the requirement is a counter that survives across serverless instances, not a relational
+database.
+
+Use Upstash Redis or Vercel KV with `@upstash/ratelimit`: one package, one env var, a sliding
+window in roughly twenty lines, and a free tier that covers this comfortably. That is not the
+deleted infrastructure returning, and it is far cheaper than discovering the bill.
+
+An in-memory `Map` is still not acceptable, for the reason recorded when the original limiter
+was replaced: it is bypassed across cold starts and across instances, so it protects nothing
+on Vercel.
+
+Two limits, because they protect different things:
+
+- **Per IP**, a sliding window on `/api/audit`, so one visitor cannot walk through many repos
+- **Global per hour** on `/api/generate`, a spend ceiling that fails closed with an honest
+  message rather than an unbounded bill
+
+The function cache and the fact that generation requires answering questions both reduce
+exposure, but neither is a limit, and neither should be described as one.
 
 ---
 
