@@ -1559,8 +1559,11 @@ In the Vercel dashboard: Settings, Environment Variables, add `GITHUB_TOKEN` for
 ```bash
 git add -A
 git commit -m "chore: verify the audit funnel failure paths locally"
-git push origin main
+git push -u origin web-audit-funnel
 ```
+
+Push the branch, not `main`. Merging is handled separately via
+superpowers:finishing-a-development-branch after the whole-branch review.
 
 - [ ] **Step 9: Verify on production**
 
