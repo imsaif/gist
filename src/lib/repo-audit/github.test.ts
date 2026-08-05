@@ -15,8 +15,33 @@ describe('parseRepoUrl', () => {
     expect(parseRepoUrl('vercel/next.js')).toEqual({ owner: 'vercel', repo: 'next.js' });
   });
 
+  it('accepts github.com/owner/repo without scheme', () => {
+    expect(parseRepoUrl('github.com/sindresorhus/slugify')).toEqual({
+      owner: 'sindresorhus',
+      repo: 'slugify',
+    });
+  });
+
+  it('accepts www.github.com/owner/repo without scheme', () => {
+    expect(parseRepoUrl('www.github.com/owner/repo')).toEqual({
+      owner: 'owner',
+      repo: 'repo',
+    });
+  });
+
+  it('accepts http:// scheme variant', () => {
+    expect(parseRepoUrl('http://github.com/owner/repo')).toEqual({
+      owner: 'owner',
+      repo: 'repo',
+    });
+  });
+
   it('strips a trailing slash and .git', () => {
     expect(parseRepoUrl('https://github.com/a/b.git/')).toEqual({ owner: 'a', repo: 'b' });
+  });
+
+  it('does not carry query strings into the repo name', () => {
+    expect(parseRepoUrl('https://github.com/a/b?x=1')).toEqual({ owner: 'a', repo: 'b' });
   });
 
   it('rejects a non-github url', () => {
