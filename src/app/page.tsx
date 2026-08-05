@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { CopyInstall } from '@/components/CopyInstall';
+import { AuditFlow } from '@/components/Audit/AuditFlow';
 
 export const metadata: Metadata = {
   title: 'llms.gist: product context your coding agent actually reads',
@@ -95,12 +96,10 @@ export default function Home() {
             with.
           </p>
 
-          <div className="mx-auto mt-9 max-w-lg">
-            <CopyInstall command={INSTALL} />
+          <div className="mt-9">
+            <AuditFlow />
           </div>
-          <p className="text-ink-tertiary mt-4 text-sm">
-            Then run <span className="font-mono">/llms-gist</span> in any repo.
-          </p>
+          <p className="text-ink-tertiary mt-4 text-sm">Public GitHub repos. No signup.</p>
         </section>
 
         {/* Four steps. Numbered because the order is a real dependency chain:
@@ -115,6 +114,13 @@ export default function Home() {
               <p className="text-ink-secondary mt-2 text-[15px] leading-relaxed">{step.body}</p>
             </div>
           ))}
+        </section>
+
+        <section className="mt-10 text-center">
+          <p className="text-ink-tertiary text-sm">Already know you want it?</p>
+          <div className="mx-auto mt-3 max-w-lg">
+            <CopyInstall command={INSTALL} />
+          </div>
         </section>
 
         <footer className="border-border-primary text-ink-tertiary mt-16 flex items-center justify-between border-t py-8 text-sm">
