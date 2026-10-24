@@ -8,7 +8,8 @@
 - **Repo:** github.com/imsaif/gist (public, MIT), never write credential values into tracked files
 - **Stack:** Next.js 16 (App Router), React 19, TypeScript, Tailwind v4, Vitest
 - **Models:** OpenAI `gpt-4o-2024-11-20` + Anthropic `claude-sonnet-4-5-20250929` for the dormant audit in `src/lib/audit/`, `claude-haiku-4-5-20251001` as its judge
-- **Distribution:** Claude Code plugin only (`install.sh` → `/llms-gist`). The web app was removed in the terminal-first change (2026-08-03)
+- **Distribution:** Claude Code plugin, listed in Anthropic's directory (2026-10-06). As a plugin the command is `/llms-gist:llms-gist`; the old `install.sh` path installs a standalone `/llms-gist` but downloads from llmsgist.org, whose Vercel deployment was found PAUSED on 2026-10-24, so the README no longer advertises it. Plugin `homepage` points at the GitHub README for the same reason.
+- **This file lives in `.claude/`** because the repo root is the plugin root, where a CLAUDE.md is not loaded and the directory scan warns.
 
 ## Naming (locked — mirrors llms.txt)
 

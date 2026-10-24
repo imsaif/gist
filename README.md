@@ -4,17 +4,21 @@
 
 ## Quick start
 
-```bash
-curl -fsSL llmsgist.org/i | bash
-```
-
-Then in Claude Code:
+In Claude Code, install it from the plugin directory: run `/plugin`, open **Discover**, search for **gist**, and install. Or add it straight from this repo:
 
 ```
-/llms-gist
+/plugin marketplace add imsaif/gist
+/plugin install llms-gist@llms-gist
+/reload-plugins
 ```
 
-It audits how AI tools see your project and generates a `.gist` file to fix the gaps.
+Then, inside the project you want to describe:
+
+```
+/llms-gist:llms-gist
+```
+
+Or just ask Claude: "make a .gist file for this project". It audits how AI tools see your project and generates a `.gist` file to fix the gaps.
 
 ---
 

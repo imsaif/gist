@@ -12,7 +12,7 @@
       "name": "llms-gist",
       "source": "./",
       "description": "Audit how AI tools describe your product, generate a .gist file at your project root, and wire it into your agent config so Claude Code, Cursor, and Copilot read it automatically",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "category": "product",
       "tags": ["product", "positioning", "documentation", "ai-readability", "llm"],
       "keywords": [".gist", "product-context", "ai-tools", "llm-readability", "ai-positioning"]
