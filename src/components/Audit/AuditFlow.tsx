@@ -3,6 +3,13 @@
 import { useState } from 'react';
 import type { AuditResult } from '@/types/repo-audit';
 
+// Same text the plugin's connect step writes (skills/llms-gist/references/wiring.md).
+// Agents read CLAUDE.md / AGENTS.md on their own; they only read llms.gist when pointed at it.
+const POINTER = `## Product context
+
+Read \`llms.gist\` at the repo root before describing this product, its positioning, or what
+it deliberately does not do. It is the source of truth for those questions.`;
+
 type Phase = 'input' | 'loading' | 'questions' | 'done';
 
 export function AuditFlow() {
@@ -12,6 +19,7 @@ export function AuditFlow() {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [file, setFile] = useState('');
   const [error, setError] = useState('');
+  const [copied, setCopied] = useState(false);
 
   async function runAudit(e: React.FormEvent) {
     e.preventDefault();
@@ -57,6 +65,16 @@ export function AuditFlow() {
     } catch {
       setError('We could not reach the server. Your answers are still here, try again.');
       setPhase('questions');
+    }
+  }
+
+  async function copyPointer() {
+    try {
+      await navigator.clipboard.writeText(POINTER);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      setCopied(false);
     }
   }
 
@@ -140,10 +158,26 @@ export function AuditFlow() {
             Download llms.gist
           </button>
           <p className="text-ink-secondary mt-5 text-sm leading-relaxed">
-            Put this at your project root. Then run{' '}
-            <code className="font-mono">curl -fsSL llmsgist.org/i | bash</code> and{' '}
-            <code className="font-mono">/llms-gist</code> to connect it to your agent and check that
-            it actually worked.
+            Put it at your project root. Your coding agent only reads it when something points to
+            it, so add these lines to <code className="font-mono">CLAUDE.md</code>,{' '}
+            <code className="font-mono">AGENTS.md</code> or your Cursor rules:
+          </p>
+          <pre className="border-border-primary bg-background-tertiary mt-3 overflow-auto rounded-xl border p-4 font-mono text-[13px] whitespace-pre-wrap">
+            {POINTER}
+          </pre>
+          <button
+            onClick={copyPointer}
+            className="border-border-primary mt-3 rounded-full border px-5 py-2 text-sm font-semibold"
+          >
+            {copied ? 'Copied' : 'Copy these lines'}
+          </button>
+          <p className="text-ink-secondary mt-5 text-sm leading-relaxed">
+            Want it done for you, with a check that it worked? Install the Claude Code plugin from
+            the{' '}
+            <a className="underline" href="https://github.com/imsaif/gist#readme">
+              README
+            </a>{' '}
+            and run <code className="font-mono">/llms-gist:llms-gist</code>.
           </p>
         </div>
       )}
