@@ -9,7 +9,7 @@
 - **Stack:** Next.js 16 (App Router), React 19, TypeScript, Tailwind v4, Vitest
 - **Models:** OpenAI `gpt-4o-2024-11-20` + Anthropic `claude-sonnet-4-5-20250929` for the dormant audit in `src/lib/audit/`, `claude-haiku-4-5-20251001` as its judge
 - **Distribution:** Claude Code plugin, listed in Anthropic's directory (2026-10-06). As a plugin the command is `/llms-gist:llms-gist`; the old `install.sh` path installs a standalone `/llms-gist` but downloads from llmsgist.org, whose Vercel deployment was found PAUSED on 2026-10-24, so the README no longer advertises it. Plugin `homepage` points at the GitHub README for the same reason.
-- **This file lives in `.claude/`** because the repo root is the plugin root, where a CLAUDE.md is not loaded and the directory scan warns.
+- **Plugin layout (since 2026-11-11):** the plugin lives in `plugins/llms-gist/`; root `marketplace.json` points there. The directory listing can only change its tracked _branch_, not its folder, so it tracks branch **`plugin`**, which `.github/workflows/plugin-branch.yml` rebuilds from that folder on every merge to main. Never edit `plugin` by hand. Directory rules for non-Verified orgs: only Markdown, text, JSON, YAML and PNG/JPEG/GIF/WebP/ICO, no `#!` files, no package-manager config. Examples are `.gist.md` for that reason and are excluded from prettier to stay byte-exact.
 
 ## Naming (locked — mirrors llms.txt)
 
