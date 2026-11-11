@@ -1,0 +1,29 @@
+# Rebuilds the `plugin` branch from plugins/llms-gist/ on every push to main.
+# The plugin directory listing tracks that branch, so it only ever sees the
+# plugin's own files, never the website.
+name: Sync plugin branch
+
+on:
+  push:
+    branches: [main]
+    paths: ['plugins/llms-gist/**']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: plugin-branch
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Split plugin folder into its own branch
+        run: |
+          git subtree split --prefix=plugins/llms-gist -b plugin-split
+          git push origin plugin-split:plugin
