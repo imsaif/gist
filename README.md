@@ -88,7 +88,7 @@ Proves the wiring worked instead of assuming it. It picks a question only `llms.
   - **Not This**: what it's NOT (prevents competitor blending)
   - **Open Questions**: what's still unresolved
 
-See [skills/llms-gist/references/file-format.md](skills/llms-gist/references/file-format.md) for the full spec.
+See [plugins/llms-gist/skills/llms-gist/references/file-format.md](plugins/llms-gist/skills/llms-gist/references/file-format.md) for the full spec.
 
 ## Examples
 
