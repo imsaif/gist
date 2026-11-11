@@ -29,10 +29,10 @@ A single `.gist` markdown file placed at the project root. This file follows a s
 2. Read the file format reference at `references/file-format.md` for the exact output structure.
 3. Read the wiring reference at `references/wiring.md` for which config files each coding agent loads and the exact pointer text to append.
 4. Read the example files in `references/` to see completed .gist files for different product types:
-   - `references/example-spark-mail.gist` — AI feature layer in an email client
-   - `references/example-linear.gist` — opinionated project management tool
-   - `references/example-v0.gist` — iterative AI code generation
-   - `references/example-raycast.gist` — extensible desktop launcher with AI
+   - `references/example-spark-mail.gist.md` — AI feature layer in an email client
+   - `references/example-linear.gist.md` — opinionated project management tool
+   - `references/example-v0.gist.md` — iterative AI code generation
+   - `references/example-raycast.gist.md` — extensible desktop launcher with AI
 
 ## How the conversation works
 
