@@ -16,7 +16,7 @@
 - Extension / format: **`.gist`** (never `.gist.design`)
 - Canonical filename at project root: **`llms.gist`** (mirrors `/llms.txt`)
 - Brand: **gist** / **llms.gist**. Crawler UA: `GistBot`
-- Skill directory and command: **`skills/llms-gist/`**, invoked as `/llms-gist`
+- Skill directory and command: **`plugins/llms-gist/skills/llms-gist/`**, invoked as `/llms-gist`
 - Working state lives in `.llmsgist/`, never `.gist/`, which would collide with the extension
 - `gist.design`, `.gist.design`, and `gist-design` appear nowhere
 
@@ -44,12 +44,12 @@ One static page at `/`. Everything else was removed in the terminal-first change
 
 ## Key Files
 
-- `skills/llms-gist/SKILL.md` — the skill: audit the repo, generate `llms.gist`, append a
+- `plugins/llms-gist/skills/llms-gist/SKILL.md` — the skill: audit the repo, generate `llms.gist`, append a
   pointer to the agent config files the repo has, then verify in a fresh session without
   naming the file
-- `skills/llms-gist/references/file-format.md` — the `.gist` file spec
-- `skills/llms-gist/references/patterns.md` — the 36 AI UX patterns the skill can name
-- `skills/llms-gist/references/wiring.md` — per-agent config targets and the pointer text
+- `plugins/llms-gist/skills/llms-gist/references/file-format.md` — the `.gist` file spec
+- `plugins/llms-gist/skills/llms-gist/references/patterns.md` — the 36 AI UX patterns the skill can name
+- `plugins/llms-gist/skills/llms-gist/references/wiring.md` — per-agent config targets and the pointer text
 - `src/lib/audit/` — dormant, intentionally unreferenced. Read its README before touching it.
 
 ## Commands

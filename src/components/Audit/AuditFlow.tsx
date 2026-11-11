@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import type { AuditResult } from '@/types/repo-audit';
 
-// Same text the plugin's connect step writes (skills/llms-gist/references/wiring.md).
+// Same text the plugin's connect step writes (plugins/llms-gist/skills/llms-gist/references/wiring.md).
 // Agents read CLAUDE.md / AGENTS.md on their own; they only read llms.gist when pointed at it.
 const POINTER = `## Product context
 

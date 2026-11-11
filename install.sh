@@ -35,11 +35,11 @@ fi
 echo "  Downloading skill files..."
 git clone --depth 1 --filter=blob:none --sparse "$REPO" "$TMP_DIR/gist" 2>/dev/null
 cd "$TMP_DIR/gist"
-git sparse-checkout set skills/llms-gist 2>/dev/null
+git sparse-checkout set plugins/llms-gist/skills/llms-gist 2>/dev/null
 
 # Install
 mkdir -p "$(dirname "$SKILL_DIR")"
-cp -r "$TMP_DIR/gist/skills/llms-gist" "$SKILL_DIR"
+cp -r "$TMP_DIR/gist/plugins/llms-gist/skills/llms-gist" "$SKILL_DIR"
 
 echo ""
 echo "  Installed to $SKILL_DIR"
