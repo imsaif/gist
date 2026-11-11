@@ -11,7 +11,7 @@
 ### Session 2026-11-11 19:02 (MacBook)
 
 - **Pattern:** Directory listing unblocked: plugin moved to its own folder and branch
-- **Status:** Shipped (PRs #4, #5 merged); directory scan of 1.0.3 still pending
+- **Status:** Shipped (PRs #4, #5 merged). 1.0.3 passed the directory scan and all policy checks the same evening, confirming the `.gist` extension was the last blocker; Publish update requested, waiting for an Anthropic reviewer
 - **Files Changed:** 26 across PRs #4 and #5, plus this CLAUDE.md layout note
 - **Tests Added/Modified:** 0 (`claude plugin validate` clean on the plugin folder and branch)
 - **Notes:** The directory refused 1.0.1 and flagged the live 1.0.0 (Nov 4) because the listing scanned the repo root, website included (GitHub token read, package files, scripts). Moved the plugin to `plugins/llms-gist/` (PR #4), found the listing's folder cannot change, so pointed it at a `plugin` branch rebuilt from that folder by a GitHub Action (PR #5); five blockers fell to one, "files outside the allowed types", and the `.gist` examples were renamed `.gist.md` for 1.0.3 on the guess that the extension is the cause. Two "Check for new commits" clicks had not registered 1.0.3 by end of session.
