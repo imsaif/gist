@@ -86,13 +86,12 @@ export default function Home() {
         {/* Hero */}
         <section className="pt-12 pb-4 text-center md:pt-20">
           <h1 className="text-ink-primary mx-auto max-w-[20ch] text-[2.5rem] leading-[1.08] font-bold tracking-[-0.03em] md:text-[3.5rem]">
-            llms.gist is a product expert inside your terminal
+            Tell your coding agents what your product is, and isn’t
           </h1>
 
           <p className="text-ink-secondary mx-auto mt-6 max-w-[52ch] text-[17px] leading-relaxed">
-            One file at your project root that tells your coding agents who your product is for,
-            what it deliberately is not, and how it differs from the product they keep confusing it
-            with.
+            One file at your project root: who it’s for, what it leaves out, and what it gets
+            confused with.
           </p>
 
           <div className="mt-9">
